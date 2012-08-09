@@ -181,6 +181,14 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         if self.filename:
             wx.CallAfter(self.printbtn.Enable)
 
+        wx.CallAfter(self.callOnConnect)
+
+
+    def callOnConnect(self):
+        macro = "onConnect"
+        if self.macros.get(macro, False):
+            self.onecmd(macro)
+
 
     def sentcb(self,line):
         if("G1" in line):
@@ -1599,7 +1607,11 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
             if self.sdprinting:
                 self.p.send_now("M26 S0")
 
+        macro = "onDisconnect"
+        if self.macros.get(macro, False):
+            self.onecmd(macro)
 
+                
     def reset(self,event):
         print _("Reset.")
         dlg=wx.MessageDialog(self, _("Are you sure you want to reset the printer?"), _("Reset?"), wx.YES|wx.NO)
@@ -1611,6 +1623,11 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
                 self.p.paused=0
                 wx.CallAfter(self.pausebtn.SetLabel, _("Pause"))
                 self.paused=0
+
+        macro = "onReset"
+        if self.macros.get(macro, False):
+            self.onecmd(macro)
+
 
     def get_build_dimensions(self,bdim):
         import re
