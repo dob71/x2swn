@@ -1,8 +1,24 @@
 #!/usr/bin/env python
-from serial import Serial
+
+# This file is part of the Printrun suite.
+# 
+# Printrun is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# Printrun is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with Printrun.  If not, see <http://www.gnu.org/licenses/>.
+
+from serial import Serial, SerialException
 from threading import Thread
-import time
-import sys
+from select import error as SelectError
+import time, getopt, sys
 
 class printcore():
     def __init__(self,port=None,baud=None):
@@ -31,6 +47,7 @@ class printcore():
         self.endcb=None#impl ()
         self.onlinecb=None#impl ()
         self.loud=False#emit sent and received lines to terminal
+        self.greetings=['start','Grbl ']
         if port is not None and baud is not None:
             #print port, baud
             self.connect(port, baud)
@@ -71,12 +88,26 @@ class printcore():
         """This function acts on messages from the firmware
         """
         self.clear=True
-        time.sleep(0.5)
+        time.sleep(1.0)
         self.send_now("M105")
         while(True):
             if(not self.printer or not self.printer.isOpen):
                 break
-            line=self.printer.readline()
+            try:
+                line=self.printer.readline()
+            except SelectError, e:
+                if 'Bad file descriptor' in e.args[1]:
+                    print "Can't read from printer (disconnected?)."
+                    break
+                else:
+                    raise
+            except SerialException, e:
+                print "Can't read from printer (disconnected?)."
+                break
+            except OSError, e:
+                print "Can't read from printer (disconnected?)."
+                break
+
             if(len(line)>1):
                 self.log+=[line]
                 if self.recvcb is not None:
@@ -88,10 +119,10 @@ class printcore():
                     print "RECV: ",line.rstrip()
             if(line.startswith('DEBUG_')):
                 continue
-            if(line.startswith('start') or line.startswith('ok')):
+            if(line.startswith(tuple(self.greetings)) or line.startswith('ok')):
                 self.clear=True
-            if(line.startswith('start') or line.startswith('ok') or "T:" in line):
-                if (not self.online or line.startswith('start')) and self.onlinecb is not None:
+            if(line.startswith(tuple(self.greetings)) or line.startswith('ok') or "T:" in line):
+                if (not self.online or line.startswith(tuple(self.greetings))) and self.onlinecb is not None:
                     try:
                         self.onlinecb()
                     except:
@@ -114,11 +145,11 @@ class printcore():
                         pass
                 #callback for errors
                 pass
-            if "resend" in line.lower() or "rs" in line:
+            if line.lower().startswith("resend") or line.startswith("rs"):
                 try:
                     toresend=int(line.replace("N:"," ").replace("N"," ").replace(":"," ").split()[-1])
                 except:
-                    if "rs" in line:
+                    if line.startswith("rs"):
                         toresend=int(line.split()[1])
                 self.resendfrom=toresend
                 self.clear=True
@@ -195,6 +226,8 @@ class printcore():
                 pass
         while(self.printing and self.printer and self.online):
             self._sendnext()
+        self.log=[]
+        self.sent=[]
         if self.endcb is not None:
             try:
                 self.endcb()
@@ -215,6 +248,7 @@ class printcore():
             self._send(self.sentlines[self.resendfrom],self.resendfrom,False)
             self.resendfrom+=1
             return
+        self.sentlines={}
         self.resendfrom=-1
         for i in self.priqueue[:]:
             self._send(i)
@@ -252,28 +286,47 @@ class printcore():
                     self.sendcb(command)
                 except:
                     pass
-            self.printer.write(command+"\n")
+            try:
+                self.printer.write(str(command+"\n"))
+            except SerialException, e:
+                print "Can't write to printer (disconnected?)."
 
 if __name__ == '__main__':
-    #print "Usage: python printcore.py filename.gcode"
-    filename="../prusamendel/sellsx_export.gcode"
-    if len(sys.argv)>1:
-        filename=sys.argv[1]
-        print "Printing: "+filename
-    else:
-        print "Usage: python printcore.py filename.gcode"
-        #sys.exit(2)
-    p=printcore('/dev/ttyUSB0',115200)
-    p.loud=True
+    baud = 115200
+    loud = False
     statusreport=False
+    try:
+	opts, args=getopt.getopt(sys.argv[1:], "h,b:,v,s",["help","baud","verbose","statusreport"])
+    except getopt.GetoptError,err:
+		print str(err)
+		print help
+		sys.exit(2)
+    for o,a in opts:
+	if o in ('-h', '--help'):
+		# FIXME: Fix help
+		print "Opts are: --help , -b --baud = baudrate, -v --verbose, -s --statusreport"
+		sys.exit(1)
+	if o in ('-b', '--baud'):
+		baud = int(a)
+	if o in ('-v','--verbose'):
+		loud=True
+        elif o in ('-s','--statusreport'):
+		statusreport=True
+
+
+    if len(args)>1:
+        port=args[-2]
+        filename=args[-1]
+        print "Printing: "+filename + " on "+port + " with baudrate "+str(baud) 
+    else:
+        print "Usage: python [-h|-b|-v|-s] printcore.py /dev/tty[USB|ACM]x filename.gcode"
+        sys.exit(2)
+    p=printcore(port,baud)
+    p.loud = loud
     time.sleep(2)
-    testdata=[i.replace("\n","") for i in open(filename)]
-    p.startprint(testdata)
-    #time.sleep(1)
-    #p.pause()
-    #print "pause"
-    #time.sleep(5)
-    #p.resume()
+    gcode=[i.replace("\n","") for i in open(filename)]
+    p.startprint(gcode)
+
     try:
         if statusreport:
             p.loud=False
@@ -284,5 +337,7 @@ if __name__ == '__main__':
             if statusreport:
                 sys.stdout.write("\b\b\b\b%02.1f%%" % (100*float(p.queueindex)/len(p.mainqueue),) )
                 sys.stdout.flush()
+        p.disconnect()
+        sys.exit(0)
     except:
         p.disconnect()
