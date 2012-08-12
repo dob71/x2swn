@@ -505,9 +505,9 @@ class pronsole(cmd.Cmd):
     def load_default_rc(self,rc_filename=".pronsolerc"):
         try:
             try:
-                self.load_rc(os.path.join(os.path.expanduser("~"),rc_filename))
-            except IOError:
                 self.load_rc(rc_filename)
+            except IOError:
+                self.load_rc(os.path.join(os.path.expanduser("~"),rc_filename))
         except IOError:
             # make sure the filename is initialized
             self.rc_filename = os.path.abspath(os.path.join(os.path.expanduser("~"),rc_filename))
