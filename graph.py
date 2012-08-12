@@ -50,6 +50,7 @@ class Graph(BufferedCanvas):
         self.y_offset   = 1 # This is to show the line even when value is 0 and maxyvalue
 
         self._lastyvalue = 0
+        self.extruder_mask = 1
 
 
         #self.sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -70,10 +71,12 @@ class Graph(BufferedCanvas):
     def updateTemperatures(self, event):
         self.AddBedTemperature(self.bedtemps[-1])
         self.AddBedTargetTemperature(self.bedtargettemps[-1])
-        self.AddExtruder0Temperature(self.extruder0temps[-1])
-        self.AddExtruder0TargetTemperature(self.extruder0targettemps[-1])
-        #self.AddExtruder1Temperature(self.extruder1temps[-1])
-        #self.AddExtruder1TargetTemperature(self.extruder1targettemps[-1])
+        if((self.extruder_mask & 1) != 0):
+            self.AddExtruder0Temperature(self.extruder0temps[-1])
+            self.AddExtruder0TargetTemperature(self.extruder0targettemps[-1])
+        if((self.extruder_mask & 2) != 0):
+            self.AddExtruder1Temperature(self.extruder1temps[-1])
+            self.AddExtruder1TargetTemperature(self.extruder1targettemps[-1])
         self.Refresh()
 
 
@@ -243,6 +246,9 @@ class Graph(BufferedCanvas):
             self.extruder1targettemps.pop(0)
 
 
+    def SetPlottingExtruderMask(self, em):
+        self.extruder_mask = em
+
     def StartPlotting(self, time):
         self.Refresh()
         self.timer.Start(time)
@@ -259,9 +265,11 @@ class Graph(BufferedCanvas):
         self.drawgrid(dc, gc)
         self.drawbedtargettemp(dc, gc)
         self.drawbedtemp(dc, gc)
-        self.drawextruder0targettemp(dc, gc)
-        self.drawextruder0temp(dc, gc)
-        self.drawextruder1targettemp(dc, gc)
-        self.drawextruder1temp(dc, gc)
+        if((self.extruder_mask & 1) != 0):
+            self.drawextruder0targettemp(dc, gc)
+            self.drawextruder0temp(dc, gc)
+        if((self.extruder_mask & 2) != 0):
+            self.drawextruder1targettemp(dc, gc)
+            self.drawextruder1temp(dc, gc)
 
 
