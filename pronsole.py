@@ -506,7 +506,7 @@ class pronsole(cmd.Cmd):
         self.processing_rc=True
         myPath = os.path.abspath(os.path.dirname(__file__))
         x2swProfilesPath = os.path.join(os.path.expanduser('~'), '.x2sw')
-        rcDistroFilename = os.path.join(myPath, rc_filename)
+        rcDistroFilename = os.path.join(myPath, '.x2sw', rc_filename)
         if(not os.path.exists(os.path.join(x2swProfilesPath, '.use_local'))):
             rcPathName = os.path.join(x2swProfilesPath, rc_filename)
             try:

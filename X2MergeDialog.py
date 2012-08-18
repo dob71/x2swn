@@ -27,7 +27,7 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         self.mypath = os.path.abspath(os.path.dirname(__file__))
 
         x2swProfilesPath = os.path.join(os.path.expanduser('~'), '.x2sw')
-        rcDistroFilename = os.path.join(self.mypath, ".x2mergerc")
+        rcDistroFilename = os.path.join(self.mypath, '.x2sw', '.x2mergerc')
         if(not os.path.exists(os.path.join(x2swProfilesPath, '.use_local'))):
             rcPathName = os.path.join(x2swProfilesPath, ".x2mergerc")
             try:
