@@ -247,6 +247,7 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
             if self.macros.get(macro, False):
                 self.onecmd(macro)
             self.graph.SetPlottingExtruderMask(1)
+            self.hottgauge.SetTitle(_("Heater0:"))
             if(self.monitor):
                 self.StopPlotting()
                 self.StartPlotting()
@@ -255,6 +256,7 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
             if self.macros.get(macro, False):
                 self.onecmd(macro)
             self.graph.SetPlottingExtruderMask(2)
+            self.hottgauge.SetTitle(_("Heater1:"))
             if(self.monitor):
                 self.StopPlotting()
                 self.StartPlotting()
@@ -637,7 +639,6 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
             self.printerControls.append(btn)
             lls.Add(btn,pos=i[2],span=i[4])
 
-
         lls.Add(wx.StaticText(self.panel,-1,_("Heater:")),pos=(3,0),span=(1,1),flag=wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT)
         htemp_choices=[self.temps[i]+" ("+i+")" for i in sorted(self.temps.keys(),key=lambda x:self.temps[x])]
 
@@ -719,7 +720,11 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         self.zfeedc.SetForegroundColour("black")
         # lls.Add((10,0),pos=(0,11),span=(1,1))
 
-        self.hottgauge=TempGauge(self.panel,size=(200,24),title=_("Heater:"),maxval=230)
+        try:
+            hstr = _("Heater")+str(self._extruder)+_(":")
+        except:
+            hstr = _("Heater:")
+        self.hottgauge=TempGauge(self.panel,size=(200,24),title=hstr,maxval=230)
         lls.Add(self.hottgauge,pos=(7,0),span=(1,4))
         self.bedtgauge=TempGauge(self.panel,size=(200,24),title=_("Bed:"),maxval=130)
         lls.Add(self.bedtgauge,pos=(8,0),span=(1,4))
@@ -1870,6 +1875,9 @@ class TempGauge(wx.Panel):
     def SetTarget(self,value):
         self.setpoint=value
         self.recalc()
+        wx.CallAfter(self.Refresh)
+    def SetTitle(self,value):
+        self.title=value
         wx.CallAfter(self.Refresh)
     def interpolatedColour(self,val,vmin,vmid,vmax,cmin,cmid,cmax):
         if val < vmin: return cmin

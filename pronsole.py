@@ -17,7 +17,7 @@
 
 import cmd, printcore, sys 
 import glob, os, time
-import sys, subprocess 
+import sys, subprocess, shutil
 import math
 from math import sqrt
 import gettext
@@ -503,14 +503,30 @@ class pronsole(cmd.Cmd):
             self.processing_rc=False
     
     def load_default_rc(self,rc_filename=".pronsolerc"):
-        try:
+        self.processing_rc=True
+        myPath = os.path.abspath(os.path.dirname(__file__))
+        x2swProfilesPath = os.path.join(os.path.expanduser('~'), '.x2sw')
+        rcDistroFilename = os.path.join(myPath, rc_filename)
+        if(not os.path.exists(os.path.join(x2swProfilesPath, '.use_local'))):
+            rcPathName = os.path.join(x2swProfilesPath, rc_filename)
             try:
-                self.load_rc(rc_filename)
-            except IOError:
-                self.load_rc(os.path.join(os.path.expanduser("~"),rc_filename))
+                if(not os.path.exists(x2swProfilesPath)):
+                    print "Creating x2sw profiles path: " + x2swProfilesPath
+                    os.makedirs(x2swProfilesPath)
+                if((not os.path.exists(rcPathName)) and os.path.exists(rcDistroFilename)):
+                    print "Deploying pronsole distro rc file to: " + rcPathName
+                    shutil.copyfile(rcDistroFilename, rcPathName)
+            except:
+                print "Failure!!!"
+        else:
+            rcPathName = rcDistroFilename
+        print "Loading default pronsole rc file: " + rcPathName
+        try:
+            self.load_rc(rcPathName)
         except IOError:
+            print "Cannot load: " + rc_filename
             # make sure the filename is initialized
-            self.rc_filename = os.path.abspath(os.path.join(os.path.expanduser("~"),rc_filename))
+            self.rc_filename = rcPathName
     
     def save_in_rc(self,key,definition):
         """

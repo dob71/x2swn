@@ -4,16 +4,18 @@ from skeinforge.fabmetheus_utilities import archive
 from skeinforge.fabmetheus_utilities import settings
 from skeinforge.skeinforge_application.skeinforge_utilities import skeinforge_craft
 from skeinforge.skeinforge_application.skeinforge_utilities import skeinforge_profile
+from subprocess import STDOUT
 import printcore
 import pronsole
 import sys
 import re
 import os
+import shutil
 import subprocess
 import wx
 
-DEF_NT_PERL_PATH = "C:\\cygwin\\bin\\perl addcolor.pl"
-DEF_PERL_PATH = "./addcolor.pl"
+DEF_NT_PERL_PATH = 'C:\\cygwin\\bin\\perl addcolor.pl'
+DEF_PERL_PATH = './addcolor.pl'
 
 ID_BROWSE_BASE = 102
 ID_BROWSE_INS = 103
@@ -23,7 +25,24 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
     def __init__(self, *args, **kwds):
         pronsole.pronsole.__init__(self)
         self.mypath = os.path.abspath(os.path.dirname(__file__))
-        self.rc_filename = os.path.join(self.mypath, ".x2mergerc")
+
+        x2swProfilesPath = os.path.join(os.path.expanduser('~'), '.x2sw')
+        rcDistroFilename = os.path.join(self.mypath, ".x2mergerc")
+        if(not os.path.exists(os.path.join(x2swProfilesPath, '.use_local'))):
+            rcPathName = os.path.join(x2swProfilesPath, ".x2mergerc")
+            try:
+                if(not os.path.exists(x2swProfilesPath)):
+                    print "Creating x2sw profiles path: " + x2swProfilesPath
+                    os.makedirs(x2swProfilesPath)
+                if((not os.path.exists(rcPathName)) and os.path.exists(rcDistroFilename)):
+                    print "Deploying x2merge distro rc file to: " + rcPathName
+                    shutil.copyfile(rcDistroFilename, rcPathName)
+            except:
+                print "Failure!"
+        else:
+            rcPathName = rcDistroFilename
+        print "Using x2merge rc file pathname: " + rcPathName
+        self.rc_filename = rcPathName
 
         kwds["style"] = wx.DEFAULT_DIALOG_STYLE | wx.MAXIMIZE_BOX | wx.MINIMIZE_BOX | wx.RESIZE_BORDER
         wx.Dialog.__init__(self, *args, **kwds)
@@ -40,10 +59,10 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
             self.settings.perlCmd = DEF_NT_PERL_PATH
         else: 
             self.settings.perlCmd = DEF_PERL_PATH
-        self.settings.colorOn = "c_on.gcode"
-        self.settings.colorOff = "c_off.gcode"
-        self.settings.basePenGcode = "base_penultimate.g"
-        self.settings.insPenGcode = "insert_penutimate.g"
+        self.settings.colorOn = 'c_on.gcode'
+        self.settings.colorOff = 'c_off.gcode'
+        self.settings.basePenGcode = 'base_penultimate.g'
+        self.settings.insPenGcode = 'insert_penutimate.g'
         self.mixedGcode = None
         self.load_rc(self.rc_filename)
 
@@ -227,7 +246,7 @@ The resulted merged gcode is stripped and automatically loaded for printing by p
         cmd = self.settings.perlCmd + " '"  + self.settings.basePenGcode + "' '" +  self.settings.insPenGcode + \
               "' '" + altpath + "\\" + self.settings.colorOn + "' '" + altpath + "\\" + self.settings.colorOff + "'"
         try:
-            out=open(mixed,"w")
+            out=open(mixed,"w+")
             out.write("")
         except IOError,x:
             print str(x)
@@ -235,11 +254,13 @@ The resulted merged gcode is stripped and automatically loaded for printing by p
             self.Destroy()
             return
         print "Starting gcode mixing script:\n", cmd
-        code = subprocess.call(cmd, stdout=out)
+        code = subprocess.call(cmd, stdout=out, stderr=out)
         if (code != 0):
+           out.seek(0)
+           outErr = out.read();
            out.close()
            os.remove(mixed)
-           print "Failure, code " + str(code)
+           print "Failure, code " + str(code) + ". Output:\n" + outErr;
            self.EndModal(2)
            self.Destroy()
         else:   
