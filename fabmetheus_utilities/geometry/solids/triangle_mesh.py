@@ -868,6 +868,9 @@ class TriangleMesh( group.Group ):
 		for point in transformedVertexes:
 			self.cornerMaximum.maximize(point)
 			self.cornerMinimum.minimize(point)
+		# For dual extrusion gcode mixing the height should be preserved
+		if self.cornerMinimum.z > 0:
+			self.cornerMinimum.z = 0
 		return self.cornerMinimum.z
 
 	def getTransformedVertexes(self):

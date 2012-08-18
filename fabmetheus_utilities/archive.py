@@ -9,6 +9,7 @@ import __init__
 
 import os
 import sys
+import shutil
 import traceback
 
 
@@ -18,7 +19,23 @@ __date__ = '$Date: 2008/02/05 $'
 __license__ = 'GNU Affero General Public License http://www.gnu.org/licenses/agpl.html'
 
 
-globalTemporarySettingsPath = os.path.join(os.path.expanduser('~'), '.skeinforge')
+x2swProfilesPath = os.path.join(os.path.expanduser('~'), '.x2sw')
+rcDistroPathname = os.path.join(os.getcwd(), ".skeinforge")
+if(not os.path.exists(os.path.join(x2swProfilesPath, '.use_local'))):
+    rcPathName = os.path.join(x2swProfilesPath, ".skeinforge")
+    try:
+        if(not os.path.exists(x2swProfilesPath)):
+            print "Creating skeinforge x2sw profiles path: " + x2swProfilesPath
+            os.makedirs(x2swProfilesPath)
+        if((not os.path.exists(rcPathName)) and os.path.exists(rcDistroPathname)):
+            print "Deploying skeinforge distro profiles to: " + x2swProfilesPath
+            shutil.copytree(rcDistroPathname, rcPathName)
+    except:
+        print "Failure!"
+else:
+    rcPathName = rcDistroPathname
+print "Using skeinforge profiles path: " + rcPathName
+globalTemporarySettingsPath = rcPathName
 
 
 def addToNamePathDictionary(directoryPath, namePathDictionary):
