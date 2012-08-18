@@ -1,0 +1,88 @@
+# .pronsolerc file for X2
+!print "Loaded " + self.rc_filename
+!self._extruder = 0
+
+set port COM2
+set xy_feedrate 3000
+set z_feedrate 300
+set e_feedrate 100
+set last_temperature 125.0
+set last_bed_temperature 35.0
+set temperature_abs 220
+set bedtemp_abs 115
+set temperature_pla 177
+set bedtemp_pla 78
+
+macro onConnect
+  !self._extruder = 0
+  !self.onecmd('button 0 "Ext 0" /c green extruder0')
+  !self.onecmd('button 1 "Ext 1" /c lightgrey extruder1')
+
+macro onDisconnect
+  !self._extruder = 0
+  !self.onecmd('button 0 "Ext 0" /c lightgrey extruder0')
+  !self.onecmd('button 1 "Ext 1" /c lightgrey extruder1')
+
+macro onReset
+  !self._extruder = 0
+  !self.onecmd('button 0 "Ext 0" /c lightgrey extruder0')
+  !self.onecmd('button 1 "Ext 1" /c lightgrey extruder1')
+
+macro extruder0
+  T0
+
+macro extruder1
+  T1
+
+macro onSetExt0
+  !self._extruder = 0
+  !self.onecmd('button %d "Ext 0" /c green extruder0' % 0)
+  !self.onecmd('button 1 "Ext 1" /c lightgrey extruder1')
+button 0 "Ext 0" /c "lightgrey" extruder0
+
+macro onSetExt1
+  !self._extruder = 1
+  !self.onecmd('button %d "Ext 1" /c green extruder1' % 1)
+  !self.onecmd('button 0 "Ext 0" /c lightgrey extruder0')
+button 1 "Ext 1" /c "lightgrey" extruder1
+
+macro fanoff
+   M107
+button 4 "fan off" /c "lightgrey" fanoff
+
+macro fan70
+   M106
+   !time.sleep(1.0)
+   M106 S70
+button 5 "fan 50%" /c "lightgrey" fan70
+
+macro fan120
+   M106
+   !time.sleep(1.0)
+   M106 S120
+button 6 "fan 100%" /c "lightgrey" fan120
+
+macro resetSD
+   M22
+   !time.sleep(0.2)
+   M21
+   !time.sleep(0.2)
+   M20
+button 7 "ResetSD" /c "lightgrey" resetSD
+
+macro x2Merge
+   !try:
+   !    from X2MergeDialog import X2MergeDialog
+   !    dlg = X2MergeDialog(self)
+   !    res = dlg.ShowModal()
+   !    if (res == 1):
+   !         self.loadfile(None, filename=dlg.GetPath())
+   !    if (res == 2):
+   !         self.status.SetStatusText(_("The merge has failed!"))
+   !except:
+   !    self.status.SetStatusText(_("The merge cannot be completed!"))
+   !    pass
+button 8 "X2Merge" /c "lightgrey" x2Merge
+
+set last_file_path T:\Job\3DPrint\STLs\calibration
+set build_dimensions 200x200x125
