@@ -1,0 +1,8 @@
+G91 ;(switch to relative positioning)
+G1 E-14 F2000 ;(retract for long pause at feed rate 20mm/min)
+G90 ;(Back to absolute positioning)
+M104 L40 ;(lower the base extruder temperature)
+G1 X40 Y40 F3000 ; (move to the parking spot)
+M109 T1 H40 W5 ;(reheat the color extruder)
+T1 ;(switch to color extruder)
+;(do not do anything since retract return will restore the filament position)

@@ -1,0 +1,5 @@
+set colorOn c_on.gcode
+set colorOff c_off.gcode
+set basePenGcode T:\Job\3DPrint\STLs\calibration\base_penultimate.gcode
+set insPenGcode T:\Job\3DPrint\STLs\calibration\inset_penultimate.gcode
+set perlCmd C:\cygwin\bin\perl addcolor.pl

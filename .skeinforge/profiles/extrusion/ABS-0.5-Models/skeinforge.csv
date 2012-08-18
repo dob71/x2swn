@@ -1,0 +1,9 @@
+Format is tab separated skeinforge settings.
+_Name                          	Value
+WindowPosition	727+41
+Open File for Skeinforge	T:/Job/3DPrint/STLs/calibration/_40x10.STL
+analyze	False
+craft	True
+help	False
+meta	False
+profile	False
