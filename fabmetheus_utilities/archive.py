@@ -20,9 +20,9 @@ __license__ = 'GNU Affero General Public License http://www.gnu.org/licenses/agp
 
 
 x2swProfilesPath = os.path.join(os.path.expanduser('~'), '.x2sw')
-rcDistroPathname = os.path.join(os.getcwd(), ".skeinforge")
+rcDistroPathname = os.path.join(os.getcwd(), '.x2sw', '.skeinforge')
 if(not os.path.exists(os.path.join(x2swProfilesPath, '.use_local'))):
-    rcPathName = os.path.join(x2swProfilesPath, ".skeinforge")
+    rcPathName = os.path.join(x2swProfilesPath, '.skeinforge')
     try:
         if(not os.path.exists(x2swProfilesPath)):
             print "Creating skeinforge x2sw profiles path: " + x2swProfilesPath
