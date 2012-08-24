@@ -504,7 +504,7 @@ class pronsole(cmd.Cmd):
     
     def load_default_rc(self,rc_filename=".pronsolerc"):
         self.processing_rc=True
-        myPath = os.path.abspath(os.path.dirname(__file__))
+        myPath = os.path.abspath(os.path.dirname(sys.argv[0]))
         x2swProfilesPath = os.path.join(os.path.expanduser('~'), '.x2sw')
         rcDistroFilename = os.path.join(myPath, '.x2sw', rc_filename)
         if(not os.path.exists(os.path.join(x2swProfilesPath, '.use_local'))):
@@ -1148,7 +1148,13 @@ class pronsole(cmd.Cmd):
         print "monitor 2 - Reports temperature and SD print status (if SD printing) every 2 seconds"
         
     def expandcommand(self,c):
-        return c.replace("$python",sys.executable)
+        if getattr(sys, 'frozen', None):
+            python = os.path.join(sys._MEIPASS, 'python')
+            if (os.name == 'nt'):
+                python += '.exe'
+        else:
+            python = sys.executable
+        return c.replace("$python", python)
         
     def do_skein(self,l):
         l=l.split()

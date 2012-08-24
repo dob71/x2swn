@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
 from skeinforge.fabmetheus_utilities import archive
-from skeinforge.fabmetheus_utilities import settings
-from skeinforge.skeinforge_application.skeinforge_utilities import skeinforge_craft
-from skeinforge.skeinforge_application.skeinforge_utilities import skeinforge_profile
 from subprocess import STDOUT
 import printcore
 import pronsole
@@ -24,7 +21,7 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
     '''GUI Frontend to addcolor.pl script.'''
     def __init__(self, *args, **kwds):
         pronsole.pronsole.__init__(self)
-        self.mypath = os.path.abspath(os.path.dirname(__file__))
+        self.mypath = os.path.abspath(os.path.dirname(sys.argv[0]))
 
         x2swProfilesPath = os.path.join(os.path.expanduser('~'), '.x2sw')
         rcDistroFilename = os.path.join(self.mypath, '.x2sw', '.x2mergerc')
@@ -76,8 +73,7 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         self.Show()
         
     def __set_properties(self):
-        self.profileName = skeinforge_profile.getProfileName(skeinforge_profile.getCraftTypeName())
-        self.SetTitle("X2 Merge (" + self.profileName + ")")
+        self.SetTitle("X2 Merge")
         
         # For some reason the dialog size is not consistent between Windows and Linux - this is a hack to get it working 
         if (os.name == 'nt'):
