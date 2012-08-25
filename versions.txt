@@ -1,3 +1,1 @@
-x2sw 1.1.0.1
-Printrun dceaf26f48754b904fa74d2ee312fd9c0161b078
-Slic3r 0833b4e0219eb0e29b4da214a48d0e69f9e7b8fb
+1.1.0.1
