@@ -1,7 +1,3 @@
-[subtree ".x2sw"]
-	url = git@github.com:dob71/x2sw_profiles.git
-	path = .x2sw
-	branch = master
 [subtree "skeinforge"]
 	url = git@github.com:dob71/sf.git
 	path = skeinforge
