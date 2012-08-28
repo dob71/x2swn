@@ -1,0 +1,3 @@
+[submodule ".x2sw"]
+	path = .x2sw
+	url = http://github.com/dob71/x2sw_profiles.git
