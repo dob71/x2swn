@@ -572,7 +572,8 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         self.monitorbox.Bind(wx.EVT_CHECKBOX,self.setmonitor)
 
         uts.Add((15,-1),flag=wx.EXPAND)
-        uts.Add(self.minibtn,0,wx.ALIGN_CENTER)
+        # Mini mode not working correctly yet
+        #uts.Add(self.minibtn,0,wx.ALIGN_CENTER)
 
         #SECOND ROW
         ubs=self.upperbottomsizer=wx.BoxSizer(wx.HORIZONTAL)

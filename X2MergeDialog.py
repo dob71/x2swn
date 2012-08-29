@@ -11,14 +11,11 @@ import shutil
 import subprocess
 import wx
 
-DEF_NT_PERL_PATH = 'C:\\cygwin\\bin\\perl addcolor.pl'
-DEF_PERL_PATH = './addcolor.pl'
-
 ID_BROWSE_BASE = 102
 ID_BROWSE_INS = 103
 
 class X2MergeDialog(wx.Dialog, pronsole.pronsole):
-    '''GUI Frontend to addcolor.pl script.'''
+    '''Gcode mixer for dual extruder prints.'''
     def __init__(self, *args, **kwds):
         pronsole.pronsole.__init__(self)
         self.mypath = os.path.abspath(os.path.dirname(sys.argv[0]))
@@ -52,10 +49,6 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         self.Bind(wx.EVT_BUTTON, self.onBrowse, self.browseButton1)
         self.Bind(wx.EVT_BUTTON, self.onBrowse, self.browseButton2)
         
-        if (os.name == 'nt'):
-            self.settings.perlCmd = DEF_NT_PERL_PATH
-        else: 
-            self.settings.perlCmd = DEF_PERL_PATH
         self.settings.colorOn = 'c_on.gcode'
         self.settings.colorOff = 'c_off.gcode'
         self.settings.basePenGcode = 'base_penultimate.g'
@@ -93,7 +86,99 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         mainSizer.Add(actionsSizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5)
         self.SetSizer(mainSizer)
         self.Layout()
+
+    def makeUpMixFileName(self, filename):
+        if (re.search("penultimate[^/\\\]*$", filename) != None):
+            mixed = re.sub("penultimate([^/\\\\]*)$", "mixed\\1", filename)
+        else:
+            mixed = re.sub("(\\.[^\\./\\\\]*)$", "_mixed.g", filename)
+        if (mixed == None):
+            mixed = "mixed.g"
+        self.outFileTc.SetValue(mixed)
                 
+    def Mix(self, out):
+        fn_base = self.settings.basePenGcode
+        fn_color = self.settings.insPenGcode
+        fn_alt_start = os.path.join(self.altpath, self.settings.colorOn)
+        fn_alt_end = os.path.join(self.altpath, self.settings.colorOff)
+        mixed_layers = 0
+
+        if (len(fn_alt_start) == 0):
+            fn_alt_start = os.path.join(self.altpath, 'pla_c_on.gcode')
+        if (len(fn_alt_end) == 0):
+            fn_alt_end = os.path.join(self.altpath, 'pla_c_off.gcode')
+
+        ALTSTART = open(fn_alt_start, 'r') 
+        ALTEND = open(fn_alt_end, 'r')
+        BASE = open(fn_base, 'r')
+        COLOR = open(fn_color, 'r')
+
+        # Read in the alt start and stop files
+        alt_start = '';
+        for l in ALTSTART:
+            l = l.rstrip('\n').rstrip('\r')
+            l = re.sub(';.*', '', l).strip()
+            if (len(l) > 0):
+                alt_start += (l + '\n')
+        ALTSTART.close()
+        alt_stop = ''
+        for l in ALTEND:
+            l = l.rstrip('\n').rstrip('\r')
+            l = re.sub('[;(].*', '', l).strip()
+            if (len(l) > 0):
+                alt_stop += (l + '\n')
+        ALTEND.close()
+
+        # Read in the layers of the color model, format: (<layer> 0.32 )
+        color_layer = {}
+        layer_height = 0.0
+        g_one_seen = False
+        layer_code = '';
+        in_layer_code = False
+        g_one_seen = False
+        for l in COLOR:
+            if (not in_layer_code) and ('<layer>' in l):
+                in_layer_code = True;
+            elif in_layer_code and ('</layer>' in l):
+                in_layer_code = False;
+            elif not in_layer_code:
+                continue
+            if '</layer>' in l: 
+                if g_one_seen:
+                    color_layer[layer_height] = layer_code
+                layer_code = '' 
+                g_one_seen = False
+                continue 
+            m = re.match(r'.*<layer>\s+([\d\.]+)', l)
+            if m:
+                layer_height = float(m.group(1))
+            l = l.rstrip('\n').rstrip('\r')
+            l = re.sub('[;(].*', '', l).strip()
+            if (len(l) > 0):
+                layer_code += (l + '\n')
+                if l.startswith('g1') or l.startswith('G1'):
+                    g_one_seen = True
+        COLOR.close()
+        # Read and print the base gcode lines doing what the script is designed for
+        layer_height = 0.0
+        for l in BASE:
+            # capture the layer height
+            m = re.match(r'.*<layer>\s+([\d\.]+)', l)
+            if m:
+                layer_height = float(m.group(1))
+                continue
+            # if done with the layer add matching color part layer
+            if ('</layer>' in l) and (len(color_layer[layer_height]) > 0):
+                print >>out, alt_start + color_layer[layer_height] + alt_stop
+                mixed_layers += 1
+                continue
+            l = l.rstrip('\n').rstrip('\r')
+            l = re.sub('[;(].*', '', l).strip()
+            if (len(l) > 0):
+                print >>out, l
+        BASE.close()
+        return mixed_layers
+
     def onBrowse(self, e):
         if (ID_BROWSE_BASE == e.GetId()):
            filename = self.baseTc.GetValue()
@@ -121,9 +206,10 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
             return
         filename = name
         if (ID_BROWSE_BASE == e.GetId()):
-           filename = self.baseTc.SetValue(filename)
+           self.baseTc.SetValue(filename)
+           self.makeUpMixFileName(filename)
         if (ID_BROWSE_INS == e.GetId()):
-           filename = self.insTc.SetValue(filename)
+           self.insTc.SetValue(filename)
 
     def getFileSettings(self):
         settingsSizer = wx.BoxSizer(wx.VERTICAL)
@@ -133,17 +219,15 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         infoStaticBoxSizer = wx.StaticBoxSizer(infoStaticBox, wx.VERTICAL)
         infoSizer = wx.GridBagSizer(hgap=1, vgap=1)
         infoSizer.AddGrowableCol(0)
-        text = "This dialog allows selection of the files for passing over \
-to the addcolor.pl script. The script mixes gcode from the files \
+        text = "This script mixes Skeinforge penultimate gcode files \
 and produces printing instructions for 2 extruder prints. \
 The 'base' (to be printed by Ext 0) and 'insert' (to be printed by Ext 1) \
 files should be Skeinforge penultimate gcode files (see Skeinforge Export settings) \
 sliced at the same layer height.\n\
 The extruder 1 on/off files (they are picked from the Skeinforge alterations folder) are inserted \
 when the extruder has to switch from 0 to 1 and then back to 0 while printing a layer. \n\
-You might need to edit the path to perl in the script command line if your  \
-setup doesn't work with the default setting. \n\
-The resulted merged gcode is stripped and automatically loaded for printing by pronterface UI."
+The resulted merged gcode is stripped and automatically loaded for printing by pronterface UI. \
+It is also saved in the automatically generated file named as shown in the 'Output file name' box."
         infoText = wx.StaticText(self.scrollbarPanel, -1, text)
         if (os.name == 'nt'):
             infoStaticBoxSizer.SetMinSize((320, -1))
@@ -205,14 +289,15 @@ The resulted merged gcode is stripped and automatically loaded for printing by p
 
         settingRow = wx.BoxSizer(wx.VERTICAL)
         settingSizer = wx.BoxSizer(wx.HORIZONTAL)
-        settingLabel = wx.StaticText(self.scrollbarPanel, -1, "Script command line:")
+        settingLabel = wx.StaticText(self.scrollbarPanel, -1, "Output file name:")
         settingLabel.Wrap(300)
         settingSizer.Add(settingLabel, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
-        textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.perlCmd, size=(150, -1))
-        self.perlExeTc = textCtrl
+        textCtrl = wx.TextCtrl(self.scrollbarPanel, value='', size=(150, -1))
+        self.outFileTc = textCtrl
         settingSizer.Add(textCtrl, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
         settingRow.Add(settingSizer, 0, wx.TOP, 10)
         parametersBoxSizer.Add(settingRow, 0, wx.EXPAND, 0)
+        self.makeUpMixFileName(self.settings.basePenGcode)
 
         settingsSizer.Add(parametersBoxSizer, 0, wx.EXPAND | wx.ALL, 0)
 
@@ -226,21 +311,12 @@ The resulted merged gcode is stripped and automatically loaded for printing by p
         self.settings.colorOff = self.extOffTc.GetValue()
         self.settings.basePenGcode = self.baseTc.GetValue()
         self.settings.insPenGcode = self.insTc.GetValue()
-        self.settings.perlCmd = self.perlExeTc.GetValue()
         self.set("colorOn", self.settings.colorOn)
         self.set("colorOff", self.settings.colorOff)
         self.set("basePenGcode", self.settings.basePenGcode)
         self.set("insPenGcode", self.settings.insPenGcode)
-        self.set("perlCmd", self.settings.perlCmd)
-        altpath = archive.getSettingsPath('alterations')
-        if (re.search("penultimate[^/\\\]*$", self.settings.basePenGcode) != None):
-            mixed = re.sub("penultimate([^/\\\\]*)$", "mixed\\1", self.settings.basePenGcode)
-        else:
-            mixed = re.sub("(\\.[^\\./\\\\]*)$", "_mixed.g", self.settings.basePenGcode)
-        if (mixed == None):
-            mixed = "mixed.g"
-        cmd = self.settings.perlCmd + " '"  + self.settings.basePenGcode + "' '" +  self.settings.insPenGcode + \
-              "' '" + altpath + "\\" + self.settings.colorOn + "' '" + altpath + "\\" + self.settings.colorOff + "'"
+        self.altpath = archive.getSettingsPath('alterations')
+        mixed = self.outFileTc.GetValue()
         try:
             out=open(mixed,"w+")
             out.write("")
@@ -249,19 +325,26 @@ The resulted merged gcode is stripped and automatically loaded for printing by p
             self.EndModal(2)
             self.Destroy()
             return
-        print "Starting gcode mixing script:\n", cmd
-        code = subprocess.call(cmd, stdout=out, stderr=out)
+
+        print "Starting gcode mixing script..."
+
+        try:
+            mixed_layers = self.Mix(out)
+            code = 0
+        except IOError, e:
+            print e.errno
+            print e
+            code = -1
+        except:
+            code = -1
+
         if (code != 0):
-           out.seek(0)
-           outErr = out.read();
-           out.close()
            os.remove(mixed)
-           print "Failure, code " + str(code) + ". Output:\n" + outErr;
            self.EndModal(2)
            self.Destroy()
         else:   
            out.close()
-           print "Done, successfully mixed"
+           print "Done, successfully mixed %d layers" % mixed_layers
            self.mixedGcode = mixed
            self.EndModal(1)
            self.Destroy()
@@ -272,7 +355,7 @@ The resulted merged gcode is stripped and automatically loaded for printing by p
 class SkeinforgeX2MergeApp(wx.App):
     def OnInit(self):
         wx.InitAllImageHandlers()
-        print X2MergeDialog(None, -1, "").ShowModal()
+        X2MergeDialog(None, -1, "").ShowModal()
         return 1
 
 if __name__ == "__main__":
