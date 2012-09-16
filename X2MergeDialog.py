@@ -356,8 +356,7 @@ class SkeinforgeX2MergeApp(wx.App):
     def OnInit(self):
         wx.InitAllImageHandlers()
         X2MergeDialog(None, -1, "").ShowModal()
-        return 1
+        return True
 
 if __name__ == "__main__":
     skeinforgeX2MergeApp = SkeinforgeX2MergeApp(0)
-    skeinforgeX2MergeApp.MainLoop()
