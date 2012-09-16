@@ -503,7 +503,19 @@ class pronsole(cmd.Cmd):
             self.processing_rc=False
     
     def load_default_rc(self,rc_filename=".pronsolerc"):
-        self.processing_rc=True
+        if os.path.exists(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), '.x2sw')):
+            self.load_x2_rc(rc_filename)
+            return
+        try:
+            try:
+                self.load_rc(os.path.join(os.path.expanduser("~"),rc_filename))
+            except IOError:
+                self.load_rc(rc_filename)
+        except IOError:
+            # make sure the filename is initialized
+            self.rc_filename = os.path.abspath(os.path.join(os.path.expanduser("~"),rc_filename)) 
+
+    def load_x2_rc(self,rc_filename=".pronsolerc"):
         myPath = os.path.abspath(os.path.dirname(sys.argv[0]))
         x2swProfilesPath = os.path.join(os.path.expanduser('~'), '.x2sw')
         rcDistroFilename = os.path.join(myPath, '.x2sw', rc_filename)
@@ -525,9 +537,8 @@ class pronsole(cmd.Cmd):
             self.load_rc(rcPathName)
         except IOError:
             print "Cannot load: " + rc_filename
-            # make sure the filename is initialized
             self.rc_filename = rcPathName
-    
+
     def save_in_rc(self,key,definition):
         """
         Saves or updates macro or other definitions in .pronsolerc 

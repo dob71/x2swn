@@ -59,7 +59,10 @@ class Tee(object):
         sys.stdout = self
         self.target=target
     def __del__(self):
-        sys.stdout = self.stdout
+        try: # To hide the exception on exit after displaying plater or x2profiler
+            sys.stdout = self.stdout
+        except:
+            pass
     def write(self, data):
         self.target(data)
         self.stdout.write(data.encode("utf-8"))
@@ -423,6 +426,10 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         self.Bind(wx.EVT_MENU, self.loadfile, m.Append(-1,_("&Open..."),_(" Opens file")))
         self.Bind(wx.EVT_MENU, self.do_editgcode, m.Append(-1,_("&Edit..."),_(" Edit open file")))
         self.Bind(wx.EVT_MENU, self.clearOutput, m.Append(-1,_("Clear console"),_(" Clear output console")))
+        if os.path.exists(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), '.x2sw')) and \
+           os.path.exists(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'x2Profiler.py')):
+            item = m.Append(-1,_("X2 Profile Manager"),_(" Manages Configuration Profiles"))
+            self.Bind(wx.EVT_MENU, self.x2profiler, item)
         self.Bind(wx.EVT_MENU, self.project, m.Append(-1,_("Projector"),_(" Project slices")))
         self.Bind(wx.EVT_MENU, self.OnExit, m.Append(wx.ID_EXIT,_("E&xit"),_(" Closes the Window")))
         self.menustrip.Append(m,_("&File"))
@@ -445,6 +452,10 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         self.update_macros_menu()
         self.SetMenuBar(self.menustrip)
 
+    def x2profiler(self,e=None):
+        import x2Profiler
+        x2Profiler.X2ProfilerApp().Run()
+        pronsole.pronsole.load_default_rc(self)
 
     def doneediting(self,gcode):
         f=open(self.filename,"w")
@@ -1525,16 +1536,25 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         wx.CallAfter(self.gviz.Refresh)
 
     def printfile(self,event):
-        self.extra_print_time=0
-        if self.paused:
+        # If printing or pused
+        if self.paused or self.p.printing or self.sdprinting:
+            if self.p.printing:
+                self.p.pause() # There is no stop in printcode, only pause
+            elif self.sdprinting:
+                self.p.send_now("M25")
+                self.p.send_now("M26 S0")
+                self.sdprinting = 0
+            self.extra_print_time=0
             self.p.paused=0
             self.paused=0
-            self.on_startprint()
-            if self.sdprinting:
-                self.p.send_now("M26 S0")
-                self.p.send_now("M24")
-                return
+            wx.CallAfter(self.printbtn.SetLabel, _("Print"))
+            wx.CallAfter(self.pausebtn.SetLabel, _("Pause"))
+            wx.CallAfter(self.pausebtn.Disable)
+            if not self.filename:
+                wx.CallAfter(self.printbtn.Disable)
+            return
 
+        # Start new print
         if self.f is None or not len(self.f):
             wx.CallAfter(self.status.SetStatusText, _("No file loaded. Please use load first."))
             return
@@ -1547,7 +1567,8 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
     def on_startprint(self):
         wx.CallAfter(self.pausebtn.SetLabel, _("Pause"))
         wx.CallAfter(self.pausebtn.Enable)
-        wx.CallAfter(self.printbtn.SetLabel, _("Restart"))
+        wx.CallAfter(self.printbtn.SetLabel, _("Cancel"))
+        wx.CallAfter(self.printbtn.Enable)
 
     def endupload(self):
         self.p.send_now("M29 ")
@@ -1603,6 +1624,7 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         self.on_startprint()
         threading.Thread(target=self.getfiles).start()
         pass
+
 
     def connect(self,event):
         print _("Connecting...")
@@ -1959,6 +1981,14 @@ class TempGauge(wx.Panel):
 
 if __name__ == '__main__':
     app = wx.App(False)
+
+    # If starting the first time ever (no ~/.x2sw folder) run profiler
+    if os.path.exists(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), '.x2sw')) and \
+       os.path.exists(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'x2Profiler.py')) and \
+       not os.path.exists(os.path.join(os.path.expanduser('~'), '.x2sw')):
+        import x2Profiler
+        x2Profiler.X2ProfilerApp().Run()
+
     main = PronterWindow()
     main.Show()
     try:

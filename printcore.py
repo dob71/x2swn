@@ -37,6 +37,7 @@ class printcore():
         self.resendfrom=-1
         self.paused=False
         self.sentlines={}
+        self.senttokeep=16
         self.log=[]
         self.sent=[]
         self.tempcb=None#impl (wholeline)
@@ -46,7 +47,7 @@ class printcore():
         self.startcb=None#impl ()
         self.endcb=None#impl ()
         self.onlinecb=None#impl ()
-        self.loud=False#emit sent and received lines to terminal
+        self.loud=False #emit sent and received lines to terminal
         self.greetings=['start','Grbl ']
         if port is not None and baud is not None:
             #print port, baud
@@ -80,8 +81,9 @@ class printcore():
         """Reset the printer
         """
         if(self.printer):
-            self.printer.setDTR(1)
-            self.printer.setDTR(0)
+            self.printer.setDTR(False)
+            time.sleep(0.22)
+            self.printer.setDTR(True)
             
             
     def _listen(self):
@@ -152,6 +154,7 @@ class printcore():
                     if line.startswith("rs"):
                         toresend=int(line.split()[1])
                 self.resendfrom=toresend
+                print "Resending from: "+ str(toresend) + "\n"
                 self.clear=True
         self.clear=True
         #callback for disconnect
@@ -248,7 +251,6 @@ class printcore():
             self._send(self.sentlines[self.resendfrom],self.resendfrom,False)
             self.resendfrom+=1
             return
-        self.sentlines={}
         self.resendfrom=-1
         for i in self.priqueue[:]:
             self._send(i)
@@ -277,6 +279,11 @@ class printcore():
             command=prefix+"*"+str(self._checksum(prefix))
             if("M110" not in command):
                 self.sentlines[lineno]=command
+                if lineno > self.senttokeep:
+                    del self.sentlines[lineno - self.senttokeep]
+                elif lineno == 0:
+                    self.sentlines = {}
+
         if(self.printer):
             self.sent+=[command]
             if self.loud:
