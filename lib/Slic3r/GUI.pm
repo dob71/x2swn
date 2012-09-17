@@ -4,6 +4,9 @@ use warnings;
 use utf8;
 
 use FindBin;
+use File::Basename;
+use File::HomeDir;
+
 use Slic3r::GUI::AboutDialog;
 use Slic3r::GUI::ConfigWizard;
 use Slic3r::GUI::Plater;
@@ -47,7 +50,7 @@ sub OnInit {
     $self->{notifier} = Slic3r::GUI::Notifier->new;
     
     # locate or create data directory
-    $datadir = Wx::StandardPaths::Get->GetUserDataDir;
+    $datadir = GetConfigDir();
     Slic3r::debugf "Data directory: %s\n", $datadir;
     my $run_wizard = (-d $datadir) ? 0 : 1;
     for ($datadir, "$datadir/print", "$datadir/filament", "$datadir/printer") {
@@ -212,6 +215,25 @@ sub save_settings {
     my $self = shift;
     
     Slic3r::Config->write_ini("$datadir/slic3r.ini", $Settings);
+}
+
+sub GetConfigDir {
+    # If we are not included into the X2SW bundle, use standard path
+    my $x2sw_bundle_prof_path = dirname($FindBin::Bin) . '/.x2sw';
+    if(! -e $x2sw_bundle_prof_path) { 
+        Slic3r::debugf "Using standard config path\n";
+        return Wx::StandardPaths::Get->GetUserDataDir;
+    }
+    # See if we should use user home folder
+    my $x2sw_cfg_path = File::HomeDir->my_home . '/.x2sw';
+    if(! -e  ($x2sw_cfg_path . '/.use_local')) {
+        Slic3r::debugf "Using user home x2sw profiles path: $x2sw_cfg_path\n";
+        mkdir $x2sw_cfg_path;
+        return $x2sw_cfg_path . '/Slic3r';
+    }
+    # Use the local .x2sw folder
+    Slic3r::debugf "Using the local install x2sw profiles path: $x2sw_cfg_path\n";
+    return $x2sw_bundle_prof_path . '/Slic3r';
 }
 
 package Slic3r::GUI::ProgressStatusBar;
