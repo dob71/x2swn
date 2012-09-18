@@ -575,6 +575,7 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         uts.Add(self.resetbtn)
         self.minibtn=wx.Button(self.panel,-1,_("Mini mode"))
         self.minibtn.Bind(wx.EVT_BUTTON,self.toggleview)
+        self.minibtn.Disable()
 
         uts.Add((25,-1))
         self.monitorbox=wx.CheckBox(self.panel,-1,_("Monitor Printer"))
