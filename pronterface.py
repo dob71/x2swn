@@ -426,8 +426,7 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         self.Bind(wx.EVT_MENU, self.loadfile, m.Append(-1,_("&Open..."),_(" Opens file")))
         self.Bind(wx.EVT_MENU, self.do_editgcode, m.Append(-1,_("&Edit..."),_(" Edit open file")))
         self.Bind(wx.EVT_MENU, self.clearOutput, m.Append(-1,_("Clear console"),_(" Clear output console")))
-        if os.path.exists(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), '.x2sw')) and \
-           os.path.exists(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'x2Profiler.py')):
+        if os.path.exists(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), '.x2sw')):
             item = m.Append(-1,_("X2 Profile Manager"),_(" Manages Configuration Profiles"))
             self.Bind(wx.EVT_MENU, self.x2profiler, item)
         self.Bind(wx.EVT_MENU, self.project, m.Append(-1,_("Projector"),_(" Project slices")))
@@ -1984,10 +1983,12 @@ if __name__ == '__main__':
 
     # If starting the first time ever (no ~/.x2sw folder) run profiler
     if os.path.exists(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), '.x2sw')) and \
-       os.path.exists(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'x2Profiler.py')) and \
        not os.path.exists(os.path.join(os.path.expanduser('~'), '.x2sw')):
-        import x2Profiler
-        x2Profiler.X2ProfilerApp().Run()
+        try:
+            import x2Profiler
+            x2Profiler.X2ProfilerApp().Run()
+        except:
+            pass
 
     main = PronterWindow()
     main.Show()
