@@ -2,10 +2,10 @@ X2 Software Bundle
 ==================
 
 X2SW is a software bundle of Printrun, Skeinforge and Slic3r where 
-all the three packages are tightly integrated an can be easily deployed 
-and configured. The configuration for specific printer(if available in the 
-online repository) can be easily retrieved using x2Profiler app (integrated 
-with Printrun UI included in the bundle).
+all the three packages are tightly integrated and can be easily deployed 
+and configured. The configuration for specific printer (if available in the 
+online repository) can be retrieved using x2Profiler app (integrated with 
+Printrun UI included in the bundle).
 
 The software installer for MS Windows (XP, Vista, Win7) and binary packages 
 for Linux are available. The Windows installer takes care of all the software 
@@ -42,12 +42,12 @@ The modified versions of the software included in the bundle can be found here:
 X2SW: https://github.com/dob71/x2swn
 Clone that repository if interested in running from sources.
 This repository uses "git subtree" to combine all the software components. 
-The profiles repository is included as a GIT submodule (you'll need to pull
-it after initial cloning if interested in having a local copy of this 
-repository). Alternatively you can use x2Profiler UI to retrieve a suitable
-set of profiles for your printer from the online repository.
+The profiles repository is included as a GIT submodule (you'll need to clone
+it too if interested in having a local copy of this repository). Alternatively 
+you can use x2Profiler UI to retrieve a suitable set of profiles for your 
+printer directly from the online repository.
 
-The packager repository (builds the installer and binary packages):
+The packager repository (builds the installer and binary packages) is here:
 https://github.com/dob71/x2sw_packager
 (this repo uses "git submodules")
 

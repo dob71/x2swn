@@ -150,6 +150,8 @@ class DownloadingPage(wiz.PyWizardPage):
     #----------------------------------------------------------------------
     def Run(self):
         global x2ProfilerApp
+        self.Show()
+        self.GetParent().Update()
         try:
             self.cmd_fetch(x2ProfilerApp.repo, x2ProfilerApp.repo_url)
             self.gauge.SetValue(100)
@@ -436,7 +438,10 @@ step, cancel the wizard after choosing the desired mode."), 0, wx.ALL, 5)
     def onCheckbox(self, event):
         global x2ProfilerApp
 
-        inplace_file = os.path.join(os.path.expanduser('~'), '.x2sw', '.use_local')
+        inplace_path = os.path.join(os.path.expanduser('~'), '.x2sw')
+        inplace_file = os.path.join(inplace_path, '.use_local')
+        if not os.path.exists(inplace_path):
+            os.path.mkdir(inplace_path)
         if self.inplace_mode.IsChecked():
             with file(inplace_file, 'a'): 
                 pass
