@@ -155,8 +155,6 @@ class DownloadingPage(wiz.PyWizardPage):
         try:
             self.cmd_fetch(x2ProfilerApp.repo, x2ProfilerApp.repo_url)
             self.gauge.SetValue(100)
-            reopen_repo = Repo(x2ProfilerApp.x2swProfilesPath)
-            x2ProfilerApp.repo = reopen_repo
             self.status.SetLabel('Done fetching from ' + x2ProfilerApp.repo_url)
         except:
             self.status.SetLabel('Failure to create temporary repository for:\n' + x2ProfilerApp.repo_url)
@@ -441,7 +439,7 @@ step, cancel the wizard after choosing the desired mode."), 0, wx.ALL, 5)
         inplace_path = os.path.join(os.path.expanduser('~'), '.x2sw')
         inplace_file = os.path.join(inplace_path, '.use_local')
         if not os.path.exists(inplace_path):
-            os.path.mkdir(inplace_path)
+            os.mkdir(inplace_path)
         if self.inplace_mode.IsChecked():
             with file(inplace_file, 'a'): 
                 pass
