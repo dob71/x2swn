@@ -4,48 +4,64 @@ X2 Software Bundle
 X2SW is a software bundle of Printrun, Skeinforge and Slic3r where 
 all the three packages are tightly integrated and can be easily deployed 
 and configured. The configuration for specific printer (if available in the 
-online repository) can be retrieved using x2Profiler app (integrated with 
-Printrun UI included in the bundle).
+profiles repository) can be retrieved using x2Profiler app (integrated with 
+the Printrun UI version included in the bundle).
 
-The software installer for MS Windows (XP, Vista, Win7) and binary packages 
+The software installer for MS Windows (XP, Vista, Win7...) and binary packages 
 for Linux are available. The Windows installer takes care of all the software 
-setup from Arduino drivers to the software configuration profiles.
+setup from Arduino drivers to the software configuration profiles. Note that
+if you select the Arduino drivers to install, for each driver Windows will show
+warning about it not being signed (choose to install anyway when the warning 
+pops up).
 
-All the configuration profiles are initially installed in the .x2sw folder in 
-the root of the bundle. You can choose either to work with the configuration 
-files "in-place" (i.e. right where they are in the bundle) or deploy them 
-into ".x2sw" folder under your user home directory. 
-
-The X2Profiler app can be used to change where the configuration files are 
-stored. It starts automatically on the first Pronterface run after 
-installing the X2SW bundle (only if installing the first time) or can be 
+All the configuration profiles that come with the bundle are stored in the 
+local GIT repository under .x2sw folder in the root of the bundle. The 
+x2Profiler app helps to select the specifc profile for your printer (either
+from the local or online repositiry), choose the profile target location and 
+deploy it. x2Profiler starts automatically on the first Pronterface run after 
+installing the X2SW bundle (if installing the first time) or can be 
 started manually from under the "File" menu. 
 
-The .x2sw folder in the root of the bundle is a standard GIT repository 
-that can be used to store and retrieve various versions of your profiles 
-manually using GIT as well as compare them and even push the profiles back 
-for merging to the central online profiles repositoy.
+When choosing the profile deployment location note that the the chosen setting 
+is shared by all the installations of the x2sw bundle for the user account. You
+can choose either to work with the configuration files "in-place" (i.e. right 
+where they are in the bundle) or deploy them into ".x2sw" folder under your 
+user home directory. If you deploy to the user home, all your X2SW copies will 
+share the same profiles, otherwise each will use its own local set. 
 
-The bundle is self-contained. The configuration and/or profile files for 
-unmodified versions of the software packages (Printrun, Skeinforge, Slic3r) 
-are not going to be affected (the unmodified versions of the software do 
-not use .x2sw subfolder to store all the related profiles and rc files).
+The .x2sw folder in the root of the bundle is a standard GIT repository.
+It can be used to store and retrieve various versions of your profiles 
+manually using GIT as well as compare them and be pulled back to the online  
+repositoy for sharing with other X2SW software bundle users.
+
+The bundle is self-contained. The configuration and/or profile files for the 
+unmodified versions of the included software (Printrun, Skeinforge, Slic3r) 
+are not affected since the files are stored in different locations.
+
+Running from Sources
+====================
 
 If you would like to run the included software packages from sources (rather 
-than precompiled binaries), check the Printrun's readme file (README.printrun) 
-for more information about the installation of the Python dependencies.
-Look at the end of the slic3r/README.markdown for instructions on how to run 
-Slic3r from sources. You can ignore this information if using the binary 
-package of the x2sw bundle or the installer.
+than precompiled binaries), check the Printrun readme file (README.printrun) 
+for more information about the installation of the Python dependencies and 
+look at the end of the slic3r/README.markdown for instructions on how to run 
+Slic3r from sources. You can ignore this and the following information if using 
+the binary package of the X2SW bundle or the installer.
 
-The modified versions of the software included in the bundle can be found here:
-X2SW: https://github.com/dob71/x2swn
-Clone that repository if interested in running from sources.
+For running the x2Profiler from sources install Dulwich v0.8.5 or later: 
+http://www.samba.org/~jelmer/dulwich/
+Install by running: <path_to_python>/python setup.py --pure install
+
+The X2SW source repository that can be used for running from sources is here:
+https://github.com/dob71/x2swn
 This repository uses "git subtree" to combine all the software components. 
-The profiles repository is included as a GIT submodule (you'll need to clone
-it too if interested in having a local copy of this repository). Alternatively 
-you can use x2Profiler UI to retrieve a suitable set of profiles for your 
-printer directly from the online repository.
+The profiles repository is included as a GIT submodule (clone recursively
+if interested in having a local copy of this repository). Alternatively 
+you can use x2Profiler UI to retrieve a suitable profile for your printer 
+directly from the online repository.
+
+For Developers
+==============
 
 The packager repository (builds the installer and binary packages) is here:
 https://github.com/dob71/x2sw_packager
