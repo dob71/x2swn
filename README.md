@@ -1,32 +1,30 @@
+X2 Software Bundle
+==================
+
 X2SW is a software bundle of Printrun, Skeinforge and Slic3r where 
-all three packages are tightly integrated and augmented with a 
-set of profiles and tools for working with dual extruding machines
-running X2 Mod of the Marlin firmware (https://github.com/dob71/Marlin/tree/m).
-X2SW was designed to simplify the software and profiles deployment for 
-RepRap X2 3D printers. It can as easily be used for any other kind of 
-RepRap printers.
+all the three packages are tightly integrated an can be easily deployed 
+and configured. The configuration for specific printer(if available in the 
+online repository) can be easily retrieved using x2Profiler app (integrated 
+with Printrun UI included in the bundle).
 
 The software installer for MS Windows (XP, Vista, Win7) and binary packages 
 for Linux are available. The Windows installer takes care of all the software 
 setup from Arduino drivers to the software configuration profiles.
 
-All the configuration files are deployed in the .x2sw folder in the root
-of the bundle. You can choose either to work with the configuration 
+All the configuration profiles are initially installed in the .x2sw folder in 
+the root of the bundle. You can choose either to work with the configuration 
 files "in-place" (i.e. right where they are in the bundle) or deploy them 
-into ".x2sw" folder under you user home directory. You can use the X2Profiler 
-app integrated into Proterface to change where the configuration files are 
-stored. X2Profiler starts automatically on the first Pronterface run after 
-installing the X2SW bundle or can be started manually from under the "File" 
-menu.
+into ".x2sw" folder under your user home directory. 
 
-You can also change the location of the configuration manually. If you'd like 
-to use the profiles "in-place" then create "~/.x2sw" folder and 
-"~/.x2sw/.use_local" file using 'touch ~/.x2sw/.use_local' under Unix or 
-'echo "" > %USERPROFILE%\.x2sw\.use_local` under Windows. 
+The X2Profiler app can be used to change where the configuration files are 
+stored. It starts automatically on the first Pronterface run after 
+installing the X2SW bundle (only if installing the first time) or can be 
+started manually from under the "File" menu. 
 
-The .x2sw folder is a standard GIT repository that can be used to store and 
-retrieve various versions of your profiles as well as compare them and even  
-push the profiles back for merging to the central online profiles repositoy.
+The .x2sw folder in the root of the bundle is a standard GIT repository 
+that can be used to store and retrieve various versions of your profiles 
+manually using GIT as well as compare them and even push the profiles back 
+for merging to the central online profiles repositoy.
 
 The bundle is self-contained. The configuration and/or profile files for 
 unmodified versions of the software packages (Printrun, Skeinforge, Slic3r) 
@@ -40,12 +38,14 @@ Look at the end of the slic3r/README.markdown for instructions on how to run
 Slic3r from sources. You can ignore this information if using the binary 
 package of the x2sw bundle or the installer.
 
-The modified versions of the software in the x2sw bundle can be found here:
+The modified versions of the software included in the bundle can be found here:
 X2SW: https://github.com/dob71/x2swn
-Use it if interested in running from sources.
+Clone that repository if interested in running from sources.
 This repository uses "git subtree" to combine all the software components. 
 The profiles repository is included as a GIT submodule (you'll need to pull
-it after cloning if interested in having a local copy of this repository). 
+it after initial cloning if interested in having a local copy of this 
+repository). Alternatively you can use x2Profiler UI to retrieve a suitable
+set of profiles for your printer from the online repository.
 
 The packager repository (builds the installer and binary packages):
 https://github.com/dob71/x2sw_packager
