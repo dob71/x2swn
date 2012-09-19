@@ -22,21 +22,21 @@ deploy it. x2Profiler starts automatically on the first Pronterface run after
 installing the X2SW bundle (if installing the first time) or can be 
 started manually from under the "File" menu. 
 
-When choosing the profile deployment location note that the the chosen setting 
+When choosing the profile deployment location note that the chosen setting 
 is shared by all the installations of the x2sw bundle for the user account. You
 can choose either to work with the configuration files "in-place" (i.e. right 
 where they are in the bundle) or deploy them into ".x2sw" folder under your 
 user home directory. If you deploy to the user home, all your X2SW copies will 
-share the same profiles, otherwise each will use its own local set. 
+share the same configuration files, otherwise each will use its own local set. 
 
 The .x2sw folder in the root of the bundle is a standard GIT repository.
 It can be used to store and retrieve various versions of your profiles 
-manually using GIT as well as compare them and be pulled back to the online  
-repositoy for sharing with other X2SW software bundle users.
+manually using GIT as well as compare them and pull back to the online  
+repository for sharing with other X2SW software bundle users.
 
-The bundle is self-contained. The configuration and/or profile files for the 
-unmodified versions of the included software (Printrun, Skeinforge, Slic3r) 
-are not affected since the files are stored in different locations.
+The bundle is self-contained. The configuration files for the unmodified 
+versions of the included software (Printrun, Skeinforge, Slic3r) are not 
+affected since those files are stored in different locations.
 
 Running from Sources
 ====================
@@ -46,7 +46,7 @@ than precompiled binaries), check the Printrun readme file (README.printrun)
 for more information about the installation of the Python dependencies and 
 look at the end of the slic3r/README.markdown for instructions on how to run 
 Slic3r from sources. You can ignore this and the following information if using 
-the binary package of the X2SW bundle or the installer.
+the binary package or the installer.
 
 For running the x2Profiler from sources install Dulwich v0.8.5 or later: 
 http://www.samba.org/~jelmer/dulwich/
