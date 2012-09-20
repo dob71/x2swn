@@ -11,9 +11,6 @@ import shutil
 import subprocess
 import wx
 
-ID_BROWSE_BASE = 102
-ID_BROWSE_INS = 103
-
 class X2MergeDialog(wx.Dialog, pronsole.pronsole):
     '''Gcode mixer for dual extruder prints.'''
     def __init__(self, *args, **kwds):
@@ -42,8 +39,8 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         wx.Dialog.__init__(self, *args, **kwds)
         self.okButton = wx.Button(self, wx.ID_OK, "Generate and Load")
         self.cancelButton = wx.Button(self, wx.ID_CANCEL, "Cancel")
-        self.browseButton1 = wx.Button(self, ID_BROWSE_BASE, "...")
-        self.browseButton2 = wx.Button(self, ID_BROWSE_INS, "...")
+        self.browseButton1 = wx.Button(self, wx.ID_ANY, "Vah...", name = 'base')
+        self.browseButton2 = wx.Button(self, wx.ID_ANY, "Bah...", name = 'ins')
         self.Bind(wx.EVT_BUTTON, self.OnExit, self.cancelButton)
         self.Bind(wx.EVT_BUTTON, self.OnSave, self.okButton)
         self.Bind(wx.EVT_BUTTON, self.onBrowse, self.browseButton1)
@@ -56,12 +53,9 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         self.mixedGcode = None
         self.load_rc(self.rc_filename)
 
-        self.scrollbarPanel = wx.ScrolledWindow(self, -1, style=wx.TAB_TRAVERSAL)
-        self.settingsSizer = self.getFileSettings()
-        self.scrollbarPanel.SetSizer(self.settingsSizer)
-
         self.__set_properties()   
         self.__do_layout()        
+
         self.Center()
         self.Show()
         
@@ -69,21 +63,22 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         self.SetTitle("X2 Merge")
         
         # For some reason the dialog size is not consistent between Windows and Linux - this is a hack to get it working 
-        if (os.name == 'nt'):
-            self.SetMinSize(wx.DLG_SZE(self, (465, 245)))
-        else:
-            self.SetSize(wx.DLG_SZE(self, (465, 200)))
-            
+        self.SetMinSize(wx.DLG_SZE(self, (465, 220)))
         self.SetPosition((0, 0))
-        self.scrollbarPanel.SetScrollRate(10, 10)
         
     def __do_layout(self):
         mainSizer = wx.BoxSizer(wx.VERTICAL)
+		
+        self.scrollbarPanel = wx.ScrolledWindow(self, -1, style=wx.TAB_TRAVERSAL)
+        self.scrollbarPanel.SetScrollRate(10, 10)
+        self.scrollbarPanel.SetSizer(self.getFileSettings())
         mainSizer.Add(self.scrollbarPanel, 1, wx.EXPAND | wx.ALL, 5)
+		
         actionsSizer = wx.BoxSizer(wx.HORIZONTAL)
         actionsSizer.Add(self.okButton, 0, 0, 0)
         actionsSizer.Add(self.cancelButton, 0, wx.LEFT, 10)
         mainSizer.Add(actionsSizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5)
+		
         self.SetSizer(mainSizer)
         self.Layout()
 
@@ -180,11 +175,11 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         return mixed_layers
 
     def onBrowse(self, e):
-        if (ID_BROWSE_BASE == e.GetId()):
+        if ('base' == e.GetEventObject().GetName()):
            filename = self.baseTc.GetValue()
            dname = "Path to base penultimate gcode file"
            usefilter = 1
-        if (ID_BROWSE_INS == e.GetId()):
+        if ('ins' == e.GetEventObject().GetName()):
            filename = self.insTc.GetValue()
            dname = "Path to insert penultimate gcode file"
            usefilter = 1
@@ -229,12 +224,8 @@ when the extruder has to switch from 0 to 1 and then back to 0 while printing a 
 The resulted merged gcode is stripped and automatically loaded for printing by pronterface UI. \
 It is also saved in the automatically generated file named as shown in the 'Output file name' box."
         infoText = wx.StaticText(self.scrollbarPanel, -1, text)
-        if (os.name == 'nt'):
-            infoStaticBoxSizer.SetMinSize((320, -1))
-            infoText.Wrap(600)
-        else: 
-            infoStaticBoxSizer.SetMinSize((450, -1))
-            infoText.Wrap(410)
+        infoStaticBoxSizer.SetMinSize((600, -1))
+        infoText.Wrap(600)
         infoSizer.Add(infoText, pos=(0, 0))
         infoStaticBoxSizer.Add(infoSizer, 1, wx.EXPAND | wx.ALL, 0)
         settingsSizer.Add(infoStaticBoxSizer, 1, wx.EXPAND | wx.ALL, 0)
@@ -244,9 +235,9 @@ It is also saved in the automatically generated file named as shown in the 'Outp
         settingRow = wx.BoxSizer(wx.VERTICAL)
         settingSizer = wx.BoxSizer(wx.HORIZONTAL)
         settingLabel = wx.StaticText(self.scrollbarPanel, -1, "Base penultimate gcode:")
-        settingLabel.Wrap(300)
+        settingLabel.Wrap(200)
         settingSizer.Add(settingLabel, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
-        textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.basePenGcode, size=(150, -1))
+        textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.basePenGcode, size=(200, -1))
         self.baseTc = textCtrl
         settingSizer.Add(textCtrl, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
         settingSizer.Add(self.browseButton1, 0, wx.LEFT|wx.TOP, 10)
@@ -256,9 +247,9 @@ It is also saved in the automatically generated file named as shown in the 'Outp
         settingRow = wx.BoxSizer(wx.VERTICAL)
         settingSizer = wx.BoxSizer(wx.HORIZONTAL)
         settingLabel = wx.StaticText(self.scrollbarPanel, -1, "Insert penultimate gcode:")
-        settingLabel.Wrap(300)
+        settingLabel.Wrap(200)
         settingSizer.Add(settingLabel, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
-        textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.insPenGcode, size=(150, -1))
+        textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.insPenGcode, size=(200, -1))
         self.insTc = textCtrl
         settingSizer.Add(textCtrl, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
         settingSizer.Add(self.browseButton2, 0, wx.LEFT|wx.TOP, 10)
@@ -268,9 +259,9 @@ It is also saved in the automatically generated file named as shown in the 'Outp
         settingRow = wx.BoxSizer(wx.VERTICAL)
         settingSizer = wx.BoxSizer(wx.HORIZONTAL)
         settingLabel = wx.StaticText(self.scrollbarPanel, -1, "Ext 1 On gcode:")
-        settingLabel.Wrap(300)
+        settingLabel.Wrap(200)
         settingSizer.Add(settingLabel, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
-        textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.colorOn, size=(150, -1))
+        textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.colorOn, size=(200, -1))
         self.extOnTc = textCtrl
         settingSizer.Add(textCtrl, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
         settingRow.Add(settingSizer, 0, wx.TOP, 10)
@@ -279,9 +270,9 @@ It is also saved in the automatically generated file named as shown in the 'Outp
         settingRow = wx.BoxSizer(wx.VERTICAL)
         settingSizer = wx.BoxSizer(wx.HORIZONTAL)
         settingLabel = wx.StaticText(self.scrollbarPanel, -1, "Ext 1 Off gcode:")
-        settingLabel.Wrap(300)
+        settingLabel.Wrap(200)
         settingSizer.Add(settingLabel, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
-        textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.colorOff, size=(150, -1))
+        textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.colorOff, size=(200, -1))
         self.extOffTc = textCtrl
         settingSizer.Add(textCtrl, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
         settingRow.Add(settingSizer, 0, wx.TOP, 10)
@@ -290,7 +281,7 @@ It is also saved in the automatically generated file named as shown in the 'Outp
         settingRow = wx.BoxSizer(wx.VERTICAL)
         settingSizer = wx.BoxSizer(wx.HORIZONTAL)
         settingLabel = wx.StaticText(self.scrollbarPanel, -1, "Output file name:")
-        settingLabel.Wrap(300)
+        settingLabel.Wrap(200)
         settingSizer.Add(settingLabel, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
         textCtrl = wx.TextCtrl(self.scrollbarPanel, value='', size=(150, -1))
         self.outFileTc = textCtrl
@@ -304,6 +295,7 @@ It is also saved in the automatically generated file named as shown in the 'Outp
         return settingsSizer
 
     def OnExit(self, e):
+        self.EndModal(-1)
         self.Destroy()
         
     def OnSave(self, e):
@@ -355,8 +347,9 @@ It is also saved in the automatically generated file named as shown in the 'Outp
 class SkeinforgeX2MergeApp(wx.App):
     def OnInit(self):
         wx.InitAllImageHandlers()
-        X2MergeDialog(None, -1, "").ShowModal()
         return True
 
 if __name__ == "__main__":
     skeinforgeX2MergeApp = SkeinforgeX2MergeApp(0)
+    X2MergeDialog(None, -1, "").ShowModal()
+    exit()
