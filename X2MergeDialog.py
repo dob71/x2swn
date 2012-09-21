@@ -181,10 +181,10 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         else:
             return
         filename = name
-        if (ID_BROWSE_BASE == e.GetId()):
+        if ('base' == e.GetEventObject().GetName()):
            self.baseTc.SetValue(filename)
            self.makeUpMixFileName(filename)
-        if (ID_BROWSE_INS == e.GetId()):
+        if ('ins' == e.GetEventObject().GetName()):
            self.insTc.SetValue(filename)
 
     def getFileSettings(self):
