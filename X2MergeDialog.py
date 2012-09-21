@@ -15,34 +15,17 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
     '''Gcode mixer for dual extruder prints.'''
     def __init__(self, *args, **kwds):
         pronsole.pronsole.__init__(self)
-        self.mypath = os.path.abspath(os.path.dirname(sys.argv[0]))
-
-        x2swProfilesPath = os.path.join(os.path.expanduser('~'), '.x2sw')
-        rcDistroFilename = os.path.join(self.mypath, '.x2sw', '.x2mergerc')
-        if(not os.path.exists(os.path.join(x2swProfilesPath, '.use_local'))):
-            rcPathName = os.path.join(x2swProfilesPath, ".x2mergerc")
-            try:
-                if(not os.path.exists(x2swProfilesPath)):
-                    print "Creating x2sw profiles path: " + x2swProfilesPath
-                    os.makedirs(x2swProfilesPath)
-                if((not os.path.exists(rcPathName)) and os.path.exists(rcDistroFilename)):
-                    print "Deploying x2merge distro rc file to: " + rcPathName
-                    shutil.copyfile(rcDistroFilename, rcPathName)
-            except:
-                print "Failure!"
-        else:
-            rcPathName = rcDistroFilename
-        print "Using x2merge rc file pathname: " + rcPathName
-        self.rc_filename = rcPathName
 
         kwds["style"] = wx.DEFAULT_DIALOG_STYLE | wx.MAXIMIZE_BOX | wx.MINIMIZE_BOX | wx.RESIZE_BORDER
         wx.Dialog.__init__(self, *args, **kwds)
         self.okButton = wx.Button(self, wx.ID_OK, "Generate and Load")
         self.cancelButton = wx.Button(self, wx.ID_CANCEL, "Cancel")
-        self.browseButton1 = wx.Button(self, wx.ID_ANY, "Vah...", name = 'base')
-        self.browseButton2 = wx.Button(self, wx.ID_ANY, "Bah...", name = 'ins')
         self.Bind(wx.EVT_BUTTON, self.OnExit, self.cancelButton)
         self.Bind(wx.EVT_BUTTON, self.OnSave, self.okButton)
+
+        self.scrollbarPanel = wx.ScrolledWindow(self, -1, style=wx.TAB_TRAVERSAL)
+        self.browseButton1 = wx.Button(self.scrollbarPanel, wx.ID_ANY, "...", name = 'base')
+        self.browseButton2 = wx.Button(self.scrollbarPanel, wx.ID_ANY, "...", name = 'ins')
         self.Bind(wx.EVT_BUTTON, self.onBrowse, self.browseButton1)
         self.Bind(wx.EVT_BUTTON, self.onBrowse, self.browseButton2)
         
@@ -51,7 +34,7 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         self.settings.basePenGcode = 'base_penultimate.g'
         self.settings.insPenGcode = 'insert_penutimate.g'
         self.mixedGcode = None
-        self.load_rc(self.rc_filename)
+        self.load_default_rc(".x2mergerc")
 
         self.__set_properties()   
         self.__do_layout()        
@@ -68,8 +51,6 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         
     def __do_layout(self):
         mainSizer = wx.BoxSizer(wx.VERTICAL)
-		
-        self.scrollbarPanel = wx.ScrolledWindow(self, -1, style=wx.TAB_TRAVERSAL)
         self.scrollbarPanel.SetScrollRate(10, 10)
         self.scrollbarPanel.SetSizer(self.getFileSettings())
         mainSizer.Add(self.scrollbarPanel, 1, wx.EXPAND | wx.ALL, 5)
@@ -240,7 +221,7 @@ It is also saved in the automatically generated file named as shown in the 'Outp
         textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.basePenGcode, size=(200, -1))
         self.baseTc = textCtrl
         settingSizer.Add(textCtrl, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
-        settingSizer.Add(self.browseButton1, 0, wx.LEFT|wx.TOP, 10)
+        settingSizer.Add(self.browseButton1, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 10)
         settingRow.Add(settingSizer, 0, wx.TOP, 10)
         parametersBoxSizer.Add(settingRow, 0, wx.EXPAND, 0)
 
@@ -252,7 +233,7 @@ It is also saved in the automatically generated file named as shown in the 'Outp
         textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.insPenGcode, size=(200, -1))
         self.insTc = textCtrl
         settingSizer.Add(textCtrl, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
-        settingSizer.Add(self.browseButton2, 0, wx.LEFT|wx.TOP, 10)
+        settingSizer.Add(self.browseButton2, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 10)
         settingRow.Add(settingSizer, 0, wx.TOP, 10)
         parametersBoxSizer.Add(settingRow, 0, wx.EXPAND, 0)
 
