@@ -622,10 +622,6 @@ use GIT to manually checkout the desired profile or fix the repository.")
         build_index_from_tree(self.repo.path, self.repo.index_path(),
                               self.repo.object_store, o.tree)
 
-        # If we need to deploy into home folder
-        if x2ProfilerApp.x2swProfilesPath == x2ProfilerApp.x2swProfilesTgtPath:
-            return
-        
         # Make the deployment folder (if not there) and checkout files into it
         if not os.path.isdir(x2ProfilerApp.x2swProfilesTgtPath):
             os.makedirs(x2ProfilerApp.x2swProfilesTgtPath)
