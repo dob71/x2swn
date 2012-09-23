@@ -445,6 +445,7 @@ step, cancel the wizard after choosing the desired mode."), 0, wx.ALL, 5)
                 pass
         else:
             os.remove(inplace_file)
+        x2ProfilerApp.changes = True
 
         x2ProfilerApp.DetermineProfilesPaths()
         self.UpdatePageUi()
@@ -585,7 +586,6 @@ class ReportResultPage(wiz.PyWizardPage):
         else:
             paths_str = "\nRepository path: none\nDeployment path: none"
             self.sel_box.SetLabel('Profile: ' + 'not selected' + paths_str)
-        #self.GetParent().FindWindowById(wx.ID_FORWARD).Disable()
         self.Show()
         self.GetParent().Update()
         if not x2ProfilerApp.page5.deploy_profile.IsChecked():
@@ -594,12 +594,11 @@ class ReportResultPage(wiz.PyWizardPage):
             try:
                 self.DoDeploy(self.selection)
                 self.status.SetLabel("The operation has completed successfully.")
-
             except:
                 self.status.SetLabel("\
 The operation has failed! Please examine the X2SW profiles folder and\n\
 use GIT to manually checkout the desired profile or fix the repository.")
-        #self.GetParent().FindWindowById(wx.ID_FORWARD).Enable()
+        x2ProfilerApp.changes = True
 
     #----------------------------------------------------------------------
     def DoDeploy(self, ref):
@@ -692,6 +691,7 @@ class X2ProfilerApp():
 
         self.DetermineProfilesPaths()
         self.repo = None
+        self.changes = False
 
         ### for debugging ### self.repo_url = 'D:\\tmp\\.x2sw'
         self.repo_url = 'http://github.com/dob71/x2sw_profiles.git'
@@ -705,7 +705,7 @@ class X2ProfilerApp():
         self.page3 = SelectProfilesPage(self.wizard, "Select Profile")
         self.page4 = ChooseModePage(self.wizard, "Storage Mode")
         self.page5 = DeployPage(self.wizard, "Deploy Profile")
-        self.page6 = ReportResultPage(self.wizard, "Completed")
+        self.page6 = ReportResultPage(self.wizard, "Deploying")
 
         # Set the initial order of the pages
         self.page1.SetNext(self.page2)
@@ -737,7 +737,7 @@ class X2ProfilerApp():
             except:
                 pass
 
-        return True
+        return self.changes
 
     #----------------------------------------------------------------------
     def OnPageChanged(self, event):

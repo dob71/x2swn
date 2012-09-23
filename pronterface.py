@@ -453,8 +453,18 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
 
     def x2profiler(self,e=None):
         import x2Profiler
-        x2Profiler.X2ProfilerApp().Run()
-        pronsole.pronsole.load_default_rc(self)
+        if not x2Profiler.X2ProfilerApp().Run():
+            return
+        if wx.YES == wx.MessageBox('Would you like to restart to apply the changes?', '', style = wx.YES_NO|wx.ICON_QUESTION):
+            self.statuscheck=0
+            self.p.recvcb=None
+            self.p.disconnect()
+            try:
+                self.gwindow.Destroy()
+            except:
+                pass
+            self.Destroy()
+            os.execl(sys.executable, *([sys.executable]+sys.argv))
 
     def doneediting(self,gcode):
         f=open(self.filename,"w")
