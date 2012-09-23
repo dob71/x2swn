@@ -2016,3 +2016,9 @@ if __name__ == '__main__':
             pass
         if not g_start_app:
             break
+        del main
+        del app
+        app = wx.App(False)
+        
+
+
