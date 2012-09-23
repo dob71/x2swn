@@ -73,6 +73,7 @@ class Tee(object):
 class PronterWindow(wx.Frame,pronsole.pronsole):
     def __init__(self, filename=None,size=winsize):
         pronsole.pronsole.__init__(self)
+        self.restart = False
         self.settings.build_dimensions = '200x200x100+0+0+0' #default build dimensions are 200x200x100 with 0,0,0 in the corner of the bed
         self.settings.last_bed_temperature = 0.0
         self.settings.last_file_path = ""
@@ -463,8 +464,11 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
                 self.gwindow.Destroy()
             except:
                 pass
+            global g_start_app
+            for macro_name in self.macros.keys():
+                self.delete_macro(macro_name)
+            g_start_app = True
             self.Destroy()
-            os.execl(sys.executable, *([sys.executable]+sys.argv))
 
     def doneediting(self,gcode):
         f=open(self.filename,"w")
@@ -2001,10 +2005,14 @@ if __name__ == '__main__':
         except:
             pass
 
-    main = PronterWindow()
-    main.Show()
-    try:
-        app.MainLoop()
-    except:
-        pass
-
+    g_start_app = True
+    while(g_start_app):
+        g_start_app = False
+        main = PronterWindow()
+        main.Show()
+        try:
+            app.MainLoop()
+        except:
+            pass
+        if not g_start_app:
+            break
