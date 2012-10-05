@@ -1184,7 +1184,7 @@ class pronsole(cmd.Cmd):
             import shlex
             if(settings):
                 param = self.expandcommand(self.settings.sliceoptscommand).replace("\\","\\\\").encode()
-                print "Entering skeinforge settings: ",param
+                print "Entering slicer settings: ",param
                 subprocess.call(shlex.split(param))
             else:
                 param = self.expandcommand(self.settings.slicecommand).encode()
@@ -1194,7 +1194,7 @@ class pronsole(cmd.Cmd):
                 print "Loading skeined file."
                 self.do_load(l[0].replace(".stl","_export.gcode"))
         except Exception,e:
-            print "Skeinforge execution failed: ",e
+            print "Slicer execution failed: ",e
         
     def complete_skein(self, text, line, begidx, endidx):
         s=line.split()
