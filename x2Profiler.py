@@ -587,6 +587,8 @@ class ReportResultPage(wiz.PyWizardPage):
  
     #----------------------------------------------------------------------
     def Run(self):
+        self.GetParent().FindWindowById(wx.ID_FORWARD).Disable()
+        self.GetParent().FindWindowById(wx.ID_BACKWARD).Disable()
         self.status.SetLabel("Processing...")
         global x2ProfilerApp
         self.selection = x2ProfilerApp.selection
@@ -611,6 +613,8 @@ class ReportResultPage(wiz.PyWizardPage):
                 self.status.SetLabel("\
 The operation has failed! Please examine the X2SW profiles folder and\n\
 use GIT to manually checkout the desired profile or fix the repository.")
+        self.GetParent().FindWindowById(wx.ID_FORWARD).Enable()
+        self.GetParent().FindWindowById(wx.ID_BACKWARD).Enaable()
         x2ProfilerApp.changes = True
 
     #----------------------------------------------------------------------
