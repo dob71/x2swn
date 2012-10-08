@@ -614,7 +614,7 @@ class ReportResultPage(wiz.PyWizardPage):
 The operation has failed! Please examine the X2SW profiles folder and\n\
 use GIT to manually checkout the desired profile or fix the repository.")
         self.GetParent().FindWindowById(wx.ID_FORWARD).Enable()
-        self.GetParent().FindWindowById(wx.ID_BACKWARD).Enaable()
+        self.GetParent().FindWindowById(wx.ID_BACKWARD).Enable()
         x2ProfilerApp.changes = True
 
     #----------------------------------------------------------------------
