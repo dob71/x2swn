@@ -590,6 +590,9 @@ class ReportResultPage(wiz.PyWizardPage):
         self.SetAutoLayout(True)
         self.SetSizer(self.sizer)
 
+    #----------------------------------------------------------------------
+    def afterRun(self):
+        self.GetParent().FindWindowById(wx.ID_FORWARD).Enable()
  
     #----------------------------------------------------------------------
     def Run(self):
@@ -617,8 +620,8 @@ class ReportResultPage(wiz.PyWizardPage):
                 self.status.SetLabel("\
 The operation has failed! Please examine the X2SW profiles folder and\n\
 use GIT to manually checkout the desired profile or fix the repository.")
-        self.GetParent().FindWindowById(wx.ID_FORWARD).Enable()
         x2ProfilerApp.changes = True
+        wx.CallAfter(self.afterRun)
 
     #----------------------------------------------------------------------
     def DoDeploy(self, ref):
@@ -763,7 +766,7 @@ class X2ProfilerApp():
     def OnPageChanged(self, event):
         cp = self.wizard.GetCurrentPage()
         if hasattr(cp, 'Run'): 
-            cp.Run()
+            wx.CallAfter(cp.Run)
 
     #----------------------------------------------------------------------
     def OnPageChanging(self, event):
