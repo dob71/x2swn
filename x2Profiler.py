@@ -546,6 +546,12 @@ WARNING: All the user files (if any) under the \"Deployment path\" will be lost!
             self.GetParent().FindWindowById(wx.ID_FORWARD).Disable()
 
     #----------------------------------------------------------------------
+    def OnPageChanging(self, event):
+        # Disable buttons as we moving forward 
+        if event.GetDirection():
+            self.GetParent().FindWindowById(wx.ID_FORWARD).Disable()
+
+    #----------------------------------------------------------------------
     def SetNext(self, next):
         self.next = next
  
@@ -587,8 +593,6 @@ class ReportResultPage(wiz.PyWizardPage):
  
     #----------------------------------------------------------------------
     def Run(self):
-        self.GetParent().FindWindowById(wx.ID_FORWARD).Disable()
-        self.GetParent().FindWindowById(wx.ID_BACKWARD).Disable()
         self.status.SetLabel("Processing...")
         global x2ProfilerApp
         self.selection = x2ProfilerApp.selection
@@ -614,7 +618,6 @@ class ReportResultPage(wiz.PyWizardPage):
 The operation has failed! Please examine the X2SW profiles folder and\n\
 use GIT to manually checkout the desired profile or fix the repository.")
         self.GetParent().FindWindowById(wx.ID_FORWARD).Enable()
-        self.GetParent().FindWindowById(wx.ID_BACKWARD).Enable()
         x2ProfilerApp.changes = True
 
     #----------------------------------------------------------------------
