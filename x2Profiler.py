@@ -621,6 +621,8 @@ class ReportResultPage(wiz.PyWizardPage):
 The operation has failed! Please examine the X2SW profiles folder and\n\
 use GIT to manually checkout the desired profile or fix the repository.")
         x2ProfilerApp.changes = True
+        self.Show()
+        self.GetParent().Update()
         wx.CallAfter(self.afterRun)
 
     #----------------------------------------------------------------------
@@ -650,6 +652,7 @@ use GIT to manually checkout the desired profile or fix the repository.")
         else:
             # Cleanup the deployment destination
             self.RmAllProfiles(x2ProfilerApp.x2swProfilesTgtPath)
+
         build_index_from_tree(x2ProfilerApp.x2swProfilesTgtPath, self.repo.index_path(),
                               self.repo.object_store, o.tree)
 

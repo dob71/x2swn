@@ -453,8 +453,10 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         self.SetMenuBar(self.menustrip)
 
     def x2profiler(self,e=None):
+        self.processing_rc = True
         import x2Profiler
         if not x2Profiler.X2ProfilerApp().Run():
+            self.p.processing_rc = False
             return
         if wx.YES == wx.MessageBox('Would you like to restart to apply the changes?', '', style = wx.YES_NO|wx.ICON_QUESTION):
             self.statuscheck=0
@@ -469,6 +471,8 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
                 self.delete_macro(macro_name)
             g_start_app = True
             self.Destroy()
+        else:
+            self.processing_rc = False
 
     def doneediting(self,gcode):
         f=open(self.filename,"w")
