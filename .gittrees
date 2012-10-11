@@ -1,0 +1,8 @@
+[subtree "skeinforge"]
+	url = git@github.com:dob71/sf.git
+	path = skeinforge
+	branch = master
+[subtree "slic3r"]
+	url = git@github.com:dob71/Slic3r.git
+	path = slic3r
+	branch = master
