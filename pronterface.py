@@ -1394,6 +1394,8 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         if "File selected" in l:
             wx.CallAfter(self.status.SetStatusText,_("Starting print"))
             self.sdprinting=1
+            self.p.send_now("M25")
+            self.p.send_now("M26 S0")
             self.p.send_now("M24")
             self.startcb()
             return
@@ -1558,7 +1560,7 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         if self.paused or self.p.printing or self.sdprinting:
             if self.p.printing:
                 self.p.pause() # There is no stop in printcode, only pause
-            elif self.sdprinting:
+            if self.sdprinting:
                 self.p.send_now("M25")
                 self.p.send_now("M26 S0")
                 self.sdprinting = 0
@@ -1570,9 +1572,11 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
             wx.CallAfter(self.pausebtn.Disable)
             if not self.filename:
                 wx.CallAfter(self.printbtn.Disable)
+            print _("Print cancelled.")
             return
 
         # Start new print
+        self.sdprinting = 0
         if self.f is None or not len(self.f):
             wx.CallAfter(self.status.SetStatusText, _("No file loaded. Please use load first."))
             return
@@ -1617,7 +1621,6 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         pass
 
     def pause(self,event):
-        print _("Paused.")
         if not self.paused:
             if self.sdprinting:
                 self.p.send_now("M25")
@@ -1626,11 +1629,13 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
                     #print "Not printing, cannot pause."
                     return
                 self.p.pause()
+            print _("Paused.")
             self.paused=True
             self.extra_print_time += int(time.time() - self.starttime)
             wx.CallAfter(self.pausebtn.SetLabel, _("Resume"))
         else:
             self.paused=False
+            print _("Resumed.")
             if self.sdprinting:
                 self.p.send_now("M24")
             else:

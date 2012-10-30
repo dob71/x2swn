@@ -144,9 +144,10 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
                 layer_height = float(m.group(1))
                 continue
             # if done with the layer add matching color part layer
-            if ('</layer>' in l) and (len(color_layer[layer_height]) > 0):
-                print >>out, alt_start + color_layer[layer_height] + alt_stop
-                mixed_layers += 1
+            if ('</layer>' in l):
+                if (layer_height in color_layer) and (len(color_layer[layer_height]) > 0):
+                    print >>out, alt_start + color_layer[layer_height] + alt_stop
+                    mixed_layers += 1
                 continue
             l = l.rstrip('\n').rstrip('\r')
             l = re.sub('[;(].*', '', l).strip()
@@ -309,10 +310,14 @@ It is also saved in the automatically generated file named as shown in the 'Outp
             print e
             code = -1
         except:
+            print "The script has failed. Internal error!"
             code = -1
 
         if (code != 0):
-           os.remove(mixed)
+           try:
+               os.remove(mixed)
+           except:
+               pass
            self.EndModal(2)
            self.Destroy()
         else:   

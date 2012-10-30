@@ -37,7 +37,7 @@ class printcore():
         self.resendfrom=-1
         self.paused=False
         self.sentlines={}
-        self.senttokeep=16
+        self.senttokeep=32
         self.log=[]
         self.sent=[]
         self.tempcb=None#impl (wholeline)
