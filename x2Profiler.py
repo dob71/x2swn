@@ -246,6 +246,9 @@ class DownloadingPage(wiz.PyWizardPage):
 ########################################################################
 class SelectProfilesPage(wiz.PyWizardPage):
     """Wizard page for selecting what profiles to deploy"""
+    REF_TYPE_TAG = 1
+    REF_TYPE_HEAD = 2
+    REF_TYPE_RHEAD = 3
  
     #----------------------------------------------------------------------
     def __init__(self, parent, title):
@@ -262,6 +265,8 @@ class SelectProfilesPage(wiz.PyWizardPage):
         self.tree = wx.TreeCtrl(self, -1, style = wx.TR_HAS_BUTTONS|wx.TR_HAS_VARIABLE_ROW_HEIGHT)
         image_list = wx.ImageList(16, 16) 
         self.profile = image_list.Add(wx.Image("images/profile.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()) 
+        self.profile_rb = image_list.Add(wx.Image("images/profile_rb.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()) 
+        self.profile_lb = image_list.Add(wx.Image("images/profile_lb.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()) 
         self.folder = image_list.Add(wx.Image("images/folder.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()) 
         self.tree.AssignImageList(image_list) 
         self.sizer.Add(self.tree, 2, wx.EXPAND)
@@ -277,54 +282,78 @@ class SelectProfilesPage(wiz.PyWizardPage):
         self.selection = None
         
     #----------------------------------------------------------------------
-    def fillTree(self, tagsList, path, node):
-        for item_name,item_file in tagsList[path]:
+    def fillTree(self, refsList, path, node):
+        for item_name,item_file,ref_type in refsList[path]:
             child_path = path + '/' + item_name
-            ref = None
+            if ref_type == self.REF_TYPE_TAG:
+                child_ref_path = 'refs/tags' + child_path[4:]
+                prof_image = self.profile
+            elif ref_type == self.REF_TYPE_HEAD:
+                child_ref_path = 'refs/heads' + child_path[4:]
+                prof_image = self.profile_lb
+            elif ref_type == self.REF_TYPE_RHEAD:
+                child_ref_path = 'refs/remotes/origin' + child_path[4:]
+                prof_image = self.profile_rb
+            ### for debugging ### print child_ref_path
             child = self.tree.AppendItem(node, item_name)
             if item_file:
-                self.tree.SetPyData(child, 'refs/' + child_path)
-                self.tree.SetItemImage(child, self.profile, wx.TreeItemIcon_Normal) 
+                self.tree.SetPyData(child, child_ref_path)
+                self.tree.SetItemImage(child, prof_image, wx.TreeItemIcon_Normal) 
             else:
                 self.tree.SetItemImage(child, self.folder, wx.TreeItemIcon_Normal) 
-            if tagsList.has_key(child_path):
-                self.fillTree(tagsList, child_path, child)
- 
+            if refsList.has_key(child_path):
+                self.fillTree(refsList, child_path, child)
+
     #----------------------------------------------------------------------
     def Run(self):
         # Prepare a tree-structured dictionary of refs paths
         global x2ProfilerApp
         self.repo = x2ProfilerApp.repo
         self.refs = self.repo.get_refs()
-        tagsList = {}
-        reflist = sorted(sorted(self.refs.keys()),key=lambda x: -len(x.split('/')))
+        refsList = {}
+		# Make remote origin heads look similar to tags and local heads
+        refkeys = ['refs/rheads'+item[19:] if item[:19]=='refs/remotes/origin' else item for item in self.refs.keys()]
+        reflist = sorted(sorted(refkeys),key=lambda x: -len(x.split('/')))
+        ### for debugging #### print reflist
         for ref in reflist:
             parts = ref.split('/')
-            if parts[0] != 'refs' or parts[1] != 'tags' or len(parts) <= 2:
+			# Filter out one-level refs and anything that is neither tag or head
+            if parts[0] != 'refs' or len(parts) <= 3:
                 continue
+            if parts[1] != 'tags' and parts[1] != 'heads' and parts[1] != 'rheads':
+                continue
+            # Is it a tag, a local branch head or remote branch head?
+            ref_type = self.REF_TYPE_TAG
+            if parts[1] == 'heads':
+                ref_type = self.REF_TYPE_HEAD
+            elif parts[1] == 'rheads':
+                ref_type = self.REF_TYPE_RHEAD
+            parts[1] = 'root'
             for ii in range(2, len(parts)):
                 key = '/'.join(parts[1:ii])
                 # see if already have the node path we are about to add
-                if tagsList.has_key(key + '/' + parts[ii]):
+                if refsList.has_key(key + '/' + parts[ii]):
                     continue
-                # If at the end of the branch (i.e. the real tag file name)
-                tag_file = False
+                # build reference key
+                # If at the end of the branch (i.e. the tag/head ref file name)
+                file_ref = False
                 if ii >= len(parts)-1: 
-                    tag_file = True
+                    file_ref = True
                 # Still going down the ref's path...
                 # If we already started ading items to this subtree
-                if tagsList.has_key(key):
-                    tagsList[key].append([parts[ii],tag_file])
+                if refsList.has_key(key):
+                    refsList[key].append([parts[ii],file_ref,ref_type])
                 else:
-                    tagsList[key]=[[parts[ii],tag_file]]
-                #print 'ii: '+ str(ii) +'### key: ' + key + ' ### add: ' + parts[ii]
-        
+                    refsList[key]=[[parts[ii],file_ref,ref_type]]
+                ### for debugging ### print 'ii: '+ str(ii) +' ### key: ' + key + ' ### add: ' + parts[ii]
+		
         # Build the UI tree (can do it above, but cleaner to separate)
         self.tree.DeleteAllItems()
         root = self.tree.AddRoot("FDM 3D Printers")
         self.tree.SetItemImage(root, self.folder, wx.TreeItemIcon_Normal) 
-        if tagsList.has_key('tags'):
-            self.fillTree(tagsList, 'tags', root)
+        if refsList.has_key('root'):
+            self.fillTree(refsList, 'root', root)
+		    
         self.tree.Expand(root)
 
         # On/off next button based on either a profile was selected or not
