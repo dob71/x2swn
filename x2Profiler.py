@@ -297,7 +297,8 @@ class SelectProfilesPage(wiz.PyWizardPage):
             ### for debugging ### print child_ref_path
             child = self.tree.AppendItem(node, item_name)
             if item_file:
-                self.tree.SetPyData(child, child_ref_path)
+                child_ref_sha = self.refs[child_ref_path]
+                self.tree.SetPyData(child, child_ref_sha)
                 self.tree.SetItemImage(child, prof_image, wx.TreeItemIcon_Normal) 
             else:
                 self.tree.SetItemImage(child, self.folder, wx.TreeItemIcon_Normal) 
