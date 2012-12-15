@@ -1558,6 +1558,9 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
     def printfile(self,event):
         # If printing or pused
         if self.paused or self.p.printing or self.sdprinting:
+            dlg=wx.MessageDialog(self, _("Are you sure you want to cancel the print?"), _("Cancel?"), wx.YES|wx.NO)
+            if dlg.ShowModal()==wx.ID_NO:
+                return
             if self.p.printing:
                 self.p.pause() # There is no stop in printcode, only pause
             if self.sdprinting:

@@ -81,6 +81,8 @@ class printcore():
         """Reset the printer
         """
         if(self.printer):
+            self.printer.setDTR(True)
+            time.sleep(0.22)
             self.printer.setDTR(False)
             time.sleep(0.22)
             self.printer.setDTR(True)
