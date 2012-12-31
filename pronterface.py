@@ -1483,7 +1483,6 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         self.skeining=0
         self.skeinp=None
 
-
     def skein(self,filename):
         wx.CallAfter(self.loadbtn.SetLabel,_("Cancel"))
         print _("Slicing ") + filename
@@ -1494,7 +1493,31 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
         thread(target=self.skein_func).start()
         thread(target=self.skein_monitor).start()
 
+    def cancelprint(self):
+        if self.p.printing:
+            self.p.pause() # There is no stop in printcode, only pause
+        if self.sdprinting:
+            self.p.send_now("M25")
+            self.p.send_now("M26 S0")
+            self.sdprinting = 0
+        self.extra_print_time=0
+        self.p.paused=0
+        self.paused=0
+        wx.CallAfter(self.printbtn.SetLabel, _("Print"))
+        wx.CallAfter(self.pausebtn.SetLabel, _("Pause"))
+        wx.CallAfter(self.pausebtn.Disable)
+        if not self.filename:
+            wx.CallAfter(self.printbtn.Disable)
+        print _("Print cancelled.")
+        return
+
     def loadfile(self,event,filename=None):
+        # If printing or pused
+        if self.paused or self.p.printing or self.sdprinting:
+            dlg=wx.MessageDialog(self, _("Would you like to cancel the ongoing print to load the new file?"), _("Cancel?"), wx.YES|wx.NO)
+            if dlg.ShowModal()==wx.ID_NO:
+                return
+            self.cancelprint()
         if self.skeining and self.skeinp is not None:
             self.skeinp.terminate()
             return
@@ -1561,23 +1584,8 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
             dlg=wx.MessageDialog(self, _("Are you sure you want to cancel the print?"), _("Cancel?"), wx.YES|wx.NO)
             if dlg.ShowModal()==wx.ID_NO:
                 return
-            if self.p.printing:
-                self.p.pause() # There is no stop in printcode, only pause
-            if self.sdprinting:
-                self.p.send_now("M25")
-                self.p.send_now("M26 S0")
-                self.sdprinting = 0
-            self.extra_print_time=0
-            self.p.paused=0
-            self.paused=0
-            wx.CallAfter(self.printbtn.SetLabel, _("Print"))
-            wx.CallAfter(self.pausebtn.SetLabel, _("Pause"))
-            wx.CallAfter(self.pausebtn.Disable)
-            if not self.filename:
-                wx.CallAfter(self.printbtn.Disable)
-            print _("Print cancelled.")
+            self.cancelprint()
             return
-
         # Start new print
         self.sdprinting = 0
         if self.f is None or not len(self.f):
@@ -1647,6 +1655,13 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
 
 
     def sdprintfile(self,event):
+        # If printing or pused
+        if self.paused or self.p.printing or self.sdprinting:
+            dlg=wx.MessageDialog(self, _("Are you sure you want to cancel the print?"), _("Cancel?"), wx.YES|wx.NO)
+            if dlg.ShowModal()==wx.ID_NO:
+                return
+            self.cancelprint()
+            return
         self.on_startprint()
         threading.Thread(target=self.getfiles).start()
         pass
