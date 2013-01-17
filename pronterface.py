@@ -1732,15 +1732,10 @@ class PronterWindow(wx.Frame,pronsole.pronsole):
     def reset(self,event):
         print _("Reset.")
         dlg=wx.MessageDialog(self, _("Are you sure you want to reset the printer?"), _("Reset?"), wx.YES|wx.NO)
-        if dlg.ShowModal()==wx.ID_YES:
-            self.p.reset()
-            self.p.printing=0
-            wx.CallAfter(self.printbtn.SetLabel, _("Print"))
-            if self.paused:
-                self.p.paused=0
-                wx.CallAfter(self.pausebtn.SetLabel, _("Pause"))
-                self.paused=0
-
+        if dlg.ShowModal()!=wx.ID_YES:
+            return
+        self.cancelprint()
+        self.p.reset()
         macro = "onReset"
         if self.macros.get(macro, False):
             self.onecmd(macro)
