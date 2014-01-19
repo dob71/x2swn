@@ -1862,6 +1862,8 @@ def isWithinChannel( channelRadius, pointIndex, loop ):
 	aheadSegmentComplexLength = abs( aheadSegmentComplex )
 	if aheadSegmentComplexLength < channelRadius:
 		return True
+	if aheadSegmentComplexLength == 0 or behindSegmentComplexLength == 0:
+		return False
 	behindSegmentComplex /= behindSegmentComplexLength
 	aheadSegmentComplex /= aheadSegmentComplexLength
 	absoluteZ = getDotProductPlusOne( aheadSegmentComplex, behindSegmentComplex )
