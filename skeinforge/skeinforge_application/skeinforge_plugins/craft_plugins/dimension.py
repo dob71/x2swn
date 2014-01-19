@@ -67,6 +67,11 @@ Default is off.
 
 When selected, retraction will work even when the next thread is within the same island.  If it is not selected, retraction will only work when crossing a boundary.
 
+===Retract On Layer Change===
+Default is off.
+
+When selected, retraction will be forced when layers change. If it is not selected, retraction will only work if remaining logic requires it.
+
 ===Retraction Distance===
 Default is zero.
 
@@ -162,6 +167,7 @@ class DimensionRepository:
 		self.maximumEValueBeforeReset = settings.FloatSpin().getFromValue(0.0, 'Maximum E Value before Reset (float):', self, 999999.9, 91234.0)
 		self.minimumTravelForRetraction = settings.FloatSpin().getFromValue(0.0, 'Minimum Travel for Retraction (millimeters):', self, 2.0, 1.0)
 		self.retractWithinIsland = settings.BooleanSetting().getFromValue('Retract Within Island', self, False)
+		self.retractOnLayerChange = settings.BooleanSetting().getFromValue('Retract On Layer Change', self, False)
 		self.retractionDistance = settings.FloatSpin().getFromValue( 0.0, 'Retraction Distance (millimeters):', self, 100.0, 0.0 )
 		self.restartExtraDistance = settings.FloatSpin().getFromValue( 0.0, 'Restart Extra Distance (millimeters):', self, 100.0, 0.0 )
 		self.executeTitle = 'Dimension'
@@ -265,8 +271,10 @@ class DimensionSkein:
 						if locationEnclosureIndex != self.getSmallestEnclosureIndex(self.oldLocation.dropAxis()):
 							return None
 					locationMinusOld = location - self.oldLocation
-					xyTravel = abs(locationMinusOld.dropAxis())
 					zTravelMultiplied = locationMinusOld.z * self.zDistanceRatio
+					if self.repository.retractOnLayerChange.value and zTravelMultiplied != 0:
+						return None
+					xyTravel = abs(locationMinusOld.dropAxis())
 					return math.sqrt(xyTravel * xyTravel + zTravelMultiplied * zTravelMultiplied)
 				location = gcodec.getLocationFromSplitLine(location, splitLine)
 			elif firstWord == 'M101':
