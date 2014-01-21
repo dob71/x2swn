@@ -750,7 +750,7 @@ class X2ProfilerApp():
         self.changes = False
 
         ### for debugging ### self.repo_url = 'D:\\tmp\\.x2sw'
-        self.repo_url = 'http://github.com/dob71/x2sw_profiles.git'
+        self.repo_url = 'https://github.com/dob71/x2sw_profiles.git'
         self.selection = None
         self.tmp_repo_path = None
 
