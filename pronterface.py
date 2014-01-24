@@ -2018,9 +2018,18 @@ class TempGauge(wx.Panel):
 if __name__ == '__main__':
     app = wx.App(False)
 
-    # If starting the first time ever (no ~/.x2sw folder) run profiler
-    if os.path.exists(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), '.x2sw')) and \
-       not os.path.exists(os.path.join(os.path.expanduser('~'), '.x2sw')):
+    # If starting the first time ever (no ~/.x2sw folder) run profiler, also
+    # run it if the RC file is not in the selected storage location.
+    rc_filename = ".pronsolerc"
+    myPath = os.path.abspath(os.path.dirname(sys.argv[0]))
+    x2swProfilesPath = os.path.join(os.path.expanduser('~'), '.x2sw')
+    rcDistroFilename = os.path.join(myPath, '.x2sw', rc_filename)
+    if(not os.path.exists(os.path.join(x2swProfilesPath, '.use_local'))):
+            rcPathName = os.path.join(x2swProfilesPath, rc_filename)
+    else:
+            rcPathName = rcDistroFilename
+    if os.path.exists(os.path.join(myPath, '.x2sw')) and \
+       not os.path.exists(rcPathName):
         try:
             import x2Profiler
             x2Profiler.X2ProfilerApp().Run()
