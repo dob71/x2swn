@@ -108,7 +108,6 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         # Read in the layers of the color model, format: (<layer> 0.32 )
         color_layer = {}
         layer_height = 0.0
-        g_one_seen = False
         layer_code = '';
         in_layer_code = False
         g_one_seen = False
@@ -137,6 +136,7 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         COLOR.close()
         # Read and print the base gcode lines doing what the script is designed for
         layer_height = 0.0
+        layer_ins_on = false
         for l in BASE:
             # capture the layer height
             m = re.match(r'.*<layer>\s+([\d\.]+)', l)
@@ -146,12 +146,18 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
             # if done with the layer add matching color part layer
             if ('</layer>' in l):
                 if (layer_height in color_layer) and (len(color_layer[layer_height]) > 0):
-                    print >>out, alt_start + color_layer[layer_height] + alt_stop
+                    if (not layer_ins_on):
+                        print >>out, alt_start
+                        layer_ins_on = true
+                    print >>out, color_layer[layer_height]
                     mixed_layers += 1
                 continue
             l = l.rstrip('\n').rstrip('\r')
             l = re.sub('[;(].*', '', l).strip()
             if (len(l) > 0):
+                if (layer_ins_on):
+                    print >>out, alt_stop
+                    layer_ins_on = false
                 print >>out, l
         BASE.close()
         return mixed_layers
