@@ -67,6 +67,11 @@ Default is off.
 
 When selected, retraction will work even when the next thread is within the same island.  If it is not selected, retraction will only work when crossing a boundary.
 
+===Disable Retract Within Infill===
+Default is off.
+
+When selected, any retraction while printing infill will be disabled.
+
 ===Retract On Layer Change===
 Default is off.
 
@@ -167,6 +172,7 @@ class DimensionRepository:
 		self.maximumEValueBeforeReset = settings.FloatSpin().getFromValue(0.0, 'Maximum E Value before Reset (float):', self, 999999.9, 91234.0)
 		self.minimumTravelForRetraction = settings.FloatSpin().getFromValue(0.0, 'Minimum Travel for Retraction (millimeters):', self, 2.0, 1.0)
 		self.retractWithinIsland = settings.BooleanSetting().getFromValue('Retract Within Island', self, False)
+		self.disableRetractWithinInfill = settings.BooleanSetting().getFromValue('Disable Retract Within Infill', self, False)
 		self.retractOnLayerChange = settings.BooleanSetting().getFromValue('Retract On Layer Change', self, False)
 		self.retractionDistance = settings.FloatSpin().getFromValue( 0.0, 'Retraction Distance (millimeters):', self, 100.0, 0.0 )
 		self.restartExtraDistance = settings.FloatSpin().getFromValue( 0.0, 'Restart Extra Distance (millimeters):', self, 100.0, 0.0 )
@@ -197,10 +203,11 @@ class DimensionSkein:
 		self.totalExtrusionDistance = 0.0
 		self.travelFeedRatePerSecond = None
 		self.zDistanceRatio = 5.0
+		self.infill = False
 
 	def addLinearMoveExtrusionDistanceLine(self, extrusionDistance):
 		'Get the extrusion distance string from the extrusion distance.'
-		if self.repository.extruderRetractionSpeed.value != 0.0:
+		if self.repository.extruderRetractionSpeed.value != 0.0 and extrusionDistance != 0.0:
 			self.distanceFeedRate.output.write('G1 F%s\n' % self.extruderRetractionSpeedMinuteString)
 			self.distanceFeedRate.output.write('G1%s\n' % self.getExtrusionDistanceStringFromExtrusionDistance(extrusionDistance))
 			self.distanceFeedRate.output.write('G1 F%s\n' % self.distanceFeedRate.getRounded(self.feedRateMinute))
@@ -307,6 +314,8 @@ class DimensionSkein:
 
 	def getRetractionRatio(self, lineIndex):
 		'Get the retraction ratio.'
+		if self.repository.disableRetractWithinInfill.value and self.infill:
+			return 0.0
 		distanceToNextThread = self.getDistanceToNextThread(lineIndex)
 		if distanceToNextThread == None:
 			return 1.0
@@ -403,6 +412,14 @@ class DimensionSkein:
 			self.isExtruderActive = False
 		elif firstWord == 'M108':
 			self.flowRate = float( splitLine[1][1 :] )
+		elif firstWord == '(<infill>)':
+			self.infill = True
+		elif firstWord == '(</infill>)':
+			self.infill = False
+			if self.repository.disableRetractWithinInfill.value:
+				if (not self.isExtruderActive) and self.retractionRatio == 0.0:
+					self.retractionRatio = self.getRetractionRatio(lineIndex)
+					self.addLinearMoveExtrusionDistanceLine(-self.repository.retractionDistance.value * self.retractionRatio)
 		self.distanceFeedRate.addLine(line)
 
 
