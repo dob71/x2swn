@@ -1,14 +1,16 @@
 package Slic3r::Format::OBJ;
 use Moo;
 
+use File::Basename qw(basename);
+
 sub read_file {
     my $self = shift;
     my ($file) = @_;
     
-    open my $fh, '<', $file or die "Failed to open $file\n";
+    Slic3r::open(\my $fh, '<', $file) or die "Failed to open $file\n";
     my $vertices = [];
     my $facets = [];
-    while (my $_ = <$fh>) {
+    while (<$fh>) {
         if (/^v ([^ ]+)\s+([^ ]+)\s+([^ ]+)/) {
             push @$vertices, [$1, $2, $3];
         } elsif (/^f (\d+).*? (\d+).*? (\d+).*?/) {
@@ -17,7 +19,16 @@ sub read_file {
     }
     close $fh;
     
-    return Slic3r::TriangleMesh->new(vertices => $vertices, facets => $facets);
+    my $mesh = Slic3r::TriangleMesh->new;
+    $mesh->ReadFromPerl($vertices, $facets);
+    $mesh->repair;
+    
+    my $model = Slic3r::Model->new;
+    
+    my $basename = basename($file);
+    my $object = $model->add_object(input_file => $file, name => $basename);
+    my $volume = $object->add_volume(mesh => $mesh, name => $basename);
+    return $model;
 }
 
 1;
