@@ -1,0 +1,139 @@
+%module{Slic3r::XS};
+
+%{
+#include <myinit.h>
+#include "libslic3r/Point.hpp"
+#include "libslic3r/Polygon.hpp"
+#include "libslic3r/Polyline.hpp"
+%}
+
+%name{Slic3r::Point} class Point {
+    Point(long _x = 0, long _y = 0);
+    ~Point();
+    Clone<Point> clone()
+        %code{% RETVAL=THIS; %}; 
+    void scale(double factor);
+    void translate(double x, double y);
+    SV* arrayref()
+        %code{% RETVAL = THIS->to_SV_pureperl(); %};
+    SV* pp()
+        %code{% RETVAL = THIS->to_SV_pureperl(); %};
+    long x()
+        %code{% RETVAL = THIS->x; %};
+    long y()
+        %code{% RETVAL = THIS->y; %};
+    int nearest_point_index(Points points);
+    Point* nearest_point(Points points)
+        %code{% RETVAL = new Point(); THIS->nearest_point(points, RETVAL); %};
+    double distance_to(Point* point)
+        %code{% RETVAL = THIS->distance_to(*point); %};
+    double distance_to_line(Line* line)
+        %code{% RETVAL = THIS->distance_to(*line); %};
+    double perp_distance_to_line(Line* line)
+        %code{% RETVAL = THIS->perp_distance_to(*line); %};
+    double ccw(Point* p1, Point* p2)
+        %code{% RETVAL = THIS->ccw(*p1, *p2); %};
+    double ccw_angle(Point* p1, Point* p2)
+        %code{% RETVAL = THIS->ccw_angle(*p1, *p2); %};
+    Clone<Point> projection_onto_polygon(Polygon* polygon)
+        %code{% RETVAL = new Point(THIS->projection_onto(*polygon)); %};
+    Clone<Point> projection_onto_polyline(Polyline* polyline)
+        %code{% RETVAL = new Point(THIS->projection_onto(*polyline)); %};
+    Clone<Point> projection_onto_line(Line* line)
+        %code{% RETVAL = new Point(THIS->projection_onto(*line)); %};
+    Clone<Point> negative()
+        %code{% RETVAL = new Point(THIS->negative()); %};
+    bool coincides_with_epsilon(Point* point)
+        %code{% RETVAL = THIS->coincides_with_epsilon(*point); %};
+
+%{
+
+void
+Point::rotate(angle, center_sv)
+    double  angle;
+    SV*     center_sv;
+    CODE:
+        Point center;
+        center.from_SV_check(center_sv);
+        THIS->rotate(angle, center);
+
+bool
+Point::coincides_with(point_sv)
+    SV*     point_sv;
+    CODE:
+        Point point;
+        point.from_SV_check(point_sv);
+        RETVAL = THIS->coincides_with(point);
+    OUTPUT:
+        RETVAL
+
+%}
+
+};
+
+%name{Slic3r::Point3} class Point3 {
+    Point3(long _x = 0, long _y = 0, long _z = 0);
+    ~Point3();
+    Clone<Point3> clone()
+        %code{% RETVAL = THIS; %};
+    long x()
+        %code{% RETVAL = THIS->x; %};
+    long y()
+        %code{% RETVAL = THIS->y; %};
+    long z()
+        %code{% RETVAL = THIS->z; %};
+};
+
+%name{Slic3r::Pointf} class Pointf {
+    Pointf(double _x = 0, double _y = 0);
+    ~Pointf();
+    Clone<Pointf> clone()
+        %code{% RETVAL = THIS; %};
+    SV* arrayref()
+        %code{% RETVAL = THIS->to_SV_pureperl(); %};
+    SV* pp()
+        %code{% RETVAL = THIS->to_SV_pureperl(); %};
+    double x()
+        %code{% RETVAL = THIS->x; %};
+    double y()
+        %code{% RETVAL = THIS->y; %};
+    void set_x(double val)
+        %code{% THIS->x = val; %};
+    void set_y(double val)
+        %code{% THIS->y = val; %};
+    void translate(double x, double y);
+    void scale(double factor);
+    void rotate(double angle, Pointf* center)
+        %code{% THIS->rotate(angle, *center); %};
+    Clone<Pointf> negative()
+        %code{% RETVAL = THIS->negative(); %};
+    Clone<Pointf> vector_to(Pointf* point)
+        %code{% RETVAL = THIS->vector_to(*point); %};
+};
+
+%name{Slic3r::Pointf3} class Pointf3 {
+    Pointf3(double _x = 0, double _y = 0, double _z = 0);
+    ~Pointf3();
+    Clone<Pointf3> clone()
+        %code{% RETVAL = THIS; %};
+    double x()
+        %code{% RETVAL = THIS->x; %};
+    double y()
+        %code{% RETVAL = THIS->y; %};
+    double z()
+        %code{% RETVAL = THIS->z; %};
+    void set_x(double val)
+        %code{% THIS->x = val; %};
+    void set_y(double val)
+        %code{% THIS->y = val; %};
+    void set_z(double val)
+        %code{% THIS->z = val; %};
+    void translate(double x, double y, double z);
+    void scale(double factor);
+    double distance_to(Pointf3* point)
+        %code{% RETVAL = THIS->distance_to(*point); %};
+    Clone<Pointf3> negative()
+        %code{% RETVAL = THIS->negative(); %};
+    Clone<Pointf3> vector_to(Pointf3* point)
+        %code{% RETVAL = THIS->vector_to(*point); %};
+};

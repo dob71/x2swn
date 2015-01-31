@@ -1,0 +1,78 @@
+%module{Slic3r::XS};
+
+%{
+#include <myinit.h>
+#include "libslic3r/PolylineCollection.hpp"
+%}
+
+%name{Slic3r::Polyline::Collection} class PolylineCollection {
+    ~PolylineCollection();
+    Clone<PolylineCollection> clone()
+        %code{% RETVAL = THIS; %};
+    void clear()
+        %code{% THIS->polylines.clear(); %};
+    PolylineCollection* chained_path(bool no_reverse)
+        %code{%
+            RETVAL = new PolylineCollection();
+            THIS->chained_path(RETVAL, no_reverse);
+        %};
+    PolylineCollection* chained_path_from(Point* start_near, bool no_reverse)
+        %code{%
+            RETVAL = new PolylineCollection();
+            THIS->chained_path_from(*start_near, RETVAL, no_reverse);
+        %};
+    int count()
+        %code{% RETVAL = THIS->polylines.size(); %};
+    Clone<Point> leftmost_point();
+%{
+
+PolylineCollection*
+PolylineCollection::new(...)
+    CODE:
+        RETVAL = new PolylineCollection ();
+        // ST(0) is class name, others are Polylines
+        RETVAL->polylines.resize(items-1);
+        for (unsigned int i = 1; i < items; i++) {
+            // Note: a COPY of the input is stored
+            RETVAL->polylines[i-1].from_SV_check(ST(i));
+        }
+    OUTPUT:
+        RETVAL
+
+SV*
+PolylineCollection::arrayref()
+    CODE:
+        AV* av = newAV();
+        av_fill(av, THIS->polylines.size()-1);
+        int i = 0;
+        for (Polylines::iterator it = THIS->polylines.begin(); it != THIS->polylines.end(); ++it) {
+            av_store(av, i++, perl_to_SV_ref(*it));
+        }
+        RETVAL = newRV_noinc((SV*)av);
+    OUTPUT:
+        RETVAL
+
+SV*
+PolylineCollection::pp()
+    CODE:
+        AV* av = newAV();
+        av_fill(av, THIS->polylines.size()-1);
+        int i = 0;
+        for (Polylines::iterator it = THIS->polylines.begin(); it != THIS->polylines.end(); ++it) {
+            av_store(av, i++, (*it).to_SV_pureperl());
+        }
+        RETVAL = newRV_noinc((SV*)av);
+    OUTPUT:
+        RETVAL
+
+void
+PolylineCollection::append(...)
+    CODE:
+        for (unsigned int i = 1; i < items; i++) {
+            Polyline polyline;
+            polyline.from_SV_check( ST(i) );
+            THIS->polylines.push_back(polyline);
+        }
+
+%}
+};

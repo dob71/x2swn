@@ -1,0 +1,251 @@
+%module{Slic3r::XS};
+
+%{
+#include <myinit.h>
+#include "libslic3r/PrintConfig.hpp"
+%}
+
+%name{Slic3r::Config} class DynamicPrintConfig {
+    DynamicPrintConfig();
+    ~DynamicPrintConfig();
+    bool has(t_config_option_key opt_key);
+    SV* as_hash();
+    SV* get(t_config_option_key opt_key);
+    SV* get_at(t_config_option_key opt_key, int i);
+    bool set(t_config_option_key opt_key, SV* value);
+    bool set_deserialize(t_config_option_key opt_key, SV* str);
+    void set_ifndef(t_config_option_key opt_key, SV* value, bool deserialize = false);
+    std::string serialize(t_config_option_key opt_key);
+    double get_abs_value(t_config_option_key opt_key);
+    %name{get_abs_value_over}
+        double get_abs_value(t_config_option_key opt_key, double ratio_over);
+    void apply(DynamicPrintConfig* other)
+        %code{% THIS->apply(*other, true); %};
+    std::vector<std::string> diff(DynamicPrintConfig* other)
+        %code{% RETVAL = THIS->diff(*other); %};
+    bool equals(DynamicPrintConfig* other)
+        %code{% RETVAL = THIS->equals(*other); %};
+    void apply_static(FullPrintConfig* other)
+        %code{% THIS->apply(*other, true); %};
+    std::vector<std::string> get_keys()
+        %code{% THIS->keys(&RETVAL); %};
+    void erase(t_config_option_key opt_key);
+    void normalize();
+};
+
+%name{Slic3r::Config::GCode} class GCodeConfig {
+    GCodeConfig();
+    ~GCodeConfig();
+    bool has(t_config_option_key opt_key);
+    SV* as_hash();
+    SV* get(t_config_option_key opt_key);
+    SV* get_at(t_config_option_key opt_key, int i);
+    bool set(t_config_option_key opt_key, SV* value);
+    bool set_deserialize(t_config_option_key opt_key, SV* str);
+    void set_ifndef(t_config_option_key opt_key, SV* value, bool deserialize = false);
+    std::string serialize(t_config_option_key opt_key);
+    double get_abs_value(t_config_option_key opt_key);
+    %name{get_abs_value_over}
+        double get_abs_value(t_config_option_key opt_key, double ratio_over);
+    void apply_print_config(PrintConfig* other)
+        %code{% THIS->apply(*other, true); %};
+    void apply_dynamic(DynamicPrintConfig* other)
+        %code{% THIS->apply(*other, true); %};
+    std::vector<std::string> get_keys()
+        %code{% THIS->keys(&RETVAL); %};
+    std::string get_extrusion_axis();
+};
+
+%name{Slic3r::Config::Print} class PrintConfig {
+    PrintConfig();
+    ~PrintConfig();
+    bool has(t_config_option_key opt_key);
+    SV* as_hash();
+    SV* get(t_config_option_key opt_key);
+    SV* get_at(t_config_option_key opt_key, int i);
+    bool set(t_config_option_key opt_key, SV* value);
+    bool set_deserialize(t_config_option_key opt_key, SV* str);
+    void set_ifndef(t_config_option_key opt_key, SV* value, bool deserialize = false);
+    std::string serialize(t_config_option_key opt_key);
+    double get_abs_value(t_config_option_key opt_key);
+    %name{get_abs_value_over}
+        double get_abs_value(t_config_option_key opt_key, double ratio_over);
+    void apply_dynamic(DynamicPrintConfig* other)
+        %code{% THIS->apply(*other, true); %};
+    std::vector<std::string> get_keys()
+        %code{% THIS->keys(&RETVAL); %};
+    std::string get_extrusion_axis();
+};
+
+%name{Slic3r::Config::PrintRegion} class PrintRegionConfig {
+    PrintRegionConfig();
+    ~PrintRegionConfig();
+    bool has(t_config_option_key opt_key);
+    SV* as_hash();
+    SV* get(t_config_option_key opt_key);
+    SV* get_at(t_config_option_key opt_key, int i);
+    bool set(t_config_option_key opt_key, SV* value);
+    bool set_deserialize(t_config_option_key opt_key, SV* str);
+    void set_ifndef(t_config_option_key opt_key, SV* value, bool deserialize = false);
+    std::string serialize(t_config_option_key opt_key);
+    double get_abs_value(t_config_option_key opt_key);
+    %name{get_abs_value_over}
+        double get_abs_value(t_config_option_key opt_key, double ratio_over);
+    void apply(PrintRegionConfig* other)
+        %code{% THIS->apply(*other, true); %};
+    void apply_dynamic(DynamicPrintConfig* other)
+        %code{% THIS->apply(*other, true); %};
+    std::vector<std::string> get_keys()
+        %code{% THIS->keys(&RETVAL); %};
+};
+
+%name{Slic3r::Config::PrintObject} class PrintObjectConfig {
+    PrintObjectConfig();
+    ~PrintObjectConfig();
+    bool has(t_config_option_key opt_key);
+    SV* as_hash();
+    SV* get(t_config_option_key opt_key);
+    SV* get_at(t_config_option_key opt_key, int i);
+    bool set(t_config_option_key opt_key, SV* value);
+    bool set_deserialize(t_config_option_key opt_key, SV* str);
+    void set_ifndef(t_config_option_key opt_key, SV* value, bool deserialize = false);
+    std::string serialize(t_config_option_key opt_key);
+    double get_abs_value(t_config_option_key opt_key);
+    %name{get_abs_value_over}
+        double get_abs_value(t_config_option_key opt_key, double ratio_over);
+    void apply(PrintObjectConfig* other)
+        %code{% THIS->apply(*other, true); %};
+    void apply_dynamic(DynamicPrintConfig* other)
+        %code{% THIS->apply(*other, true); %};
+    std::vector<std::string> get_keys()
+        %code{% THIS->keys(&RETVAL); %};
+};
+
+%name{Slic3r::Config::Full} class FullPrintConfig {
+    FullPrintConfig();
+    ~FullPrintConfig();
+    bool has(t_config_option_key opt_key);
+    SV* as_hash();
+    SV* get(t_config_option_key opt_key);
+    SV* get_at(t_config_option_key opt_key, int i);
+    bool set(t_config_option_key opt_key, SV* value);
+    bool set_deserialize(t_config_option_key opt_key, SV* str);
+    void set_ifndef(t_config_option_key opt_key, SV* value, bool deserialize = false);
+    std::string serialize(t_config_option_key opt_key);
+    double get_abs_value(t_config_option_key opt_key);
+    %name{get_abs_value_over}
+        double get_abs_value(t_config_option_key opt_key, double ratio_over);
+    void apply_print_config(PrintConfig* other)
+        %code{% THIS->apply(*other, true); %};
+    void apply_object_config(PrintObjectConfig* other)
+        %code{% THIS->apply(*other, true); %};
+    void apply_region_config(PrintRegionConfig* other)
+        %code{% THIS->apply(*other, true); %};
+    void apply_dynamic(DynamicPrintConfig* other)
+        %code{% THIS->apply(*other, true); %};
+    std::vector<std::string> get_keys()
+        %code{% THIS->keys(&RETVAL); %};
+    std::string get_extrusion_axis();
+};
+
+%package{Slic3r::Config};
+
+%{
+PROTOTYPES: DISABLE
+
+SV*
+print_config_def()
+    CODE:
+        FullPrintConfig config;
+        t_optiondef_map* def = config.def;
+        
+        HV* options_hv = newHV();
+        for (t_optiondef_map::iterator oit = def->begin(); oit != def->end(); ++oit) {
+            HV* hv = newHV();
+            
+            t_config_option_key opt_key = oit->first;
+            ConfigOptionDef* optdef     = &oit->second;
+            
+            const char* opt_type;
+            if (optdef->type == coFloat || optdef->type == coFloats || optdef->type == coFloatOrPercent) {
+                opt_type = "f";
+            } else if (optdef->type == coPercent) {
+                opt_type = "percent";
+            } else if (optdef->type == coInt || optdef->type == coInts) {
+                opt_type = "i";
+            } else if (optdef->type == coString) {
+                opt_type = "s";
+            } else if (optdef->type == coStrings) {
+                opt_type = "s@";
+            } else if (optdef->type == coPoint || optdef->type == coPoints) {
+                opt_type = "point";
+            } else if (optdef->type == coBool || optdef->type == coBools) {
+                opt_type = "bool";
+            } else if (optdef->type == coEnum) {
+                opt_type = "select";
+            } else {
+                throw "Unknown option type";
+            }
+            (void)hv_stores( hv, "type",        newSVpv(opt_type, 0) );
+            (void)hv_stores( hv, "gui_type",    newSVpvn(optdef->gui_type.c_str(), optdef->gui_type.length()) );
+            (void)hv_stores( hv, "gui_flags",   newSVpvn(optdef->gui_flags.c_str(), optdef->gui_flags.length()) );
+            (void)hv_stores( hv, "label",       newSVpvn_utf8(optdef->label.c_str(), optdef->label.length(), true) );
+            if (!optdef->full_label.empty())
+                (void)hv_stores( hv, "full_label",  newSVpvn_utf8(optdef->full_label.c_str(), optdef->full_label.length(), true) );
+            (void)hv_stores( hv, "category",    newSVpvn(optdef->category.c_str(), optdef->category.length()) );
+            (void)hv_stores( hv, "tooltip",     newSVpvn_utf8(optdef->tooltip.c_str(), optdef->tooltip.length(), true) );
+            (void)hv_stores( hv, "sidetext",    newSVpvn_utf8(optdef->sidetext.c_str(), optdef->sidetext.length(), true) );
+            (void)hv_stores( hv, "cli",         newSVpvn(optdef->cli.c_str(), optdef->cli.length()) );
+            (void)hv_stores( hv, "ratio_over",  newSVpvn(optdef->ratio_over.c_str(), optdef->ratio_over.length()) );
+            (void)hv_stores( hv, "multiline",   newSViv(optdef->multiline ? 1 : 0) );
+            (void)hv_stores( hv, "full_width",  newSViv(optdef->full_width ? 1 : 0) );
+            (void)hv_stores( hv, "readonly",    newSViv(optdef->readonly ? 1 : 0) );
+            (void)hv_stores( hv, "height",      newSViv(optdef->height) );
+            (void)hv_stores( hv, "width",       newSViv(optdef->width) );
+            (void)hv_stores( hv, "min",         newSViv(optdef->min) );
+            (void)hv_stores( hv, "max",         newSViv(optdef->max) );
+            
+            // aliases
+            if (!optdef->aliases.empty()) {
+                AV* av = newAV();
+                av_fill(av, optdef->aliases.size()-1);
+                for (std::vector<t_config_option_key>::iterator it = optdef->aliases.begin(); it != optdef->aliases.end(); ++it)
+                    av_store(av, it - optdef->aliases.begin(), newSVpvn(it->c_str(), it->length()));
+                (void)hv_stores( hv, "aliases", newRV_noinc((SV*)av) );
+            }
+            
+            // shortcut
+            if (!optdef->shortcut.empty()) {
+                AV* av = newAV();
+                av_fill(av, optdef->shortcut.size()-1);
+                for (std::vector<t_config_option_key>::iterator it = optdef->shortcut.begin(); it != optdef->shortcut.end(); ++it)
+                    av_store(av, it - optdef->shortcut.begin(), newSVpvn(it->c_str(), it->length()));
+                (void)hv_stores( hv, "shortcut", newRV_noinc((SV*)av) );
+            }
+            
+            // enum_values
+            if (!optdef->enum_values.empty()) {
+                AV* av = newAV();
+                av_fill(av, optdef->enum_values.size()-1);
+                for (std::vector<std::string>::iterator it = optdef->enum_values.begin(); it != optdef->enum_values.end(); ++it)
+                    av_store(av, it - optdef->enum_values.begin(), newSVpvn(it->c_str(), it->length()));
+                (void)hv_stores( hv, "values", newRV_noinc((SV*)av) );
+            }
+            
+            // enum_labels
+            if (!optdef->enum_labels.empty()) {
+                AV* av = newAV();
+                av_fill(av, optdef->enum_labels.size()-1);
+                for (std::vector<std::string>::iterator it = optdef->enum_labels.begin(); it != optdef->enum_labels.end(); ++it)
+                    av_store(av, it - optdef->enum_labels.begin(), newSVpvn_utf8(it->c_str(), it->length(), true));
+                (void)hv_stores( hv, "labels", newRV_noinc((SV*)av) );
+            }
+            
+            (void)hv_stores( hv, "default", config.get(opt_key) );
+            (void)hv_store( options_hv, opt_key.c_str(), opt_key.length(), newRV_noinc((SV*)hv), 0 );
+        }
+        
+        RETVAL = newRV_noinc((SV*)options_hv);
+    OUTPUT:
+        RETVAL
+%}

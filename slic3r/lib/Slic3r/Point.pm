@@ -2,71 +2,23 @@ package Slic3r::Point;
 use strict;
 use warnings;
 
-sub new {
+sub new_scale {
     my $class = shift;
-    my $self;
-    if (@_ == 2) {
-        $self = [@_];
-    } elsif ((ref $_[0]) =~ 'ARRAY' || (ref $_[0]) =~ /Slic3r::Point/) {
-        $self = [@{$_[0]}];
-    } elsif ($_[0]->isa(__PACKAGE__)) {
-        return $_[0];
-    } else {
-        die "Invalid arguments for ${class}->new";
-    }
-    bless $self, $class;
-    return $self;
+    return $class->new(map Slic3r::Geometry::scale($_), @_);
 }
 
-sub clone {
+sub dump_perl {
     my $self = shift;
-    return (ref $self)->new(@$self);
+    return sprintf "[%s,%s]", @$self;
 }
 
-sub cast {
+package Slic3r::Pointf;
+use strict;
+use warnings;
+
+sub new_unscale {
     my $class = shift;
-    if (ref $_[0] eq 'Slic3r::Point') {
-        return $_[0];
-    } else {
-        return $class->new(@_);
-    }
+    return $class->new(map Slic3r::Geometry::unscale($_), @_);
 }
-
-sub id {
-    my $self = shift;
-    return join ',', @$self;
-}
-
-sub coordinates {
-    my $self = shift;
-    return @$self;
-}
-
-sub coincides_with {
-    my $self = shift;
-    my ($point) = @_;
-    return Slic3r::Geometry::points_coincide($self, $point);
-}
-
-sub distance_to {
-    my $self = shift;
-    my ($point) = @_;
-    return Slic3r::Geometry::distance_between_points($self, $point);
-}
-
-sub rotate {
-    my $self = shift;
-    my ($angle, $center) = @_;
-    @$self = @{ +(Slic3r::Geometry::rotate_points($angle, $center, $self))[0] };
-}
-
-sub translate {
-    my $self = shift;
-    my ($x, $y) = @_;
-    @$self = @{ +(Slic3r::Geometry::move_points([$x, $y], $self))[0] };
-}
-
-sub x { $_[0]->[0] }
-sub y { $_[0]->[1] }
 
 1;
