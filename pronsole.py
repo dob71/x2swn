@@ -18,7 +18,7 @@
 import cmd, printcore, sys 
 import glob, os, time
 import sys, subprocess, shutil
-import math
+import math, codecs
 from math import sqrt
 import gettext
 if os.path.exists('/usr/share/pronterface/locale'):
@@ -145,7 +145,7 @@ def estimate_duration(g):
                 y = get_coordinate_value("Y", parts[1:])
                 if y is None: y=lasty
                 z = get_coordinate_value("Z", parts[1:])
-                if z is None: z=lastz
+                if (z is None) or  (z<lastz): z=lastz # Do not increment z if it's below the previous (Lift z on move fix)
                 e = get_coordinate_value("E", parts[1:])
                 if e is None: e=laste
                 f = get_coordinate_value("F", parts[1:])
@@ -157,7 +157,7 @@ def estimate_duration(g):
                 # then calculate the time taken to complete the remaining distance
 
                 currenttravel = hypot3d(x, y, z, lastx, lasty, lastz)
-                distance = 2* ((lastf+f) * (f-lastf) * 0.5 ) / acceleration  #2x because we have to accelerate and decelerate
+                distance = abs(2* ((lastf+f) * (f-lastf) * 0.5 ) / acceleration)  #2x because we have to accelerate and decelerate
                 if distance <= currenttravel and ( lastf + f )!=0 and f!=0:
                     moveduration = 2 * distance / ( lastf + f )
                     currenttravel -= distance
@@ -201,6 +201,7 @@ class Settings:
         self.e_feedrate = 300
         self.slicecommand="python skeinforge/skeinforge_application/skeinforge_utilities/skeinforge_craft.py $s"
         self.sliceoptscommand="python skeinforge/skeinforge_application/skeinforge.py"
+        self.final_command = ""
 
     def _set(self,key,value):
         try:
@@ -274,6 +275,7 @@ class pronsole(cmd.Cmd):
         self.helpdict["temperature_pla"] = _("Extruder temp for PLA (default: 185 deg C)")
         self.helpdict["xy_feedrate"] = _("Feedrate for Control Panel Moves in X and Y (default: 3000mm/min)")
         self.helpdict["z_feedrate"] = _("Feedrate for Control Panel Moves in Z (default: 200mm/min)")
+        self.helpdict["final_command"] = _("Executable to run when the print is finished")
         self.commandprefixes='MGT$'
     
     def set_temp_preset(self,key,value):
@@ -490,7 +492,7 @@ class pronsole(cmd.Cmd):
     def load_rc(self,rc_filename):
         self.processing_rc=True
         try:
-            rc=open(rc_filename)
+            rc=codecs.open(rc_filename,"r","utf-8")
             self.rc_filename = os.path.abspath(rc_filename)
             for rc_cmd in rc:
                 if not rc_cmd.lstrip().startswith("#"):
@@ -559,8 +561,8 @@ class pronsole(cmd.Cmd):
             if os.path.exists(self.rc_filename):
                 import shutil
                 shutil.copy(self.rc_filename,self.rc_filename+"~bak")
-                rci=open(self.rc_filename+"~bak","r")
-            rco=open(self.rc_filename,"w")
+                rci=codecs.open(self.rc_filename+"~bak","r","utf-8")
+            rco=codecs.open(self.rc_filename,"w","utf-8")
             if rci is not None:
                 overwriting = False
                 for rc_cmd in rci:
@@ -1141,7 +1143,7 @@ class pronsole(cmd.Cmd):
                 if(self.sdprinting):
                     self.p.send_now("M27")
                 time.sleep(interval)
-                print (self.tempreadings.replace("\r","").replace("T","Hotend").replace("B","Bed").replace("\n","").replace("ok ",""))
+                #print (self.tempreadings.replace("\r","").replace("T","Hotend").replace("B","Bed").replace("\n","").replace("ok ",""))
                 if(self.p.printing):
                     print "Print progress: ", 100*float(self.p.queueindex)/len(self.p.mainqueue), "%"
                 
@@ -1191,7 +1193,7 @@ class pronsole(cmd.Cmd):
                 print "Slicing: ",param
                 params=[i.replace("$s",l[0]).replace("$o",l[0].replace(".stl","_export.gcode").replace(".STL","_export.gcode")).encode() for i in shlex.split(param.replace("\\","\\\\").encode())]
                 subprocess.call(params)
-                print "Loading skeined file."
+                print "Loading sliced file."
                 self.do_load(l[0].replace(".stl","_export.gcode"))
         except Exception,e:
             print "Slicer execution failed: ",e
@@ -1207,10 +1209,10 @@ class pronsole(cmd.Cmd):
                 return glob.glob("*/")+glob.glob("*.stl")
                 
     def help_skein(self):
-        print "Creates a gcode file from an stl model using skeinforge (with tab-completion)"
+        print "Creates a gcode file from an stl model using the slicer (with tab-completion)"
         print "skein filename.stl - create gcode file"
         print "skein filename.stl view - create gcode file and view using skeiniso"
-        print "skein set - adjust skeinforge settings"
+        print "skein set - adjust slicer settings"
         
         
     def do_home(self,l):

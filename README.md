@@ -74,5 +74,7 @@ The repositories of the individual packages as they are being prepared for
 bundling are here:
 Skeinforge: https://github.com/dob71/sf
 Slic3r: https://github.com/dob71/Slic3r
-Printrun: https://github.com/dob71/Printrun.git
+Printrun: https://github.com/dob71/x2swn
 
+The latter is the X2SW run-from-sources repo with all the sources in one 
+repository.
