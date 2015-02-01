@@ -1,3 +1,18 @@
+# This file is part of the Printrun suite.
+#
+# Printrun is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Printrun is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Printrun.  If not, see <http://www.gnu.org/licenses/>.
+
 # create a simple image slide show using the
 # wx.PaintDC surface as a canvas and
 # DrawBitmap(bitmap, x, y, bool transparent)
@@ -11,9 +26,9 @@ import shutil
 
 class MyFrame(wx.Frame):
     def __init__(self, parent, mysize):
-        wx.Frame.__init__(self, parent, wx.ID_ANY, size=mysize)
+        wx.Frame.__init__(self, parent, wx.ID_ANY, size = mysize)
         self.SetBackgroundColour('black')
-        
+
         # milliseconds per frame
         self.delay = 60
         # number of loops
@@ -41,7 +56,7 @@ class MyFrame(wx.Frame):
         self.image_list = []
         for image_file in file_list:
             self.image_list.append(wx.Bitmap(image_file))
-        
+
         # bind the panel to the paint event
         wx.EVT_PAINT(self, self.onPaint)
 
@@ -49,7 +64,7 @@ class MyFrame(wx.Frame):
         if self.mytmpdir:
             shutil.rmtree(self.mytmpdir)
 
-    def onPaint(self, event=None):
+    def onPaint(self, event = None):
         # this is the wxPython drawing surface/canvas
         dc = wx.PaintDC(self)
         while self.loops:
@@ -59,7 +74,7 @@ class MyFrame(wx.Frame):
                 w, h = bmp.GetSize()
                 info = "%s  %dx%d" % (self.name_list[ix], w, h)
                 self.SetTitle(info)
-                #self.SetSize((w,h))
+                #self.SetSize((w, h))
                 # draw the image
                 dc.DrawBitmap(bmp, 0, 0, True)
                 wx.MilliSleep(self.delay)
