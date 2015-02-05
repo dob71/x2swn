@@ -29,6 +29,8 @@ except ImportError:
     extensions = None
     build_ext = None
 
+from printrun.printcore import __version__ as printcore_version
+
 INSTALLED_FILES = "installed_files"
 
 class install (_install):
@@ -119,8 +121,9 @@ if sys.argv[1] in("install", "uninstall") and len(prefix):
     sys.argv += ["--prefix", prefix]
 
 target_images_path = "share/pronterface/images/"
-data_files = [('share/pixmaps/', ['P-face.ico', 'plater.ico', 'pronsole.ico']),
-              ('share/applications', ['pronterface.desktop'])]
+data_files = [('share/pixmaps/', ['pronterface.png', 'plater.png', 'pronsole.png']),
+              ('share/applications', ['pronterface.desktop', 'pronsole.desktop', 'plater.desktop']),
+              ('share/appdata', ['pronterface.appdata.xml', 'pronsole.appdata.xml', 'plater.appdata.xml'])]
 
 for basedir, subdirs, files in os.walk("images"):
     images = []
@@ -152,13 +155,14 @@ if build_ext:
     cmdclass['build_ext'] = build_ext
 
 setup(name = "Printrun",
+      version = printcore_version,
       description = "Host software for 3D printers",
       author = "Kliment Yanev",
       url = "http://github.com/kliment/Printrun/",
       license = "GPLv3",
       data_files = data_files,
-      packages = ["printrun", "printrun.cairosvg", "printrun.gl", "printrun.gl.libtatlin"],
-      scripts = ["pronsole.py", "pronterface.py", "plater.py", "printcore.py", "prontserve.py"],
+      packages = ["printrun", "printrun.gl", "printrun.gl.libtatlin", "printrun.gui", "printrun.power"],
+      scripts = ["pronsole.py", "pronterface.py", "plater.py", "printcore.py"],
       cmdclass = cmdclass,
       ext_modules = extensions,
       )
