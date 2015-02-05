@@ -25,6 +25,7 @@ import cStringIO as StringIO
 import subprocess
 import glob
 import logging
+import x2Profiler
 
 try: import simplejson as json
 except ImportError: import json
@@ -79,13 +80,6 @@ class ConsoleOutputHandler(object):
             self.print_on_stdout = True
             setup_logging(sys.stdout)
             self.target = target
-
-    def __del__(self):
-        try: # To hide the exception on exit after displaying plater or x2profiler
-            sys.stdout = self.stdout
-            sys.stderr = self.stderr
-        except:
-            pass
 
     def write(self, data):
         try:
@@ -168,6 +162,7 @@ class PronterWindow(MainWindow, pronsole.pronsole):
             "motorsoff": SpecialButton(_("Motors off"), ("M84"), (250, 250, 250), _("Switch all motors off")),
             "extrude": SpecialButton(_("Extrude"), ("pront_extrude"), (225, 200, 200), _("Advance extruder by set length")),
             "reverse": SpecialButton(_("Reverse"), ("pront_reverse"), (225, 200, 200), _("Reverse extruder by set length")),
+            "chktemp": SpecialButton(_("CheckTemp"), ("M105 A1"), (250, 250, 250), _("Check temperatures")),
         }
         self.custombuttons = []
         self.btndict = {}
@@ -252,6 +247,21 @@ class PronterWindow(MainWindow, pronsole.pronsole):
     #  Main interface handling
     #  --------------------------------------------------------------
 
+    def restart(self):
+        if wx.YES != wx.MessageBox('Would you like to restart to apply the changes?', '', style = wx.YES_NO|wx.ICON_QUESTION):
+            return
+        x2Profiler.pronterface_restart = True
+        pronsole.pronsole.kill(self)
+        global pronterface_quitting
+        pronterface_quitting = True
+        self.p.recvcb = None
+        self.p.disconnect()
+        self.Close()
+        if self.excluder:
+            self.excluder.close_window()
+        wx.CallAfter(self.gwindow.Destroy)
+        wx.CallAfter(self.Destroy)
+        
     def reset_ui(self):
         MainWindow.reset_ui(self)
         self.custombuttons_widgets = []
@@ -276,11 +286,12 @@ class PronterWindow(MainWindow, pronsole.pronsole):
             self.reset_ui()
 
         # Create UI
-        if self.settings.uimode in (_("Tabbed"), _("Tabbed with platers")):
-            self.createTabbedGui()
-        else:
-            self.createGui(self.settings.uimode == _("Compact"),
-                           self.settings.controlsmode == "Mini")
+        #if self.settings.uimode in (_("Tabbed"), _("Tabbed with platers")):
+        #    self.createTabbedGui()
+        #else:
+        #    self.createGui(self.settings.uimode == _("Compact"),
+        #                   self.settings.controlsmode == "Mini")
+        self.createGui(False, False)
 
         if hasattr(self, "splitterwindow"):
             self.splitterwindow.SetSashPosition(self.settings.last_sash_position)
@@ -359,7 +370,12 @@ class PronterWindow(MainWindow, pronsole.pronsole):
     #  --------------------------------------------------------------
 
     def do_monitor(self, l = ""):
-        if l.strip() == "":
+        if hasattr(l, "IsChecked"):
+            if l.IsChecked():
+                self.set("monitor", True)
+            else:
+                self.set("monitor", False)
+        elif l.strip() == "":
             self.set("monitor", not self.settings.monitor)
         elif l.strip() == "off":
             self.set("monitor", False)
@@ -464,6 +480,8 @@ class PronterWindow(MainWindow, pronsole.pronsole):
             t_ext = int(self.extrudersel.GetValue())
         if self.display_gauges: 
             self.hottgauge[t_ext].SetTarget(int(f))
+        else:
+            self.hottgauge[0].SetTarget(int(f))
         if f > 0:
             wx.CallAfter(self.htemp.SetValue, str(f))
             self.set("last_temperature", str(f))
@@ -532,9 +550,9 @@ class PronterWindow(MainWindow, pronsole.pronsole):
     def platecb(self, name):
         self.log(_("Plated %s") % name)
         self.loadfile(None, name)
-        if self.settings.uimode in (_("Tabbed"), _("Tabbed with platers")):
-            # Switch to page 1 (Status tab)
-            self.notebook.SetSelection(1)
+        #if self.settings.uimode in (_("Tabbed"), _("Tabbed with platers")):
+        #    # Switch to page 1 (Status tab)
+        #    self.notebook.SetSelection(1)
 
     def do_editgcode(self, e = None):
         if self.filename is not None:
@@ -721,7 +739,7 @@ class PronterWindow(MainWindow, pronsole.pronsole):
         self.Bind(wx.EVT_MENU, self.do_editgcode, m.Append(-1, _("&Edit..."), _(" Edit open file")))
         self.Bind(wx.EVT_MENU, self.plate, m.Append(-1, _("Plater"), _(" Compose 3D models into a single plate")))
         self.Bind(wx.EVT_MENU, self.plate_gcode, m.Append(-1, _("G-Code Plater"), _(" Compose G-Codes into a single plate")))
-        self.Bind(wx.EVT_MENU, self.exclude, m.Append(-1, _("Excluder"), _(" Exclude parts of the bed from being printed")))
+        #self.Bind(wx.EVT_MENU, self.exclude, m.Append(-1, _("Excluder"), _(" Exclude parts of the bed from being printed")))
         self.Bind(wx.EVT_MENU, self.project, m.Append(-1, _("Projector"), _(" Project slices")))
         self.menustrip.Append(m, _("&Tools"))
 
@@ -731,23 +749,23 @@ class PronterWindow(MainWindow, pronsole.pronsole):
         self.Bind(wx.EVT_MENU, self.recover, self.recoverbtn)
         self.menustrip.Append(m, _("&Advanced"))
 
-        if self.settings.slic3rintegration:
-            m = wx.Menu()
-            print_menu = wx.Menu()
-            filament_menu = wx.Menu()
-            printer_menu = wx.Menu()
-            m.AppendSubMenu(print_menu, _("Print &settings"))
-            m.AppendSubMenu(filament_menu, _("&Filament"))
-            m.AppendSubMenu(printer_menu, _("&Printer"))
-            menus = {"print": print_menu,
-                     "filament": filament_menu,
-                     "printer": printer_menu}
-            try:
-                self.load_slic3r_configs(menus)
-                self.menustrip.Append(m, _("&Slic3r"))
-            except IOError:
-                self.logError(_("Failed to load Slic3r configuration:") +
-                              "\n" + traceback.format_exc())
+        #if self.settings.slic3rintegration:
+        #    m = wx.Menu()
+        #    print_menu = wx.Menu()
+        #    filament_menu = wx.Menu()
+        #    printer_menu = wx.Menu()
+        #    m.AppendSubMenu(print_menu, _("Print &settings"))
+        #    m.AppendSubMenu(filament_menu, _("&Filament"))
+        #    m.AppendSubMenu(printer_menu, _("&Printer"))
+        #    menus = {"print": print_menu,
+        #             "filament": filament_menu,
+        #             "printer": printer_menu}
+        #    try:
+        #        self.load_slic3r_configs(menus)
+        #        self.menustrip.Append(m, _("&Slic3r"))
+        #    except IOError:
+        #        self.logError(_("Failed to load Slic3r configuration:") +
+        #                      "\n" + traceback.format_exc())
 
         # Settings menu
         m = wx.Menu()
@@ -773,25 +791,11 @@ class PronterWindow(MainWindow, pronsole.pronsole):
 
     def x2profiler(self,e=None):
         self.processing_rc = True
-        import x2Profiler
         if not x2Profiler.X2ProfilerApp().Run():
             self.p.processing_rc = False
             return
-        if wx.YES == wx.MessageBox('Would you like to restart to apply the changes?', '', style = wx.YES_NO|wx.ICON_QUESTION):
-            self.statuscheck=0
-            self.p.recvcb=None
-            self.p.disconnect()
-            try:
-                self.gwindow.Destroy()
-            except:
-                pass
-            global g_start_app
-            for macro_name in self.macros.keys():
-                self.delete_macro(macro_name)
-            g_start_app = True
-            self.Destroy()
-        else:
-            self.processing_rc = False
+        self.restart()
+        self.processing_rc = False
 
     def project(self, event):
         """Start Projector tool"""
@@ -853,15 +857,15 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
     #  --------------------------------------------------------------
 
     def _add_settings(self, size):
-        self.settings._add(BooleanSetting("monitor", True, _("Monitor printer status"), _("Regularly monitor printer temperatures (required to have functional temperature graph or gauges)"), "Printer"), self.update_monitor)
+        #self.settings._add(BooleanSetting("monitor", True, _("Monitor printer status"), _("Regularly monitor printer temperatures (required to have functional temperature graph or gauges)"), "Printer"), self.update_monitor)
         self.settings._add(StringSetting("simarrange_path", "", _("Simarrange command"), _("Path to the simarrange binary to use in the STL plater"), "External"))
         self.settings._add(BooleanSetting("circular_bed", False, _("Circular build platform"), _("Draw a circular (or oval) build platform instead of a rectangular one"), "Printer"), self.update_bed_viz)
         self.settings._add(SpinSetting("extruders", 0, 1, 5, _("Extruders count"), _("Number of extruders"), "Printer"))
         self.settings._add(BooleanSetting("clamp_jogging", False, _("Clamp manual moves"), _("Prevent manual moves from leaving the specified build dimensions"), "Printer"))
-        self.settings._add(ComboSetting("uimode", _("Standard"), [_("Standard"), _("Compact"), _("Tabbed"), _("Tabbed with platers")], _("Interface mode"), _("Standard interface is a one-page, three columns layout with controls/visualization/log\nCompact mode is a one-page, two columns layout with controls + log/visualization\nTabbed mode is a two-pages mode, where the first page shows controls and the second one shows visualization and log.\nTabbed with platers mode is the same as Tabbed, but with two extra pages for the STL and G-Code platers."), "UI"), self.reload_ui)
-        self.settings._add(ComboSetting("controlsmode", "Standard", ["Standard", "Mini"], _("Controls mode"), _("Standard controls include all controls needed for printer setup and calibration, while Mini controls are limited to the ones needed for daily printing"), "UI"), self.reload_ui)
-        self.settings._add(BooleanSetting("slic3rintegration", False, _("Enable Slic3r integration"), _("Add a menu to select Slic3r profiles directly from Pronterface"), "UI"), self.reload_ui)
-        self.settings._add(BooleanSetting("slic3rupdate", False, _("Update Slic3r default presets"), _("When selecting a profile in Slic3r integration menu, also save it as the default Slic3r preset"), "UI"))
+        #self.settings._add(ComboSetting("uimode", _("Standard"), [_("Standard"), _("Compact"), _("Tabbed"), _("Tabbed with platers")], _("Interface mode"), _("Standard interface is a one-page, three columns layout with controls/visualization/log\nCompact mode is a one-page, two columns layout with controls + log/visualization\nTabbed mode is a two-pages mode, where the first page shows controls and the second one shows visualization and log.\nTabbed with platers mode is the same as Tabbed, but with two extra pages for the STL and G-Code platers."), "UI"), self.reload_ui)
+        #self.settings._add(ComboSetting("controlsmode", "Standard", ["Standard", "Mini"], _("Controls mode"), _("Standard controls include all controls needed for printer setup and calibration, while Mini controls are limited to the ones needed for daily printing"), "UI"), self.reload_ui)
+        #self.settings._add(BooleanSetting("slic3rintegration", False, _("Enable Slic3r integration"), _("Add a menu to select Slic3r profiles directly from Pronterface"), "UI"), self.reload_ui)
+        #self.settings._add(BooleanSetting("slic3rupdate", False, _("Update Slic3r default presets"), _("When selecting a profile in Slic3r integration menu, also save it as the default Slic3r preset"), "UI"))
         self.settings._add(ComboSetting("mainviz", "3D", ["2D", "3D", "None"], _("Main visualization"), _("Select visualization for main window."), "Viewer"), self.reload_ui)
         self.settings._add(BooleanSetting("viz3d", False, _("Use 3D in GCode viewer window"), _("Use 3D mode instead of 2D layered mode in the visualization window"), "Viewer"), self.reload_ui)
         self.settings._add(StaticTextSetting("separator_3d_viewer", _("3D viewer options"), "", group = "Viewer"))
@@ -871,7 +875,7 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
         self.settings._add(FloatSpinSetting("gcview_path_width", 0.4, 0.01, 2, _("Extrusion width for 3D viewer"), _("Width of printed path in 3D viewer"), "Viewer", increment = 0.05), self.update_gcview_params)
         self.settings._add(FloatSpinSetting("gcview_path_height", 0.3, 0.01, 2, _("Layer height for 3D viewer"), _("Height of printed path in 3D viewer"), "Viewer", increment = 0.05), self.update_gcview_params)
         self.settings._add(BooleanSetting("tempgraph", True, _("Display temperature graph"), _("Display time-lapse temperature graph"), "UI"), self.reload_ui)
-        self.settings._add(BooleanSetting("tempgauges", False, _("Display temperature gauges"), _("Display graphical gauges for temperatures visualization"), "UI"), self.reload_ui)
+        self.settings._add(BooleanSetting("tempgauges", False, _("Display all temperature gauges"), _("Display graphical gauges for temperatures visualization for all hotends"), "UI"), self.reload_ui)
         self.settings._add(BooleanSetting("lockbox", False, _("Display interface lock checkbox"), _("Display a checkbox that, when check, locks most of Pronterface"), "UI"), self.reload_ui)
         self.settings._add(BooleanSetting("lockonstart", False, _("Lock interface upon print start"), _("If lock checkbox is enabled, lock the interface when starting a print"), "UI"))
         self.settings._add(BooleanSetting("refreshwhenloading", True, _("Update UI during G-Code load"), _("Regularly update visualization during the load of a G-Code file"), "UI"))
@@ -1034,7 +1038,10 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
 
     def statuschecker(self):
         pronsole.pronsole.statuschecker(self)
-        wx.CallAfter(self.statusbar.SetStatusText, _("Not connected to printer."))
+        try:
+            wx.CallAfter(self.statusbar.SetStatusText, _("Not connected to printer."))
+        except:
+            pass
 
     #  --------------------------------------------------------------
     #  Interface lock handling
@@ -1107,6 +1114,7 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
         wx.CallAfter(self.connectbtn.SetLabel, _("Connect"))
         wx.CallAfter(self.connectbtn.SetToolTip, wx.ToolTip(_("Connect to the printer")))
         wx.CallAfter(self.connectbtn.Bind, wx.EVT_BUTTON, self.connect)
+        wx.CallAfter(self.printbtn.SetLabel, _("Print"))
 
         wx.CallAfter(self.gui_set_disconnected)
 
@@ -1114,7 +1122,6 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
             self.p.paused = 0
             self.p.printing = 0
             wx.CallAfter(self.pausebtn.SetLabel, _("Pause"))
-            wx.CallAfter(self.printbtn.SetLabel, _("Print"))
             self.paused = 0
             if self.sdprinting:
                 self.p.send_now("M26 S0")
@@ -1620,6 +1627,8 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
                 temp = float(gline_s)
                 if self.display_gauges: 
                     wx.CallAfter(self.hottgauge[t_ext].SetTarget, temp)
+                else:
+                    wx.CallAfter(self.hottgauge[0].SetTarget, temp)
                 if self.display_graph: 
                     if t_ext == 0:
                         wx.CallAfter(self.graph.SetExtruder0TargetTemperature, temp)
@@ -1708,6 +1717,9 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
             wx.CallAfter(self.gviz.setlayer, newlayer)
 
     def update_tempdisplay(self):
+        t_ext = 0
+        if hasattr(self, "extrudersel"): 
+            t_ext = int(self.extrudersel.GetValue())
         try:
             temps = parse_temperature_report(self.tempreadings)
             if "T0" in temps and temps["T0"][0]:
@@ -1719,7 +1731,7 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
             if hotend_temp is not None:
                 if self.display_graph: 
                     wx.CallAfter(self.graph.SetExtruder0Temperature, hotend_temp)
-                if self.display_gauges: 
+                if self.display_gauges or t_ext == 0: 
                     wx.CallAfter(self.hottgauge[0].SetValue, hotend_temp)
                 setpoint = None
                 if "T0" in temps and temps["T0"][1]: 
@@ -1729,7 +1741,7 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
                 if setpoint is not None:
                     if self.display_graph: 
                         wx.CallAfter(self.graph.SetExtruder0TargetTemperature, setpoint)
-                    if self.display_gauges: 
+                    if self.display_gauges or t_ext == 0: 
                         wx.CallAfter(self.hottgauge[0].SetTarget, setpoint)
             hotend_temp = None
             if "T1" in temps:
@@ -1739,12 +1751,16 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
                     wx.CallAfter(self.graph.SetExtruder1Temperature, hotend_temp)
                 if self.display_gauges: 
                     wx.CallAfter(self.hottgauge[1].SetValue, hotend_temp)
+                elif t_ext == 1:
+                    wx.CallAfter(self.hottgauge[0].SetValue, hotend_temp)
                 setpoint = float(temps["T1"][1])
                 if setpoint is not None:
                     if self.display_graph: 
                         wx.CallAfter(self.graph.SetExtruder1TargetTemperature, setpoint)
                     if self.display_gauges: 
                         wx.CallAfter(self.hottgauge[1].SetTarget, setpoint)
+                    elif t_ext == 1:
+                        wx.CallAfter(self.hottgauge[0].SetTarget, setpoint)
             bed_temp = float(temps["B"][0]) if "B" in temps and temps["B"][0] else None
             if bed_temp is not None:
                 if self.display_graph: wx.CallAfter(self.graph.SetBedTemperature, bed_temp)

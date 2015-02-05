@@ -17,16 +17,25 @@ import wx
 
 from .utils import make_autosize_button
 
-def MainToolbar(root, parentpanel = None, use_wrapsizer = False):
-    if not parentpanel: parentpanel = root.panel
+def MainToolbar(root, ppanel = None, use_wrapsizer = False):
+    if not ppanel: 
+        ppanel = root.panel
+    parentpanel = root.newPanel(ppanel)
+
+    root.tempmon = wx.CheckBox(ppanel, label = _("Monitor") + "  ")
+    root.tempmon.Bind(wx.EVT_CHECKBOX, root.do_monitor)
+    root.tempmon.SetToolTip(wx.ToolTip(_("Turn on/off continuous temperature monitoring")))
+    root.tempmon.SetValue(root.settings.monitor)
+    glob = wx.BoxSizer(wx.HORIZONTAL)
+    glob.Add(parentpanel, 1, flag = wx.EXPAND)
+    glob.Add(root.tempmon, 0, flag = wx.ALIGN_CENTER)
+
     if root.settings.lockbox:
-        root.locker = wx.CheckBox(parentpanel, label = _("Lock") + "  ")
+        root.locker = wx.CheckBox(ppanel, label = _("Lock") + "  ")
         root.locker.Bind(wx.EVT_CHECKBOX, root.lock)
         root.locker.SetToolTip(wx.ToolTip(_("Lock graphical interface")))
-        glob = wx.BoxSizer(wx.HORIZONTAL)
-        parentpanel = root.newPanel(parentpanel)
-        glob.Add(parentpanel, 1, flag = wx.EXPAND)
         glob.Add(root.locker, 0, flag = wx.ALIGN_CENTER)
+
     ToolbarSizer = wx.WrapSizer if use_wrapsizer and wx.VERSION > (2, 9) else wx.BoxSizer
     self = ToolbarSizer(wx.HORIZONTAL)
     root.rescanbtn = make_autosize_button(parentpanel, _("Port"), root.rescanports, _("Communication Settings\nClick to rescan ports"))
@@ -82,8 +91,8 @@ def MainToolbar(root, parentpanel = None, use_wrapsizer = False):
     else:
         root.pausebtn.Reparent(parentpanel)
     self.Add(root.pausebtn)
-    root.offbtn = make_autosize_button(parentpanel, _("Off"), root.off, _("Turn printer off"), self)
-    root.printerControls.append(root.offbtn)
+    #root.offbtn = make_autosize_button(parentpanel, _("Off"), root.off, _("Turn printer off"), self)
+    #root.printerControls.append(root.offbtn)
 
     self.AddStretchSpacer(prop = 4)
 

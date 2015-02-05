@@ -29,6 +29,7 @@ from dulwich.repo import Repo
 from dulwich.server import update_server_info
 from dulwich import client
 
+pronterface_restart = False
 
 ########################################################################
 class TitledPage(wiz.WizardPageSimple):

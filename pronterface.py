@@ -29,6 +29,8 @@ not yet available for python3. You should try running with python2 instead.""")
 
 import sys
 import os
+import x2Profiler
+
 from printrun.pronterface import PronterWindow
 
 if __name__ == '__main__':
@@ -47,22 +49,17 @@ if __name__ == '__main__':
     if os.path.exists(os.path.join(myPath, '.x2sw')) and \
        not os.path.exists(rcPathName):
         try:
-            import x2Profiler
             x2Profiler.X2ProfilerApp().Run()
         except:
             pass
 
-    g_start_app = True
-    while(g_start_app):
-        g_start_app = False
+    while(True):
+        x2Profiler.pronterface_restart = False
         main = PronterWindow(app)
         main.Show()
         try:
             app.MainLoop()
         except:
             pass
-        if not g_start_app:
+        if not x2Profiler.pronterface_restart:
             break
-        del main
-        del app
-        app = wx.App(False)

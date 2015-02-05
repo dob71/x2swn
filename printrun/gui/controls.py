@@ -37,84 +37,65 @@ class XYZControlsSizer(wx.GridBagSizer):
 
 def add_extra_controls(self, root, parentpanel, extra_buttons = None, mini_mode = False):
     standalone_mode = extra_buttons is not None
-    base_line = 1 if standalone_mode else 2
 
-    if standalone_mode:
-        gauges_base_line = base_line + 10
-    elif mini_mode and root.display_graph:
-        gauges_base_line = base_line + 6
-    else:
-        gauges_base_line = base_line + 5
-    tempdisp_line = gauges_base_line + ((root.settings.extruders + 1) if root.display_gauges else 0)
-    if mini_mode and root.display_graph:
-        e_base_line = base_line + 3
-    else:
-        e_base_line = base_line + 2
+    base_line = (3 if root.display_graph else 2)
+    e_base_line = base_line + 4
+    gauges_base_line = e_base_line + 2
+    gauge_lines = root.settings.extruders if root.display_gauges else 1
+    tempdisp_line = gauges_base_line + gauge_lines + 1
 
     pos_mapping = {
-        "htemp_label": (base_line + 0, 0),
-        "htemp_off": (base_line + 0, 2),
-        "htemp_val": (base_line + 0, 3),
-        "htemp_set": (base_line + 0, 4),
-        "btemp_label": (base_line + 1, 0),
-        "btemp_off": (base_line + 1, 2),
-        "btemp_val": (base_line + 1, 3),
-        "btemp_set": (base_line + 1, 4),
-        "ebuttons": (e_base_line + 0, 0),
-        "esettings": (e_base_line + 1, 0),
-        "speedcontrol": (e_base_line + 2, 0),
-        "btemp_gauge": (gauges_base_line + root.settings.extruders, 0),
-        "tempdisp": (tempdisp_line, 0),
-        "extrude": (3, 0),
-        "reverse": (3, 2),
+        "tempgraph":    (base_line - 1, 0),
+        "ext_controls": (base_line + 0, 0),
+        "htemp_label":  (base_line + 1, 0),
+        "htemp_val":    (base_line + 1, 1),
+        "htemp_set":    (base_line + 1, 2),
+        "htemp_off":    (base_line + 1, 3),
+        "btemp_label":  (base_line + 2, 0),
+        "btemp_val":    (base_line + 2, 1),
+        "btemp_set":    (base_line + 2, 2),
+        "btemp_off":    (base_line + 2, 3),
+        "speedcontrol": (base_line + 3, 0),
+        "esettings":    (e_base_line + 0, 0),
+        "edist_label":    (0, 0),
+        "edist_val":      (1, 0),
+        "edist_unit":     (1, 1),
+        "efeed_label":    (0, 2),
+        "efeed_val":      (1, 2),
+        "efeed_unit":     (1, 3),
+        "ebuttons":     (e_base_line + 1, 0),
+        "extrude":        (0, 1),
+        "reverse":        (0, 2),
+        "chktemp":        (0, 3),
+        "btemp_gauge":  (gauges_base_line + gauge_lines, 0),
+        "tempdisp":     (tempdisp_line, 0),
     }
     for i in range(0, root.settings.extruders):
         pos_mapping["htemp_gauge" + str(i)] = (gauges_base_line + i, 0)
 
     span_mapping = {
-        "htemp_label": (1, 2),
-        "htemp_off": (1, 1),
-        "htemp_val": (1, 1),
-        "htemp_set": (1, 1 if root.display_graph else 2),
-        "btemp_label": (1, 2),
-        "btemp_off": (1, 1),
-        "btemp_val": (1, 1),
-        "btemp_set": (1, 1 if root.display_graph else 2),
-        "ebuttons": (1, 5 if root.display_graph else 6),
-        "esettings": (1, 5 if root.display_graph else 6),
-        "speedcontrol": (1, 5 if root.display_graph else 6),
-        "htemp_gauge0": (1, 5 if mini_mode else 6),
-        "htemp_gauge1": (1, 5 if mini_mode else 6),
-        "htemp_gauge2": (1, 5 if mini_mode else 6),
-        "btemp_gauge": (1, 5 if mini_mode else 6),
-        "tempdisp": (1, 5 if mini_mode else 6),
-        "extrude": (1, 2),
-        "reverse": (1, 3),
+        "tempgraph":    (1, 6),
+        "ext_controls": (1, 6),
+        "htemp_label":  (1, 1),
+        "htemp_off":    (1, 1),
+        "htemp_val":    (1, 1),
+        "htemp_set":    (1, 1),
+        "btemp_label":  (1, 1),
+        "btemp_off":    (1, 1),
+        "btemp_val":    (1, 1),
+        "btemp_set":    (1, 1),
+        "esettings":    (1, 5),
+        "speedcontrol": (1, 5),
+        "htemp_gauge0": (1, 6),
+        "htemp_gauge1": (1, 6),
+        "htemp_gauge2": (1, 6),
+        "btemp_gauge":  (1, 6),
+        "tempdisp":     (1, 6),
+        "ebuttons":     (1, 4),
+        "extrude":      (1, 1),
+        "reverse":      (1, 1),
+        "chktemp":      (1, 1),
     }
-
-    if standalone_mode:
-        pos_mapping["tempgraph"] = (base_line + 5, 0)
-        span_mapping["tempgraph"] = (5, 6)
-    elif mini_mode:
-        pos_mapping["tempgraph"] = (base_line + 2, 0)
-        span_mapping["tempgraph"] = (1, 5)
-    else:
-        pos_mapping["tempgraph"] = (base_line + 0, 5)
-        span_mapping["tempgraph"] = (5, 1)
-
-    if mini_mode:
-        pos_mapping["etool_label"] = (0, 0)
-        pos_mapping["etool_val"] = (0, 1)
-        pos_mapping["edist_label"] = (0, 2)
-        pos_mapping["edist_val"] = (0, 3)
-        pos_mapping["edist_unit"] = (0, 4)
-    else:
-        pos_mapping["edist_label"] = (0, 0)
-        pos_mapping["edist_val"] = (1, 0)
-        pos_mapping["edist_unit"] = (1, 1)
-        pos_mapping["efeed_label"] = (0, 2)
-        pos_mapping["efeed_val"] = (1, 2)
-        pos_mapping["efeed_unit"] = (1, 3)
 
     def add(name, widget, *args, **kwargs):
         kwargs["pos"] = pos_mapping[name]
@@ -150,7 +131,7 @@ def add_extra_controls(self, root, parentpanel, extra_buttons = None, mini_mode 
     add("htemp_set", root.settbtn, flag = wx.EXPAND)
 
     # Bed temp
-    add("btemp_label", wx.StaticText(parentpanel, -1, _("Bed:")), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT)
+    add("btemp_label", wx.StaticText(parentpanel, -1, _("Bed: ")), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT)
     btemp_choices = [root.bedtemps[i] + " (" + i + ")" for i in sorted(root.bedtemps.keys(), key = lambda x:root.temps[x])]
 
     root.setboff = make_button(parentpanel, _("Off"), lambda e: root.do_bedtemp("off"), _("Switch Heated Bed Off"), size = (38, -1), style = wx.BU_EXACTFIT)
@@ -224,30 +205,33 @@ def add_extra_controls(self, root, parentpanel, extra_buttons = None, mini_mode 
 
     # Temperature gauges #
 
+    def hotendgauge_scroll_setpoint(e):
+        rot = e.GetWheelRotation()
+        if rot > 0:
+            root.do_settemp(str(root.hsetpoint + 1))
+        elif rot < 0:
+            root.do_settemp(str(max(0, root.hsetpoint - 1)))
+
+    def bedgauge_scroll_setpoint(e):
+        rot = e.GetWheelRotation()
+        if rot > 0:
+            root.do_bedtemp(str(root.bsetpoint + 1))
+        elif rot < 0:
+            root.do_bedtemp(str(max(0, root.bsetpoint - 1)))
+                
     if root.display_gauges:
         for i in range(0, root.settings.extruders):
             root.hottgauge[i] = TempGauge(parentpanel, size = (-1, 24), title = _("Heater" + str(i) +":"), maxval = 300, bgcolor = root.bgcolor)
             add("htemp_gauge" + str(i), root.hottgauge[i], flag = wx.EXPAND)
-        root.bedtgauge = TempGauge(parentpanel, size = (-1, 24), title = _("Bed:"), maxval = 150, bgcolor = root.bgcolor)
-        add("btemp_gauge", root.bedtgauge, flag = wx.EXPAND)
-
-        def hotendgauge_scroll_setpoint(e):
-            rot = e.GetWheelRotation()
-            if rot > 0:
-                root.do_settemp(str(root.hsetpoint + 1))
-            elif rot < 0:
-                root.do_settemp(str(max(0, root.hsetpoint - 1)))
-
-        def bedgauge_scroll_setpoint(e):
-            rot = e.GetWheelRotation()
-            if rot > 0:
-                root.do_bedtemp(str(root.bsetpoint + 1))
-            elif rot < 0:
-                root.do_bedtemp(str(max(0, root.bsetpoint - 1)))
-                
-        for i in range(0, root.settings.extruders):
             root.hottgauge[i].Bind(wx.EVT_MOUSEWHEEL, hotendgauge_scroll_setpoint)
-        root.bedtgauge.Bind(wx.EVT_MOUSEWHEEL, bedgauge_scroll_setpoint)
+    else:
+        root.hottgauge[0] = TempGauge(parentpanel, size = (-1, 24), title = _("Heater:"), maxval = 300, bgcolor = root.bgcolor)
+        add("htemp_gauge0", root.hottgauge[0], flag = wx.EXPAND)
+        root.hottgauge[0].Bind(wx.EVT_MOUSEWHEEL, hotendgauge_scroll_setpoint)
+            
+    root.bedtgauge = TempGauge(parentpanel, size = (-1, 24), title = _("Bed:"), maxval = 150, bgcolor = root.bgcolor)
+    add("btemp_gauge", root.bedtgauge, flag = wx.EXPAND)
+    root.bedtgauge.Bind(wx.EVT_MOUSEWHEEL, bedgauge_scroll_setpoint)
 
     # Temperature (M105) feedback display #
     root.tempdisp = wx.StaticText(parentpanel, -1, "", style = wx.ST_NO_AUTORESIZE)
@@ -302,10 +286,10 @@ def add_extra_controls(self, root, parentpanel, extra_buttons = None, mini_mode 
     add("esettings", esettingspanel, flag = wx.ALIGN_LEFT)
 
     if not standalone_mode:
-        ebuttonspanel = root.newPanel(parentpanel)
-        ebuttonssizer = wx.BoxSizer(wx.HORIZONTAL)
+        econtrolpanel = root.newPanel(parentpanel)
+        econtrolsizer = wx.BoxSizer(wx.HORIZONTAL)
         if root.settings.extruders > 1:
-            etool_sel_panel = esettingspanel if mini_mode else ebuttonspanel
+            etool_sel_panel = econtrolpanel
             etool_label = wx.StaticText(etool_sel_panel, -1, _("Tool:"))
             if root.settings.extruders == 2:
                 root.extrudersel = wx.Button(etool_sel_panel, -1, "0", style = wx.BU_EXACTFIT)
@@ -334,10 +318,14 @@ def add_extra_controls(self, root, parentpanel, extra_buttons = None, mini_mode 
                 add("etool_label", etool_label, container = esettingssizer, flag = wx.ALIGN_CENTER)
                 add("etool_val", root.extrudersel, container = esettingssizer)
             else:
-                ebuttonssizer.Add(etool_label, flag = wx.ALIGN_CENTER)
-                ebuttonssizer.Add(root.extrudersel)
+                econtrolsizer.Add(etool_label, flag = wx.ALIGN_CENTER)
+                econtrolsizer.Add(root.extrudersel)
+        econtrolpanel.SetSizer(econtrolsizer)
+        add("ext_controls", econtrolpanel, flag = wx.EXPAND)
 
-        for key in ["extrude", "reverse"]:
+        ebuttonspanel = root.newPanel(parentpanel)
+        ebuttonssizer = wx.BoxSizer(wx.HORIZONTAL)
+        for key in ["extrude", "reverse", "chktemp"]:
             desc = root.cpbuttons[key]
             btn = make_custom_button(root, ebuttonspanel, desc,
                                      style = wx.BU_EXACTFIT)
@@ -370,12 +358,14 @@ class ControlsSizer(wx.GridBagSizer):
         self.extra_buttons = {}
         pos_mapping = {"extrude": (4, 0),
                        "reverse": (4, 2),
+                       "chktemp": (4, 4),
                        }
         span_mapping = {"extrude": (1, 2),
-                        "reverse": (1, 3),
+                        "reverse": (1, 2),
+                        "chktemp": (1, 2),
                         }
         for key, desc in root.cpbuttons.items():
-            if not standalone_mode and key in ["extrude", "reverse"]:
+            if not standalone_mode and key in ["extrude", "reverse", "chktemp"]:
                 continue
             panel = lltspanel if key == "motorsoff" else parentpanel
             btn = make_custom_button(root, panel, desc)

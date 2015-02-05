@@ -172,13 +172,17 @@ class RemainingTimeEstimator(object):
             return (0, 0)
         if idx == self.last_idx:
             return self.last_estimate
-        layer, line = self.gcode.idxs(idx)
-        layer_progress = (1 - (float(line + 1) / self.current_layer_lines))
-        remaining = layer_progress * self.current_layer_estimate + self.remaining_layers_estimate
-        estimate = self.drift * remaining
-        total = estimate + printtime
-        self.last_idx = idx
-        self.last_estimate = (estimate, total)
+        try:
+            layer, line = self.gcode.idxs(idx)
+            layer_progress = (1 - (float(line + 1) / self.current_layer_lines))
+            remaining = layer_progress * self.current_layer_estimate + self.remaining_layers_estimate
+            estimate = self.drift * remaining
+            total = estimate + printtime
+            self.last_idx = idx
+            self.last_estimate = (estimate, total)
+        except:
+            if idx <= 0:
+                return (0, 0)
         return self.last_estimate
 
 def parse_build_dimensions(bdim):
