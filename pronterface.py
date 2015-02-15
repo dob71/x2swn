@@ -30,8 +30,7 @@ not yet available for python3. You should try running with python2 instead.""")
 import sys
 import os
 import x2Profiler
-
-from printrun.pronterface import PronterWindow
+import printrun.pronterface
 
 if __name__ == '__main__':
     app = wx.App(False)
@@ -55,7 +54,7 @@ if __name__ == '__main__':
 
     while(True):
         x2Profiler.pronterface_restart = False
-        main = PronterWindow(app)
+        main = printrun.pronterface.PronterWindow(app)
         main.Show()
         try:
             app.MainLoop()
@@ -63,3 +62,4 @@ if __name__ == '__main__':
             pass
         if not x2Profiler.pronterface_restart:
             break
+        reload(printrun.pronterface)

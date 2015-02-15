@@ -259,6 +259,7 @@ class Settings(object):
     def __init__(self, root):
         # defaults here.
         # the initial value determines the type
+        self._settings = [];
         self._add(StringSetting("port", "", _("Serial port"), _("Port used to communicate with printer")))
         self._add(ComboSetting("baudrate", 115200, self.__baudrate_list(), _("Baud rate"), _("Communications Speed")))
         self._add(BooleanSetting("tcp_streaming_mode", False, _("TCP streaming mode"), _("When using a TCP connection to the printer, the streaming mode will not wait for acks from the printer to send new commands. This will break things such as ETA prediction, but can result in smoother prints.")), root.update_tcp_streaming_mode)
@@ -296,8 +297,6 @@ class Settings(object):
         self._add(HiddenSetting("default_extrusion", 5.0))
         self._add(HiddenSetting("last_extrusion", 5.0))
         self._add(HiddenSetting("total_filament_used", 0.0))
-
-    _settings = []
 
     def __setattr__(self, name, value):
         if name.startswith("_"):

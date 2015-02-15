@@ -180,13 +180,20 @@ class PronterOptionsDialog(wx.Dialog):
 
 def PronterOptions(pronterface):
     dialog = PronterOptionsDialog(pronterface)
+    do_restart = False
     if dialog.ShowModal() == wx.ID_OK:
         for setting in pronterface.settings._all_settings():
             old_value = setting.value
             setting.update()
             if setting.value != old_value:
                 pronterface.set(setting.name, setting.value)
+                if pronterface.pending_restart:
+                    do_restart = True
+            else:
+                pronterface.pending_restart = False
     dialog.Destroy()
+    if do_restart:
+        pronterface.restart()
 
 class ButtonEdit(wx.Dialog):
     """Custom button edit dialog"""

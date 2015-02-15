@@ -230,3 +230,10 @@ tempreport_exp = re.compile("([TB]\d*):([-+]?\d*\.?\d*)(?: ?\/)?([-+]?\d*\.?\d*)
 def parse_temperature_report(report):
     matches = tempreport_exp.findall(report)
     return dict((m[0], (m[1], m[2])) for m in matches)
+
+x2_version_exp = re.compile("Marlin +(\d+\.\d+\.\d+) +X2")
+def parse_x2_version(line):
+    m = x2_version_exp.match(line)
+    if m:
+        return m.group(1)
+    return None

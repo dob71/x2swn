@@ -75,18 +75,18 @@ def MainToolbar(root, ppanel = None, use_wrapsizer = False):
 
     self.AddStretchSpacer(prop = 1)
 
-    root.loadbtn = make_autosize_button(parentpanel, _("Load file"), root.loadfile, _("Load a 3D model file"), self)
+    #root.loadbtn = make_autosize_button(parentpanel, _("Load file"), root.loadfile, _("Load a 3D model file"), self)
     root.sdbtn = make_autosize_button(parentpanel, _("SD"), root.sdmenu, _("SD Card Printing"), self)
     root.sdbtn.Reparent(parentpanel)
     root.printerControls.append(root.sdbtn)
     if not hasattr(root, "printbtn"):
-        root.printbtn = make_autosize_button(parentpanel, _("Print"), root.printfile, _("Start Printing Loaded File"))
+        root.printbtn = make_autosize_button(parentpanel, _("Print"), root.printfile, _("Start/Cancel Printing Loaded File"))
         root.statefulControls.append(root.printbtn)
     else:
         root.printbtn.Reparent(parentpanel)
     self.Add(root.printbtn)
     if not hasattr(root, "pausebtn"):
-        root.pausebtn = make_autosize_button(parentpanel, _("Pause"), root.pause, _("Pause Current Print"))
+        root.pausebtn = make_autosize_button(parentpanel, _("Pause"), root.pause, _("Pause/Resume Current Print"))
         root.statefulControls.append(root.pausebtn)
     else:
         root.pausebtn.Reparent(parentpanel)

@@ -36,7 +36,8 @@ from . import printcore
 from .utils import install_locale, setup_logging, dosify, \
     iconfile, configfile, format_time, format_duration, \
     hexcolor_to_float, parse_temperature_report, \
-    prepare_command, check_rgb_color, check_rgba_color
+    prepare_command, check_rgb_color, check_rgba_color, \
+    parse_x2_version
 install_locale('pronterface')
 
 try:
@@ -240,14 +241,13 @@ class PronterWindow(MainWindow, pronsole.pronsole):
             self.connect()
         if self.filename is not None:
             self.do_load(self.filename)
-        if self.settings.monitor:
-            self.update_monitor()
 
     #  --------------------------------------------------------------
     #  Main interface handling
     #  --------------------------------------------------------------
 
     def restart(self):
+        self.pendig_restart = False
         if wx.YES != wx.MessageBox('Would you like to restart to apply the changes?', '', style = wx.YES_NO|wx.ICON_QUESTION):
             return
         x2Profiler.pronterface_restart = True
@@ -317,10 +317,9 @@ class PronterWindow(MainWindow, pronsole.pronsole):
             self.panel.Layout()
             if self.fgcode:
                 self.start_viz_thread()
-            if self.settings.monitor:
-                self.update_monitor()
         self.ui_ready = True
         self.Thaw()
+        self.update_monitor()
 
     def on_resize(self, event):
         wx.CallAfter(self.on_resize_real)
@@ -364,6 +363,10 @@ class PronterWindow(MainWindow, pronsole.pronsole):
         else:
             return wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOWFRAME)
     bgcolor = property(_get_bgcolor)
+    
+    def set_pending_restart(self, *args):
+        self.pending_restart = True
+    pending_restart = False
 
     #  --------------------------------------------------------------
     #  Main interface actions
@@ -389,6 +392,7 @@ class PronterWindow(MainWindow, pronsole.pronsole):
             self.log(_("Monitoring printer."))
         else:
             self.log(_("Done monitoring."))
+        wx.CallAfter(self.update_monitor)
 
     def do_pront_extrude(self, l = ""):
         feed = self.settings.e_feedrate
@@ -860,23 +864,23 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
         #self.settings._add(BooleanSetting("monitor", True, _("Monitor printer status"), _("Regularly monitor printer temperatures (required to have functional temperature graph or gauges)"), "Printer"), self.update_monitor)
         self.settings._add(StringSetting("simarrange_path", "", _("Simarrange command"), _("Path to the simarrange binary to use in the STL plater"), "External"))
         self.settings._add(BooleanSetting("circular_bed", False, _("Circular build platform"), _("Draw a circular (or oval) build platform instead of a rectangular one"), "Printer"), self.update_bed_viz)
-        self.settings._add(SpinSetting("extruders", 0, 1, 5, _("Extruders count"), _("Number of extruders"), "Printer"))
+        self.settings._add(SpinSetting("extruders", 0, 1, 5, _("Extruders count"), _("Number of extruders"), "Printer"), self.set_pending_restart)
         self.settings._add(BooleanSetting("clamp_jogging", False, _("Clamp manual moves"), _("Prevent manual moves from leaving the specified build dimensions"), "Printer"))
-        #self.settings._add(ComboSetting("uimode", _("Standard"), [_("Standard"), _("Compact"), _("Tabbed"), _("Tabbed with platers")], _("Interface mode"), _("Standard interface is a one-page, three columns layout with controls/visualization/log\nCompact mode is a one-page, two columns layout with controls + log/visualization\nTabbed mode is a two-pages mode, where the first page shows controls and the second one shows visualization and log.\nTabbed with platers mode is the same as Tabbed, but with two extra pages for the STL and G-Code platers."), "UI"), self.reload_ui)
-        #self.settings._add(ComboSetting("controlsmode", "Standard", ["Standard", "Mini"], _("Controls mode"), _("Standard controls include all controls needed for printer setup and calibration, while Mini controls are limited to the ones needed for daily printing"), "UI"), self.reload_ui)
-        #self.settings._add(BooleanSetting("slic3rintegration", False, _("Enable Slic3r integration"), _("Add a menu to select Slic3r profiles directly from Pronterface"), "UI"), self.reload_ui)
+        #self.settings._add(ComboSetting("uimode", _("Standard"), [_("Standard"), _("Compact"), _("Tabbed"), _("Tabbed with platers")], _("Interface mode"), _("Standard interface is a one-page, three columns layout with controls/visualization/log\nCompact mode is a one-page, two columns layout with controls + log/visualization\nTabbed mode is a two-pages mode, where the first page shows controls and the second one shows visualization and log.\nTabbed with platers mode is the same as Tabbed, but with two extra pages for the STL and G-Code platers."), "UI"), self.set_pending_restart)
+        #self.settings._add(ComboSetting("controlsmode", "Standard", ["Standard", "Mini"], _("Controls mode"), _("Standard controls include all controls needed for printer setup and calibration, while Mini controls are limited to the ones needed for daily printing"), "UI"), self.set_pending_restart)
+        #self.settings._add(BooleanSetting("slic3rintegration", False, _("Enable Slic3r integration"), _("Add a menu to select Slic3r profiles directly from Pronterface"), "UI"), self.set_pending_restart)
         #self.settings._add(BooleanSetting("slic3rupdate", False, _("Update Slic3r default presets"), _("When selecting a profile in Slic3r integration menu, also save it as the default Slic3r preset"), "UI"))
-        self.settings._add(ComboSetting("mainviz", "3D", ["2D", "3D", "None"], _("Main visualization"), _("Select visualization for main window."), "Viewer"), self.reload_ui)
-        self.settings._add(BooleanSetting("viz3d", False, _("Use 3D in GCode viewer window"), _("Use 3D mode instead of 2D layered mode in the visualization window"), "Viewer"), self.reload_ui)
+        self.settings._add(ComboSetting("mainviz", "3D", ["2D", "3D", "None"], _("Main visualization"), _("Select visualization for main window."), "Viewer"), self.set_pending_restart)
+        self.settings._add(BooleanSetting("viz3d", False, _("Use 3D in GCode viewer window"), _("Use 3D mode instead of 2D layered mode in the visualization window"), "Viewer"), self.set_pending_restart)
         self.settings._add(StaticTextSetting("separator_3d_viewer", _("3D viewer options"), "", group = "Viewer"))
-        self.settings._add(BooleanSetting("light3d", False, _("Use a lighter 3D visualization"), _("Use a lighter visualization with simple lines instead of extruded paths for 3D viewer"), "Viewer"), self.reload_ui)
-        self.settings._add(ComboSetting("antialias3dsamples", "0", ["0", "2", "4", "8"], _("Number of anti-aliasing samples"), _("Amount of anti-aliasing samples used in the 3D viewer"), "Viewer"), self.reload_ui)
+        self.settings._add(BooleanSetting("light3d", False, _("Use a lighter 3D visualization"), _("Use a lighter visualization with simple lines instead of extruded paths for 3D viewer"), "Viewer"), self.set_pending_restart)
+        self.settings._add(ComboSetting("antialias3dsamples", "0", ["0", "2", "4", "8"], _("Number of anti-aliasing samples"), _("Amount of anti-aliasing samples used in the 3D viewer"), "Viewer"), self.set_pending_restart)
         self.settings._add(BooleanSetting("trackcurrentlayer3d", False, _("Track current layer in main 3D view"), _("Track the currently printing layer in the main 3D visualization"), "Viewer"))
         self.settings._add(FloatSpinSetting("gcview_path_width", 0.4, 0.01, 2, _("Extrusion width for 3D viewer"), _("Width of printed path in 3D viewer"), "Viewer", increment = 0.05), self.update_gcview_params)
         self.settings._add(FloatSpinSetting("gcview_path_height", 0.3, 0.01, 2, _("Layer height for 3D viewer"), _("Height of printed path in 3D viewer"), "Viewer", increment = 0.05), self.update_gcview_params)
-        self.settings._add(BooleanSetting("tempgraph", True, _("Display temperature graph"), _("Display time-lapse temperature graph"), "UI"), self.reload_ui)
-        self.settings._add(BooleanSetting("tempgauges", False, _("Display all temperature gauges"), _("Display graphical gauges for temperatures visualization for all hotends"), "UI"), self.reload_ui)
-        self.settings._add(BooleanSetting("lockbox", False, _("Display interface lock checkbox"), _("Display a checkbox that, when check, locks most of Pronterface"), "UI"), self.reload_ui)
+        self.settings._add(BooleanSetting("tempgraph", True, _("Display temperature graph"), _("Display time-lapse temperature graph"), "UI"), self.set_pending_restart)
+        self.settings._add(BooleanSetting("tempgauges", False, _("Display all temperature gauges"), _("Display graphical gauges for temperatures visualization for all hotends"), "UI"), self.set_pending_restart)
+        self.settings._add(BooleanSetting("lockbox", False, _("Display interface lock checkbox"), _("Display a checkbox that, when check, locks most of Pronterface"), "UI"), self.set_pending_restart)
         self.settings._add(BooleanSetting("lockonstart", False, _("Lock interface upon print start"), _("If lock checkbox is enabled, lock the interface when starting a print"), "UI"))
         self.settings._add(BooleanSetting("refreshwhenloading", True, _("Update UI during G-Code load"), _("Regularly update visualization during the load of a G-Code file"), "UI"))
         self.settings._add(HiddenSetting("last_window_width", size[0]))
@@ -890,7 +894,7 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
         self.settings._add(FloatSpinSetting("preview_extrusion_width", 0.5, 0, 10, _("Preview extrusion width"), _("Width of Extrusion in Preview"), "Viewer", increment = 0.1), self.update_gviz_params)
         self.settings._add(SpinSetting("preview_grid_step1", 10., 0, 200, _("Fine grid spacing"), _("Fine Grid Spacing"), "Viewer"), self.update_gviz_params)
         self.settings._add(SpinSetting("preview_grid_step2", 50., 0, 200, _("Coarse grid spacing"), _("Coarse Grid Spacing"), "Viewer"), self.update_gviz_params)
-        self.settings._add(StringSetting("bgcolor", "#FFFFFF", _("Background color"), _("Pronterface background color"), "Colors"), self.reload_ui, validate = check_rgb_color)
+        self.settings._add(StringSetting("bgcolor", "#FFFFFF", _("Background color"), _("Pronterface background color"), "Colors"), self.set_pending_restart, validate = check_rgb_color)
         self.settings._add(StringSetting("gcview_color_background", "#FAFAC7FF", _("3D view background color"), _("Color of the 3D view background"), "Colors"), self.update_gcview_colors, validate = check_rgba_color)
         self.settings._add(StringSetting("gcview_color_travel", "#99999999", _("3D view travel moves color"), _("Color of travel moves in 3D view"), "Colors"), self.update_gcview_colors, validate = check_rgba_color)
         self.settings._add(StringSetting("gcview_color_tool0", "#FF000099", _("3D view print moves color"), _("Color of print moves with tool 0 in 3D view"), "Colors"), self.update_gcview_colors, validate = check_rgba_color)
@@ -995,7 +999,7 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
 
     def update_monitor(self, *args):
         if hasattr(self, "graph") and self.display_graph:
-            if self.settings.monitor:
+            if self.settings.monitor and self.p.online and not self.uploading:
                 wx.CallAfter(self.graph.StartPlotting, 1000)
             else:
                 wx.CallAfter(self.graph.StopPlotting)
@@ -1132,6 +1136,9 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
 
         # Relayout the toolbar to handle new buttons size
         wx.CallAfter(self.toolbarsizer.Layout)
+        
+        # Update graph
+        wx.CallAfter(self.update_monitor)
 
     def reset(self,event):
         self.log(_("Reset."))
@@ -1161,6 +1168,17 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
                 self.paused = 0
             wx.CallAfter(self.toolbarsizer.Layout)
 
+    x2_version = None
+    def versiongrabber(self, line, ignored = False):
+        self.x2_version = parse_x2_version(line)
+        if self.x2_version:
+            self.log(_("Detected Marlin X2 v" + self.x2_version))
+            self.x2_version_search_counter = 0
+        else:
+            self.x2_version_search_counter = self.x2_version_search_counter - 1
+        if self.x2_version_search_counter <= 0:
+            self.recvlisteners.remove(self.versiongrabber)
+
     #  --------------------------------------------------------------
     #  Print/upload handling
     #  --------------------------------------------------------------
@@ -1168,6 +1186,12 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
     def on_startprint(self):
         wx.CallAfter(self.pausebtn.SetLabel, _("Pause"))
         wx.CallAfter(self.pausebtn.Enable)
+        wx.CallAfter(self.printbtn.SetLabel, _("Cancel"))
+        wx.CallAfter(self.printbtn.Enable)
+        wx.CallAfter(self.toolbarsizer.Layout)
+
+    def on_startupload(self):
+        wx.CallAfter(self.pausebtn.Disable)
         wx.CallAfter(self.printbtn.SetLabel, _("Cancel"))
         wx.CallAfter(self.toolbarsizer.Layout)
 
@@ -1198,8 +1222,6 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
                 return
             self.cancelprint()
             return
-        self.on_startprint()
-        threading.Thread(target = self.getfiles).start()
         self.extra_print_time = 0
         self.on_startprint()
         threading.Thread(target = self.getfiles).start()
@@ -1209,25 +1231,34 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
             return
         if not self.p.online:
             return
+        if self.paused or self.p.printing or self.sdprinting:
+            dlg=wx.MessageDialog(self, _("Are you sure you want to cancel the print?"), _("Cancel?"), wx.YES|wx.NO)
+            if dlg.ShowModal()==wx.ID_NO:
+                return
+            self.cancelprint()
+            time.sleep(0.5)
         dlg = wx.TextEntryDialog(self, ("Enter a target filename in 8.3 format:"), _("Pick SD filename"), dosify(self.filename))
         if dlg.ShowModal() == wx.ID_OK:
             self.p.send_now("M21")
             self.p.send_now("M28 " + str(dlg.GetValue()))
+            self.on_startupload()
             self.recvlisteners.append(self.uploadtrigger)
         dlg.Destroy()
 
     def uploadtrigger(self, l):
         if "Writing to file" in l:
             self.uploading = True
-            self.p.startprint(self.fgcode)
             self.p.endcb = self.endupload
+            self.p.startprint(self.fgcode)
+        elif "open failed" in l:
             self.recvlisteners.remove(self.uploadtrigger)
-        elif "open failed, File" in l:
-            self.recvlisteners.remove(self.uploadtrigger)
+            self.uploading = False
+            self.cancelprint()
 
     def endupload(self):
         self.p.send_now("M29 ")
         wx.CallAfter(self.statusbar.SetStatusText, _("File upload complete"))
+        self.cancelprint()
         time.sleep(0.5)
         self.p.clear = True
         self.uploading = False
@@ -1338,7 +1369,7 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
         self.slicep = None
 
     def slice(self, filename):
-        wx.CallAfter(self.loadbtn.SetLabel, _("Cancel"))
+        #wx.CallAfter(self.loadbtn.SetLabel, _("Cancel"))
         wx.CallAfter(self.toolbarsizer.Layout)
         self.log(_("Slicing ") + filename)
         self.cout = StringIO.StringIO()
@@ -1471,7 +1502,7 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
         self.log(message)
         self.statusbar.SetStatusText(message)
         self.savebtn.Enable(True)
-        self.loadbtn.SetLabel(_("Load File"))
+        #self.loadbtn.SetLabel(_("Load File"))
         self.printbtn.SetLabel(_("Print"))
         self.pausebtn.SetLabel(_("Pause"))
         self.pausebtn.Disable()
@@ -1585,6 +1616,8 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
     def online(self):
         """Callback when printer goes online"""
         self.log(_("Printer is now online."))
+        self.x2_version_search_counter = 5
+        self.recvlisteners.append(self.versiongrabber)
         wx.CallAfter(self.online_gui)
         wx.CallAfter(self.callOnConnect)
 
@@ -1598,6 +1631,7 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
         self.connectbtn.SetLabel(_("Disconnect"))
         self.connectbtn.SetToolTip(wx.ToolTip("Disconnect from the printer"))
         self.connectbtn.Bind(wx.EVT_BUTTON, self.disconnect)
+        wx.CallAfter(self.update_monitor)
 
         if hasattr(self, "extrudersel"):
             self.do_tool(self.extrudersel.GetValue())
@@ -1611,7 +1645,7 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
 
     def sentcb(self, line, gline):
         """Callback when a printer gcode has been sent"""
-        if not gline:
+        if not gline or self.uploading:
             pass
         elif gline.command in ["M104", "M109"]:
             gline_s = gcoder.S(gline)
@@ -1720,6 +1754,17 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
         t_ext = 0
         if hasattr(self, "extrudersel"): 
             t_ext = int(self.extrudersel.GetValue())
+            if self.x2_version and self.x2_version >= "1.1.0":
+                new_t_ext = t_ext
+                if self.tempreadings.startswith("ok T0"):
+                    new_t_ext = 0
+                if self.tempreadings.startswith("ok T1"):
+                    new_t_ext = 1
+                if self.tempreadings.startswith("ok T2"):
+                    new_t_ext = 2 
+                if new_t_ext != t_ext:
+                    t_ext = new_t_ext
+                    self.extrudersel.SetValue(str(t_ext))
         try:
             temps = parse_temperature_report(self.tempreadings)
             if "T0" in temps and temps["T0"][0]:
@@ -2010,6 +2055,8 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
             wx.CallAfter(self.printbtn.Disable)
         self.log(_("Print cancelled."))
         wx.CallAfter(self.toolbarsizer.Layout)
+        # The only way to really cancel is to reset
+        self.p.reset()
         return
 
     def cbutton_remove(self, e, button):
