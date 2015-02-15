@@ -67,10 +67,11 @@ def add_extra_controls(self, root, parentpanel, extra_buttons = None, mini_mode 
         "extrude":        (0, 1),
         "reverse":        (0, 2),
         "chktemp":        (0, 3),
+        "htemp_gauge0": (gauges_base_line, 0),
         "btemp_gauge":  (gauges_base_line + gauge_lines, 0),
         "tempdisp":     (tempdisp_line, 0),
     }
-    for i in range(0, root.settings.extruders):
+    for i in range(1, root.settings.extruders):
         pos_mapping["htemp_gauge" + str(i)] = (gauges_base_line + i, 0)
 
     span_mapping = {

@@ -96,8 +96,5 @@ def MainToolbar(root, ppanel = None, use_wrapsizer = False):
 
     self.AddStretchSpacer(prop = 4)
 
-    if root.settings.lockbox:
-        parentpanel.SetSizer(self)
-        return glob
-    else:
-        return self
+    parentpanel.SetSizer(self)
+    return glob

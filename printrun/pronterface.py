@@ -569,12 +569,14 @@ class PronterWindow(MainWindow, pronsole.pronsole):
     def sdmenu(self, e):
         obj = e.GetEventObject()
         popupmenu = wx.Menu()
+        item = popupmenu.Append(-1, _("SD Print"))
+        self.Bind(wx.EVT_MENU, self.sdprintfile, id = item.GetId())
         item = popupmenu.Append(-1, _("SD Upload"))
         if not self.fgcode:
             item.Enable(False)
         self.Bind(wx.EVT_MENU, self.upload, id = item.GetId())
-        item = popupmenu.Append(-1, _("SD Print"))
-        self.Bind(wx.EVT_MENU, self.sdprintfile, id = item.GetId())
+        item = popupmenu.Append(-1, _("SD Reset"))
+        self.Bind(wx.EVT_MENU, self.sdreset, id = item.GetId())
         self.panel.PopupMenu(popupmenu, obj.GetPosition())
 
     def htemp_change(self, event):
@@ -1132,7 +1134,10 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
 
         macro = "onDisconnect"
         if self.macros.get(macro, False):
-            self.onecmd(macro)
+            try:
+                self.onecmd(macro)
+            except:
+                pass
 
         # Relayout the toolbar to handle new buttons size
         wx.CallAfter(self.toolbarsizer.Layout)
@@ -1151,7 +1156,10 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
         self.p.reset()
         macro = "onReset"
         if self.macros.get(macro, False):
-            self.onecmd(macro)
+            try:
+                self.onecmd(macro)
+            except:
+                pass
 
 
     def reset(self, event):
@@ -1221,10 +1229,24 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
             if dlg.ShowModal()==wx.ID_NO:
                 return
             self.cancelprint()
-            return
+            time.sleep(0.5)
         self.extra_print_time = 0
         self.on_startprint()
         threading.Thread(target = self.getfiles).start()
+
+    def sdreset(self, event):
+        # If SD printing
+        if self.sdprinting:
+            dlg=wx.MessageDialog(self, _("Are you sure you want to reset SD?"), _("Cancel?"), wx.YES|wx.NO)
+            if dlg.ShowModal()==wx.ID_NO:
+                return
+            self.cancelprint()
+            time.sleep(0.5)
+        self.p.send_now("M22")
+        time.sleep(0.2)
+        self.p.send_now("M21")
+        time.sleep(0.2)
+        self.p.send_now("M20")
 
     def upload(self, event):
         if not self.fgcode:
@@ -1624,7 +1646,10 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
     def callOnConnect(self):
         macro = "onConnect"
         if self.macros.get(macro, False):
-            self.onecmd(macro)
+            try:
+                self.onecmd(macro)
+            except:
+                pass
 
     def online_gui(self):
         """Callback when printer goes online (graphical bits)"""
@@ -1682,7 +1707,10 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
                 wx.CallAfter(self.extrudersel.SetValue, tool)
             macro = "onSetExt" + tool
             if self.macros.get(macro, False):
-                self.onecmd(macro)
+                try:
+                    self.onecmd(macro)
+                except:
+                    pass
         if gline.is_move:
             self.sentglines.put_nowait(gline)
 
