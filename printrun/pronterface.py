@@ -26,6 +26,7 @@ import subprocess
 import glob
 import logging
 import x2Profiler
+import tempfile
 
 try: import simplejson as json
 except ImportError: import json
@@ -320,6 +321,7 @@ class PronterWindow(MainWindow, pronsole.pronsole):
         self.ui_ready = True
         self.Thaw()
         self.update_monitor()
+        wx.CallAfter(self.cancelsfbtn.Disable)
 
     def on_resize(self, event):
         wx.CallAfter(self.on_resize_real)
@@ -1121,6 +1123,7 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
         wx.CallAfter(self.connectbtn.SetToolTip, wx.ToolTip(_("Connect to the printer")))
         wx.CallAfter(self.connectbtn.Bind, wx.EVT_BUTTON, self.connect)
         wx.CallAfter(self.printbtn.SetLabel, _("Print"))
+        wx.CallAfter(self.printbtn.Enable)
 
         wx.CallAfter(self.gui_set_disconnected)
 
@@ -1357,17 +1360,21 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
             output_filename = self.model_to_gcode_filename(self.filename)
             pararray = prepare_command(self.settings.slicecommand,
                                        {"$s": self.filename, "$o": output_filename})
-            if self.settings.slic3rintegration:
-                for cat, config in self.slic3r_configs.items():
-                    if config:
-                        fpath = os.path.join(self.slic3r_configpath, cat, config)
-                        pararray += ["--load", fpath]
+            #if self.settings.slic3rintegration:
+            #    for cat, config in self.slic3r_configs.items():
+            #        if config:
+            #            fpath = os.path.join(self.slic3r_configpath, cat, config)
+            #            pararray += ["--load", fpath]
             self.log(_("Running ") + " ".join(pararray))
             self.slicep = subprocess.Popen(pararray, stderr = subprocess.STDOUT, stdout = subprocess.PIPE)
+            o_str = ""
             while True:
                 o = self.slicep.stdout.read(1)
                 if o == '' and self.slicep.poll() is not None: break
-                sys.stdout.write(o)
+                o_str = o_str + o
+                if o == '\n' or  o == '\r':
+                    sys.stdout.write(o_str)
+                    o_str = ""
             self.slicep.wait()
             self.stopsf = 1
         except:
@@ -1376,27 +1383,57 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
             self.stopsf = 1
 
     def slice_monitor(self):
+        cancel_done = False
+        kill_called = False
         while not self.stopsf:
+            msg = _("Slicing...")
+            if self.cancelsf and not cancel_done and self.slicep:
+                try:
+                    if not kill_called:
+                        self.slicep.kill()
+                    if self.slicep.poll() == None:
+                        cancel_done = True
+                except:
+                    pass
+                if cancel_done:
+                    msg = _("Slicing cancelled!")
+                else:
+                    msg = _("Unable to cancel slicing!")
             try:
-                wx.CallAfter(self.statusbar.SetStatusText, _("Slicing..."))  # +self.cout.getvalue().split("\n")[-1])
+                wx.CallAfter(self.statusbar.SetStatusText, msg)
             except:
                 pass
             time.sleep(0.1)
-        fn = self.filename
-        try:
-            self.load_gcode_async(self.model_to_gcode_filename(self.filename))
-        except:
-            self.filename = fn
+        if not self.cancelsf:
+            fn = self.filename
+            try:
+                self.load_gcode_async(self.model_to_gcode_filename(self.filename))
+            except:
+                self.filename = fn
         self.slicing = False
+        self.cancelsf = False
         self.slicep = None
+        wx.CallAfter(self.cancelsfbtn.Disable)
+
+    def slice_cancel(self, event = None):
+        if not self.slicing or not self.slicep:
+            return
+        dlg=wx.MessageDialog(self, _("Would you like to cancel the slicing?"), _("Cancel?"), wx.YES|wx.NO)
+        if dlg.ShowModal()==wx.ID_NO:
+            return
+        if not self.slicing or not self.slicep:
+            return
+        self.cancelsf = True
+        wx.CallAfter(self.cancelsfbtn.Disable)
 
     def slice(self, filename):
-        #wx.CallAfter(self.loadbtn.SetLabel, _("Cancel"))
+        wx.CallAfter(self.cancelsfbtn.Enable)
         wx.CallAfter(self.toolbarsizer.Layout)
         self.log(_("Slicing ") + filename)
         self.cout = StringIO.StringIO()
         self.filename = filename
         self.stopsf = 0
+        self.cancelsf = False
         self.slicing = True
         threading.Thread(target = self.slice_func).start()
         threading.Thread(target = self.slice_monitor).start()
@@ -1524,7 +1561,6 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
         self.log(message)
         self.statusbar.SetStatusText(message)
         self.savebtn.Enable(True)
-        #self.loadbtn.SetLabel(_("Load File"))
         self.printbtn.SetLabel(_("Print"))
         self.pausebtn.SetLabel(_("Pause"))
         self.pausebtn.Disable()

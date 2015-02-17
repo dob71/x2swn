@@ -66,12 +66,6 @@ def MainToolbar(root, ppanel = None, use_wrapsizer = False):
     else:
         root.connectbtn.Reparent(parentpanel)
     self.Add(root.connectbtn)
-    if not hasattr(root, "resetbtn"):
-        root.resetbtn = make_autosize_button(parentpanel, _("Reset"), root.reset, _("Reset the printer"))
-        root.statefulControls.append(root.resetbtn)
-    else:
-        root.resetbtn.Reparent(parentpanel)
-    self.Add(root.resetbtn)
 
     self.AddStretchSpacer(prop = 1)
 
@@ -91,6 +85,18 @@ def MainToolbar(root, ppanel = None, use_wrapsizer = False):
     else:
         root.pausebtn.Reparent(parentpanel)
     self.Add(root.pausebtn)
+
+    self.AddStretchSpacer(prop = 1)
+
+    root.resetbtn = make_autosize_button(parentpanel, _("Reset"), root.reset, _("Reset the printer"), self)
+    root.resetbtn.Reparent(parentpanel)
+    root.printerControls.append(root.resetbtn)
+    if not hasattr(root, "cancelsfbtn"):
+        root.cancelsfbtn = make_autosize_button(parentpanel, _("KillSlicer"), root.slice_cancel, _("Cancel the slicing process"))
+        root.statefulControls.append(root.cancelsfbtn)
+    else:
+        root.cancelsfbtn.Reparent(parentpanel)
+    self.Add(root.cancelsfbtn)
     #root.offbtn = make_autosize_button(parentpanel, _("Off"), root.off, _("Turn printer off"), self)
     #root.printerControls.append(root.offbtn)
 
