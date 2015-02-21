@@ -1355,11 +1355,14 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
             filename = filename.replace(ext.upper(), suffix)
         return filename
 
-    def slice_func(self):
+    def slice_func(self, slicecommand = None, filename = None):
         try:
-            output_filename = self.model_to_gcode_filename(self.filename)
-            pararray = prepare_command(self.settings.slicecommand,
-                                       {"$s": self.filename, "$o": output_filename})
+            if not slicecommand:
+                slicecommand = self.settings.slicecommand
+            if filename:
+                pararray = prepare_command(slicecommand, {"$s": filename, "$o": self.output_filename})
+            else:
+                pararray = prepare_command(slicecommand, {"$s": "", "$o": self.output_filename})
             #if self.settings.slic3rintegration:
             #    for cat, config in self.slic3r_configs.items():
             #        if config:
@@ -1378,6 +1381,7 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
             self.slicep.wait()
             self.stopsf = 1
         except:
+            os.remove(self.output_filename)
             self.logError(_("Failed to execute slicing software: ")
                           + "\n" + traceback.format_exc())
             self.stopsf = 1
@@ -1404,10 +1408,17 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
             except:
                 pass
             time.sleep(0.1)
-        if not self.cancelsf:
+        try:
+            size = os.path.getsize(self.output_filename)
+            if size == 0:
+                os.remove(self.output_filename)
+        except:
+            size = 0
+        wx.CallAfter(self.statusbar.SetStatusText, _("Done, output file size: " + str(size) + " bytes"))
+        if not self.cancelsf and size > 0:
             fn = self.filename
             try:
-                self.load_gcode_async(self.model_to_gcode_filename(self.filename))
+                self.load_gcode_async(self.output_filename)
             except:
                 self.filename = fn
         self.slicing = False
@@ -1426,16 +1437,21 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
         self.cancelsf = True
         wx.CallAfter(self.cancelsfbtn.Disable)
 
-    def slice(self, filename):
+    def slice(self, filename = None, cmdline = None):
         wx.CallAfter(self.cancelsfbtn.Enable)
         wx.CallAfter(self.toolbarsizer.Layout)
-        self.log(_("Slicing ") + filename)
+        if filename:
+            self.log(_("Slicing ") + filename)
+            self.filename = filename
+            self.output_filename = self.model_to_gcode_filename(filename)
+        else:
+            self.log(_("Generating G-Code"))
+            self.output_filename = tempfile.mkstemp(suffix = ".g", prefix = "x2swtmp")[1]
         self.cout = StringIO.StringIO()
-        self.filename = filename
         self.stopsf = 0
         self.cancelsf = False
         self.slicing = True
-        threading.Thread(target = self.slice_func).start()
+        threading.Thread(target = self.slice_func, args = (cmdline,)).start()
         threading.Thread(target = self.slice_monitor).start()
 
     def cmdline_filename_callback(self, filename):
