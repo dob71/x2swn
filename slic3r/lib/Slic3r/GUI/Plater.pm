@@ -976,16 +976,22 @@ sub export_gcode {
         $self->{export_gcode_output_file} = $self->{print}->expanded_output_filepath($output_file);
     } else {
         my $default_output_file = $self->{print}->expanded_output_filepath($main::opt{output});
-        my $dlg = Wx::FileDialog->new($self, 'Save G-code file as:', wxTheApp->output_path(dirname($default_output_file)),
-            basename($default_output_file), &Slic3r::GUI::FILE_WILDCARDS->{gcode}, wxFD_SAVE);
-        if ($dlg->ShowModal != wxID_OK) {
+        my $opt_pname = $main::opt{output};
+        if ($opt_pname && $opt_pname eq $default_output_file) {
+            $self->{export_gcode_output_file} = $default_output_file;
+        } else {
+            print "Output: $default_output_file\n";
+            my $dlg = Wx::FileDialog->new($self, 'Save G-code file as:', wxTheApp->output_path(dirname($default_output_file)),
+                basename($default_output_file), &Slic3r::GUI::FILE_WILDCARDS->{gcode}, wxFD_SAVE);
+            if ($dlg->ShowModal != wxID_OK) {
+                $dlg->Destroy;
+                return;
+            }
+            $Slic3r::GUI::Settings->{_}{last_output_path} = dirname($dlg->GetPath);
+            wxTheApp->save_settings;
+            $self->{export_gcode_output_file} = $Slic3r::GUI::MainFrame::last_output_file = $dlg->GetPath;
             $dlg->Destroy;
-            return;
         }
-        $Slic3r::GUI::Settings->{_}{last_output_path} = dirname($dlg->GetPath);
-        wxTheApp->save_settings;
-        $self->{export_gcode_output_file} = $Slic3r::GUI::MainFrame::last_output_file = $dlg->GetPath;
-        $dlg->Destroy;
     }
     
     $self->statusbar->StartBusy;

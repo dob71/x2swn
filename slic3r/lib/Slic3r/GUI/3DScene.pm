@@ -113,7 +113,7 @@ sub new {
         $self->Refresh;
     });
     EVT_MOUSE_EVENTS($self, \&mouse_event);
-    
+    EVT_ERASE_BACKGROUND( $self, sub { } );
     return $self;
 }
 
