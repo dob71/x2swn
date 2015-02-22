@@ -149,6 +149,13 @@ sub about {
     $about->Destroy;
 }
 
+# static method to greate GUI loading progress dialog
+sub loading {
+    my $dlg = Wx::ProgressDialog->new('Loading...', "Loading Slic3r GUI", 100, undef, 0);
+    $dlg->Pulse();
+    return $dlg;
+}
+
 # static method accepting a wxWindow object as first parameter
 sub catch_error {
     my ($self, $cb, $message_dialog) = @_;

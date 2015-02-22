@@ -32,10 +32,11 @@ my %recommends = qw(
     XML::SAX::ExpatXS               0
 );
 
-my $sudo    = grep { $_ eq '--sudo' } @ARGV;
-my $gui     = grep { $_ eq '--gui' } @ARGV;
-my $xs_only = grep { $_ eq '--xs' }  @ARGV;
-my $fix_wx  = grep { $_ eq '--wx' }  @ARGV;
+my $sudo    = grep { $_ eq '--sudo' }    @ARGV;
+my $install = grep { $_ eq '--install' } @ARGV;
+my $gui     = grep { $_ eq '--gui' }     @ARGV;
+my $xs_only = grep { $_ eq '--xs' }      @ARGV;
+my $fix_wx  = grep { $_ eq '--wx' }      @ARGV;
 if ($gui) {
     %prereqs = qw(
     Class::Accessor                 0
@@ -55,7 +56,7 @@ if ($gui) {
 }
 
 my @missing_prereqs = ();
-if ($ENV{SLIC3R_NO_AUTO}) {
+if (!$install) {
     foreach my $module (sort keys %prereqs) {
         my $version = $prereqs{$module};
         next if eval "use $module $version; 1";
