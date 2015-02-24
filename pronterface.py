@@ -51,6 +51,7 @@ if __name__ == '__main__':
             x2Profiler.X2ProfilerApp().Run()
         except:
             pass
+    x2Profiler.X2ProfilerApp().Run(onlyIfVersionCheckFails = True)
 
     while(True):
         x2Profiler.pronterface_restart = False

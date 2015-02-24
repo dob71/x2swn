@@ -29,6 +29,9 @@ from dulwich.repo import Repo
 from dulwich.server import update_server_info
 from dulwich import client
 
+VERSION_FILE = 'version.txt'
+COMPAT_FILE = '.compat_ver_str.txt'
+
 pronterface_restart = False
 
 ########################################################################
@@ -48,7 +51,7 @@ class TitledPage(wiz.WizardPageSimple):
         title.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
         sizer.Add(title, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
         sizer.Add(wx.StaticLine(self, -1), 0, wx.EXPAND|wx.ALL, 5)
- 
+
 ########################################################################
 class UpdateRepoPage(wiz.PyWizardPage):
     """Startup wizard page"""
@@ -253,6 +256,8 @@ class SelectProfilesPage(wiz.PyWizardPage):
  
     #----------------------------------------------------------------------
     def __init__(self, parent, title):
+        global x2ProfilerApp
+        
         wiz.PyWizardPage.__init__(self, parent)
         self.next = self.prev = None
         self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -261,7 +266,15 @@ class SelectProfilesPage(wiz.PyWizardPage):
         title.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
         self.sizer.Add(title)
  
-        self.sizer.Add(wx.StaticText(self, -1, "Select the printer profile (no changes are made at this step)"), 0, wx.ALL, 5)
+        self.under_title_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.tree_title = wx.StaticText(self, -1, "Select the printer profile")
+        self.under_title_sizer.Add(self.tree_title, 1, wx.ALL|wx.ALIGN_LEFT, 0)
+        self.show_all = wx.CheckBox(self, wx.ID_ANY, 'Show All')
+        self.show_all.Bind(wx.EVT_CHECKBOX, self.onCheckbox)
+        self.all = False
+        
+        self.under_title_sizer.Add(self.show_all, 0, wx.ALL|wx.ALIGN_RIGHT, 0)
+        self.sizer.Add(self.under_title_sizer, 0, wx.ALL|wx.EXPAND, 5)
 
         self.tree = wx.TreeCtrl(self, -1, style = wx.TR_HAS_BUTTONS|wx.TR_HAS_VARIABLE_ROW_HEIGHT)
         image_list = wx.ImageList(16, 16) 
@@ -313,14 +326,15 @@ class SelectProfilesPage(wiz.PyWizardPage):
         self.repo = x2ProfilerApp.repo
         self.refs = self.repo.get_refs()
         refsList = {}
-		# Make remote origin heads look similar to tags and local heads
+        # Make remote origin heads look similar to tags and local heads
         refkeys = ['refs/rheads'+item[19:] if item[:19]=='refs/remotes/origin' else item for item in self.refs.keys()]
         reflist = sorted(sorted(refkeys),key=lambda x: -len(x.split('/')))
         ### for debugging #### print reflist
         for ref in reflist:
             parts = ref.split('/')
-			# Filter out one-level refs and anything that is neither tag or head
-            if parts[0] != 'refs' or len(parts) <= 3:
+            # We only use refs that have format refs/<tags|heads|rheads>/vX.X.X.X/<type>/...
+            # Filter out one-level refs and anything that is neither tag or head
+            if parts[0] != 'refs' or len(parts) <= 4:
                 continue
             if parts[1] != 'tags' and parts[1] != 'heads' and parts[1] != 'rheads':
                 continue
@@ -330,6 +344,9 @@ class SelectProfilesPage(wiz.PyWizardPage):
                 ref_type = self.REF_TYPE_HEAD
             elif parts[1] == 'rheads':
                 ref_type = self.REF_TYPE_RHEAD
+            ver_prefix = parts[2]
+            if not self.all and not ver_prefix.startswith('v' + x2ProfilerApp.ver_match_str):
+                continue
             parts[1] = 'root'
             for ii in range(2, len(parts)):
                 key = '/'.join(parts[1:ii])
@@ -351,11 +368,16 @@ class SelectProfilesPage(wiz.PyWizardPage):
 		
         # Build the UI tree (can do it above, but cleaner to separate)
         self.tree.DeleteAllItems()
-        root = self.tree.AddRoot("FDM 3D Printers")
+        root_str = "FDM 3D Printer Profiles for X2SW"
+        if self.all or len(x2ProfilerApp.ver[0]) == 0:
+            root_str = root_str + " (all versions)"
+        else:
+            root_str = root_str + " v" + x2ProfilerApp.ver[0]
+        root = self.tree.AddRoot(root_str)
         self.tree.SetItemImage(root, self.folder, wx.TreeItemIcon_Normal) 
         if refsList.has_key('root'):
             self.fillTree(refsList, 'root', root)
-		    
+
         self.tree.Expand(root)
 
         # On/off next button based on either a profile was selected or not
@@ -396,6 +418,11 @@ class SelectProfilesPage(wiz.PyWizardPage):
             #message += 'Type: tagged commit\n'
             message += o.message
         self.descript.SetValue(message)
+
+    #----------------------------------------------------------------------
+    def onCheckbox(self, event):
+        self.all = self.show_all.GetValue()
+        self.Run()
 
     #----------------------------------------------------------------------
     def SetNext(self, next):
@@ -742,7 +769,53 @@ class X2ProfilerApp():
         self.x2swProfilesPath = os.path.join(self.x2swProfilesPath, '.x2sw')
 
     #----------------------------------------------------------------------
-    def Run(self):
+    def ReadOurVersion(self):
+        versionfile = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), VERSION_FILE)
+        if os.path.exists(versionfile):
+            with open(versionfile) as f:
+                self.ver = f.read().splitlines()
+        else:
+            self.ver = [ None ]
+        # Match string (major.minor.) use: vrsion_str_tocheck.startswith(ver_match_str)
+        self.ver_match_str = ""
+        if self.ver[0]:
+            ver = self.ver[0]
+            ver = ver[:ver.find('.', ver.find('.') + 1) + 1]
+            self.ver_match_str = ver
+        else:
+            self.ver = [ "" ]
+
+    #----------------------------------------------------------------------
+    def IsProfileCompatible(self):
+        compat_file = os.path.join(self.x2swProfilesPath, COMPAT_FILE)
+        we_are_compatible = False
+        match_strs = []
+        if os.path.exists(compat_file):
+            with open(compat_file) as f:
+                match_strs = f.read().splitlines()
+        for match_str in match_strs:
+            if self.ver[0] and self.ver[0].startswith(match_str):
+                we_are_compatible = True
+                break
+        return we_are_compatible
+
+    #----------------------------------------------------------------------
+    def UpdateCompatFile(self):
+        compat_file = os.path.join(self.x2swProfilesPath, COMPAT_FILE)
+        we_are_compatible = False
+        match_strs = []
+        if os.path.exists(compat_file):
+            with open(compat_file) as f:
+                match_strs = f.read().splitlines()
+        match_strs.append(self.ver_match_str)
+        if os.path.exists(self.x2swProfilesPath):
+            with open(compat_file, "w") as myfile:
+                for line in match_strs:
+                    myfile.write(line + "\n")
+        return
+
+    #----------------------------------------------------------------------
+    def Run(self, onlyIfVersionCheckFails = False):
         global x2ProfilerApp
         x2ProfilerApp = self
 
@@ -754,6 +827,29 @@ class X2ProfilerApp():
         self.repo_url = 'https://github.com/dob71/x2sw_profiles.git'
         self.selection = None
         self.tmp_repo_path = None
+
+        # Read our version (x2ProfilerApp.ver array contains strings from version.txt)
+        self.ReadOurVersion()
+        
+        # If running for version check only, be done if have copatible profiles
+        if onlyIfVersionCheckFails:
+            if self.IsProfileCompatible():
+                return
+            else:
+                msg = "The current profile is not compatible with X2SW v" + self.ver[0] + ". "\
+                      "Would you like to run X2Profiler and download compatible set of profiles? "\
+                      "\n\n"\
+                      "Click [Cancel] to mark the currnet profile compatible and no loger display this message "\
+                      "(dangerous, the app might no longer start). Click [No] to skip the update just for now. "\
+                      "You'll be asked to update again next time app starts."\
+                      "\n\n"\
+                      "Profile path: " + self.x2swProfilesPath
+                res = wx.MessageBox(msg, style = wx.YES_NO|wx.CANCEL|wx.YES_DEFAULT|wx.ICON_QUESTION)
+                if res == wx.CANCEL:
+                    self.UpdateCompatFile()
+                    return
+                elif res == wx.NO:
+                    return
 
         image = wx.Image(self.imagefile("wiz.png"), wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         self.wizard = wiz.Wizard(None, -1, "X2 Profile Manager", image)
