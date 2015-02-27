@@ -205,11 +205,11 @@ class Gviz(wx.Panel):
         self.paint_overlay = None
 
     def inject(self):
-        layer = self.layers.index(self.layerindex)
+        layer = self.layers[self.layerindex]
         injector(self.gcode, self.layerindex, layer)
 
     def editlayer(self):
-        layer = self.layers.index(self.layerindex)
+        layer = self.layers[self.layerindex]
         injector_edit(self.gcode, self.layerindex, layer)
 
     def clearhilights(self):
@@ -323,9 +323,11 @@ class Gviz(wx.Panel):
             dc.DrawArc(*scaled_arcs[i])
 
     def repaint_everything(self):
-        width = self.scale[0] * self.build_dimensions[0]
-        height = self.scale[1] * self.build_dimensions[1]
-        self.blitmap = wx.EmptyBitmap(width + 1, height + 1, -1)
+        width = int(self.scale[0] * self.build_dimensions[0])
+        height = int(self.scale[1] * self.build_dimensions[1])
+        newbmp = wx.EmptyBitmap(width + 1, height + 1, -1)
+        if newbmp.Ok():
+            self.blitmap = newbmp
         dc = wx.MemoryDC()
         dc.SelectObject(self.blitmap)
         dc.SetBackground(wx.Brush((250, 250, 200)))
