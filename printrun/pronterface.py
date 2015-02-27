@@ -119,10 +119,6 @@ class PronterWindow(MainWindow, pronsole.pronsole):
 
     def _set_fgcode(self, value):
         self._fgcode = value
-        self.excluder = None
-        self.excluder_e = None
-        self.excluder_z_abs = None
-        self.excluder_z_rel = None
     fgcode = property(_get_fgcode, _set_fgcode)
 
     def _get_display_graph(self):
@@ -154,7 +150,6 @@ class PronterWindow(MainWindow, pronsole.pronsole):
         self.capture_skip = {}
         self.capture_skip_newline = False
         self.fgcode = None
-        self.excluder = None
         self.slicep = None
         self.current_pos = [0, 0, 0]
         self.paused = False
@@ -228,7 +223,6 @@ class PronterWindow(MainWindow, pronsole.pronsole):
         self.loading_gcode_message = ""
         self.mini = False
         self.p.sendcb = self.sentcb
-        self.p.preprintsendcb = self.preprintsendcb
         self.p.printsendcb = self.printsentcb
         self.p.startcb = self.startcb
         self.p.endcb = self.endcb
@@ -258,8 +252,6 @@ class PronterWindow(MainWindow, pronsole.pronsole):
         self.p.recvcb = None
         self.p.disconnect()
         self.Close()
-        if self.excluder:
-            self.excluder.close_window()
         wx.CallAfter(self.gwindow.Destroy)
         wx.CallAfter(self.Destroy)
         
@@ -354,8 +346,6 @@ class PronterWindow(MainWindow, pronsole.pronsole):
             self.save_in_rc("set e_feedrate", "set e_feedrate %d" % self.settings.e_feedrate)
         if self.settings.last_extrusion != self.settings.default_extrusion:
             self.save_in_rc("set last_extrusion", "set last_extrusion %d" % self.settings.last_extrusion)
-        if self.excluder:
-            self.excluder.close_window()
         wx.CallAfter(self.gwindow.Destroy)
         wx.CallAfter(self.Destroy)
 
@@ -747,8 +737,6 @@ class PronterWindow(MainWindow, pronsole.pronsole):
         self.Bind(wx.EVT_MENU, self.do_editgcode, m.Append(-1, _("&Edit..."), _(" Edit open file")))
         self.Bind(wx.EVT_MENU, self.plate, m.Append(-1, _("Plater"), _(" Compose 3D models into a single plate")))
         self.Bind(wx.EVT_MENU, self.plate_gcode, m.Append(-1, _("G-Code Plater"), _(" Compose G-Codes into a single plate")))
-        #self.Bind(wx.EVT_MENU, self.exclude, m.Append(-1, _("Excluder"), _(" Exclude parts of the bed from being printed")))
-        self.Bind(wx.EVT_MENU, self.project, m.Append(-1, _("Projector"), _(" Project slices")))
         self.menustrip.Append(m, _("&Tools"))
 
         m = wx.Menu()
@@ -804,22 +792,6 @@ class PronterWindow(MainWindow, pronsole.pronsole):
             return
         self.restart()
         self.processing_rc = False
-
-    def project(self, event):
-        """Start Projector tool"""
-        from printrun import projectlayer
-        projectlayer.SettingsFrame(self, self.p).Show()
-
-    def exclude(self, event):
-        """Start part excluder tool"""
-        if not self.fgcode:
-            wx.CallAfter(self.statusbar.SetStatusText, _("No file loaded. Please use load first."))
-            return
-        if not self.excluder:
-            from .excluder import Excluder
-            self.excluder = Excluder()
-        self.excluder.pop_window(self.fgcode, bgcolor = self.bgcolor,
-                                 build_dimensions = self.build_dimensions_list)
 
     def about(self, event):
         """Show about dialog"""
@@ -1765,56 +1737,6 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
                     pass
         if gline.is_move:
             self.sentglines.put_nowait(gline)
-
-    def is_excluded_move(self, gline):
-        """Check whether the given moves ends at a position specified as
-        excluded in the part excluder"""
-        if not gline.is_move or not self.excluder or not self.excluder.rectangles:
-            return False
-        for (x0, y0, x1, y1) in self.excluder.rectangles:
-            if x0 <= gline.current_x <= x1 and y0 <= gline.current_y <= y1:
-                return True
-        return False
-
-    def preprintsendcb(self, gline, next_gline):
-        """Callback when a printer gcode is about to be sent. We use it to
-        exclude moves defined by the part excluder tool"""
-        if not self.is_excluded_move(gline):
-            return gline
-        else:
-            if gline.z is not None:
-                if gline.relative:
-                    if self.excluder_z_abs is not None:
-                        self.excluder_z_abs += gline.z
-                    elif self.excluder_z_rel is not None:
-                        self.excluder_z_rel += gline.z
-                    else:
-                        self.excluder_z_rel = gline.z
-                else:
-                    self.excluder_z_rel = None
-                    self.excluder_z_abs = gline.z
-            if gline.e is not None and not gline.relative_e:
-                self.excluder_e = gline.e
-            # If next move won't be excluded, push the changes we have to do
-            if next_gline is not None and not self.is_excluded_move(next_gline):
-                if self.excluder_e is not None:
-                    self.p.send_now("G92 E%.5f" % self.excluder_e)
-                    self.excluder_e = None
-                if self.excluder_z_abs is not None:
-                    if gline.relative:
-                        self.p.send_now("G90")
-                    self.p.send_now("G1 Z%.5f" % self.excluder_z_abs)
-                    self.excluder_z_abs = None
-                    if gline.relative:
-                        self.p.send_now("G91")
-                if self.excluder_z_rel is not None:
-                    if not gline.relative:
-                        self.p.send_now("G91")
-                    self.p.send_now("G1 Z%.5f" % self.excluder_z_rel)
-                    self.excluder_z_rel = None
-                    if not gline.relative:
-                        self.p.send_now("G90")
-                return None
 
     def printsentcb(self, gline):
         """Callback when a print gcode has been sent"""

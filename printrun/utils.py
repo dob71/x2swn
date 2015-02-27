@@ -45,7 +45,7 @@ class LogFormatter(logging.Formatter):
             self._fmt = self.format_info
         else:
             self._fmt = self.format_default
-        return super(LogFormatter, self).format(record)
+        return logging.Formatter.format(self, record)
 
 def setup_logging(out, filepath = None, reset_handlers = False):
     logger = logging.getLogger()
