@@ -36,7 +36,7 @@ def install_locale(domain):
 
 class LogFormatter(logging.Formatter):
     def __init__(self, format_default, format_info):
-        super(LogFormatter, self).__init__(format_info)
+        logging.Formatter.__init__(self, format_info)
         self.format_default = format_default
         self.format_info = format_info
 
