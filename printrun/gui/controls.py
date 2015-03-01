@@ -109,15 +109,18 @@ def add_extra_controls(self, root, parentpanel, extra_buttons = None, mini_mode 
             container = self
         container.Add(widget, *args, **kwargs)
 
+    # Border between cotrols groups
+    off_top = 5
+
     # Hotend & bed temperatures #
 
     # Hotend temp
-    add("htemp_label", wx.StaticText(parentpanel, -1, _("Heat:")), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT)
+    add("htemp_label", wx.StaticText(parentpanel, -1, _("Heat:")), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT | wx.TOP, border = off_top)
     htemp_choices = [root.temps[i] + " (" + i + ")" for i in sorted(root.temps.keys(), key = lambda x:root.temps[x])]
 
     root.settoff = make_button(parentpanel, _("Off"), lambda e: root.do_settemp("off"), _("Switch Hotend Off"), size = (38, -1), style = wx.BU_EXACTFIT)
     root.printerControls.append(root.settoff)
-    add("htemp_off", root.settoff)
+    add("htemp_off", root.settoff, flag = wx.TOP, border = off_top)
 
     if root.settings.last_temperature not in map(float, root.temps.values()):
         htemp_choices = [str(root.settings.last_temperature)] + htemp_choices
@@ -126,10 +129,10 @@ def add_extra_controls(self, root, parentpanel, extra_buttons = None, mini_mode 
     root.htemp.SetToolTip(wx.ToolTip(_("Select Temperature for Hotend")))
     root.htemp.Bind(wx.EVT_COMBOBOX, root.htemp_change)
 
-    add("htemp_val", root.htemp)
+    add("htemp_val", root.htemp, flag = wx.TOP, border = off_top)
     root.settbtn = make_button(parentpanel, _("Set"), root.do_settemp, _("Switch Hotend On"), size = (38, -1), style = wx.BU_EXACTFIT)
     root.printerControls.append(root.settbtn)
-    add("htemp_set", root.settbtn, flag = wx.EXPAND)
+    add("htemp_set", root.settbtn, flag = wx.EXPAND | wx.TOP, border = off_top)
 
     # Bed temp
     add("btemp_label", wx.StaticText(parentpanel, -1, _("Bed: ")), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT)
@@ -190,7 +193,7 @@ def add_extra_controls(self, root, parentpanel, extra_buttons = None, mini_mode 
     root.printerControls.append(root.speed_setbtn)
     speedsizer.Add(root.speed_setbtn, flag = wx.ALIGN_CENTER)
     speedpanel.SetSizer(speedsizer)
-    add("speedcontrol", speedpanel, flag = wx.EXPAND)
+    add("speedcontrol", speedpanel, flag = wx.EXPAND | wx.TOP | wx.BOTTOM, border = off_top)
 
     def speedslider_spin(event):
         value = root.speed_spin.GetValue()
@@ -322,7 +325,7 @@ def add_extra_controls(self, root, parentpanel, extra_buttons = None, mini_mode 
                 econtrolsizer.Add(etool_label, flag = wx.ALIGN_CENTER)
                 econtrolsizer.Add(root.extrudersel)
         econtrolpanel.SetSizer(econtrolsizer)
-        add("ext_controls", econtrolpanel, flag = wx.EXPAND)
+        add("ext_controls", econtrolpanel, flag = wx.EXPAND | wx.TOP, border = off_top)
 
         ebuttonspanel = root.newPanel(parentpanel)
         ebuttonssizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -333,7 +336,7 @@ def add_extra_controls(self, root, parentpanel, extra_buttons = None, mini_mode 
             ebuttonssizer.Add(btn, 1, flag = wx.EXPAND)
 
         ebuttonspanel.SetSizer(ebuttonssizer)
-        add("ebuttons", ebuttonspanel, flag = wx.EXPAND)
+        add("ebuttons", ebuttonspanel, flag = wx.EXPAND | wx.BOTTOM, border = off_top)
     else:
         for key, btn in extra_buttons.items():
             add(key, btn, flag = wx.EXPAND)
@@ -379,9 +382,9 @@ class ControlsSizer(wx.GridBagSizer):
 
         root.xyfeedc = wx.SpinCtrl(lltspanel, -1, str(root.settings.xy_feedrate), min = 0, max = 50000, size = (70, -1))
         root.xyfeedc.SetToolTip(wx.ToolTip(_("Set Maximum Speed for X & Y axes (mm/min)")))
-        llts.Add(wx.StaticText(lltspanel, -1, _("XY:")), flag = wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL)
+        llts.Add(wx.StaticText(lltspanel, -1, _("XY:")), flag = wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL | wx.LEFT, border = 5)
         llts.Add(root.xyfeedc)
-        llts.Add(wx.StaticText(lltspanel, -1, _("mm/min Z:")), flag = wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL)
+        llts.Add(wx.StaticText(lltspanel, -1, _("mm/min Z:")), flag = wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL | wx.LEFT, border = 5)
         root.zfeedc = wx.SpinCtrl(lltspanel, -1, str(root.settings.z_feedrate), min = 0, max = 50000, size = (70, -1))
         root.zfeedc.SetToolTip(wx.ToolTip(_("Set Maximum Speed for Z axis (mm/min)")))
         llts.Add(root.zfeedc,)
