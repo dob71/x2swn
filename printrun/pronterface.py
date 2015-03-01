@@ -735,8 +735,10 @@ class PronterWindow(MainWindow, pronsole.pronsole):
 
         m = wx.Menu()
         self.Bind(wx.EVT_MENU, self.do_editgcode, m.Append(-1, _("&Edit..."), _(" Edit open file")))
-        self.Bind(wx.EVT_MENU, self.plate, m.Append(-1, _("Plater"), _(" Compose 3D models into a single plate")))
-        self.Bind(wx.EVT_MENU, self.plate_gcode, m.Append(-1, _("G-Code Plater"), _(" Compose G-Codes into a single plate")))
+        # Both platers are not functioning good enough to be useful
+        # The STL one is not even needed, but G-code one might be useful
+        #self.Bind(wx.EVT_MENU, self.plate, m.Append(-1, _("Plater"), _(" Compose 3D models into a single plate")))
+        #self.Bind(wx.EVT_MENU, self.plate_gcode, m.Append(-1, _("G-Code Plater"), _(" Compose G-Codes into a single plate")))
         self.menustrip.Append(m, _("&Tools"))
 
         m = wx.Menu()
