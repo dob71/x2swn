@@ -1425,7 +1425,7 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
         self.stopsf = 0
         self.cancelsf = False
         self.slicing = True
-        threading.Thread(target = self.slice_func, args = (cmdline,)).start()
+        threading.Thread(target = self.slice_func, args = (cmdline, filename)).start()
         threading.Thread(target = self.slice_monitor).start()
 
     def cmdline_filename_callback(self, filename):
