@@ -314,7 +314,16 @@ class PronterWindow(MainWindow, pronsole.pronsole):
         self.Thaw()
         self.update_monitor()
         wx.CallAfter(self.cancelsfbtn.Disable)
+        wx.CallAfter(self.callOnLoadUI)
 
+    def callOnLoadUI(self):
+        macro = "onLoadUI"
+        if self.macros.get(macro, False):
+            try:
+                self.onecmd(macro)
+            except:
+                pass
+        
     def on_resize(self, event):
         wx.CallAfter(self.on_resize_real)
         event.Skip()

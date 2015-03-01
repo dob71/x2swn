@@ -297,6 +297,9 @@ class Settings(object):
         self._add(HiddenSetting("default_extrusion", 5.0))
         self._add(HiddenSetting("last_extrusion", 5.0))
         self._add(HiddenSetting("total_filament_used", 0.0))
+        self._add(HiddenSetting("custom1", 0))
+        self._add(HiddenSetting("custom2", 0))
+        self._add(HiddenSetting("custom3", 0))
 
     def __setattr__(self, name, value):
         if name.startswith("_"):
