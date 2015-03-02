@@ -29,12 +29,22 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         self.Bind(wx.EVT_BUTTON, self.onBrowse, self.browseButton1)
         self.Bind(wx.EVT_BUTTON, self.onBrowse, self.browseButton2)
         
-        self.settings.colorOn = 'c_on.gcode'
-        self.settings.colorOff = 'c_off.gcode'
+        self.settings.colorOn = ''
+        self.settings.colorOff = ''
         self.settings.basePenGcode = 'base_penultimate.g'
         self.settings.insPenGcode = 'insert_penutimate.g'
         self.mixedGcode = None
         self.load_default_rc(".x2mergerc")
+
+        self.altpath = archive.getSettingsPath('alterations')
+        self.altfiles = []
+        for (dirpath, dirnames, filenames) in os.walk(self.altpath):
+            self.altfiles.extend([elem for elem in filenames if 'on' in elem.lower() or 'off' in elem.lower()])
+            break
+        if len(self.settings.colorOn) == 0 and len(self.altfiles) > 1:
+            self.settings.colorOn = self.altfiles[1]
+        if len(self.settings.colorOff) == 0 and len(self.altfiles) > 0:
+            self.settings.colorOff = self.altfiles[0]
 
         self.__set_properties()   
         self.__do_layout()        
@@ -136,7 +146,7 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
         COLOR.close()
         # Read and print the base gcode lines doing what the script is designed for
         layer_height = 0.0
-        layer_ins_on = false
+        layer_ins_on = False
         for l in BASE:
             # capture the layer height
             m = re.match(r'.*<layer>\s+([\d\.]+)', l)
@@ -148,7 +158,7 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
                 if (layer_height in color_layer) and (len(color_layer[layer_height]) > 0):
                     if (not layer_ins_on):
                         print >>out, alt_start
-                        layer_ins_on = true
+                        layer_ins_on = True
                     print >>out, color_layer[layer_height]
                     mixed_layers += 1
                 continue
@@ -157,7 +167,7 @@ class X2MergeDialog(wx.Dialog, pronsole.pronsole):
             if (len(l) > 0):
                 if (layer_ins_on):
                     print >>out, alt_stop
-                    layer_ins_on = false
+                    layer_ins_on = False
                 print >>out, l
         BASE.close()
         return mixed_layers
@@ -249,7 +259,8 @@ It is also saved in the automatically generated file named as shown in the 'Outp
         settingLabel = wx.StaticText(self.scrollbarPanel, -1, "Ext 1 On gcode:")
         settingLabel.Wrap(200)
         settingSizer.Add(settingLabel, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
-        textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.colorOn, size=(200, -1))
+        textCtrl = wx.ComboBox(self.scrollbarPanel, value=self.settings.colorOn, choices=self.altfiles, style=wx.CB_DROPDOWN, size=(200, -1))
+        #textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.colorOn, size=(200, -1))
         self.extOnTc = textCtrl
         settingSizer.Add(textCtrl, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
         settingRow.Add(settingSizer, 0, wx.TOP, 10)
@@ -260,7 +271,8 @@ It is also saved in the automatically generated file named as shown in the 'Outp
         settingLabel = wx.StaticText(self.scrollbarPanel, -1, "Ext 1 Off gcode:")
         settingLabel.Wrap(200)
         settingSizer.Add(settingLabel, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
-        textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.colorOff, size=(200, -1))
+        textCtrl = wx.ComboBox(self.scrollbarPanel, value=self.settings.colorOff, choices=self.altfiles, style=wx.CB_DROPDOWN, size=(200, -1))
+        #textCtrl = wx.TextCtrl(self.scrollbarPanel, value=self.settings.colorOff, size=(200, -1))
         self.extOffTc = textCtrl
         settingSizer.Add(textCtrl, 0, flag=wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)
         settingRow.Add(settingSizer, 0, wx.TOP, 10)
