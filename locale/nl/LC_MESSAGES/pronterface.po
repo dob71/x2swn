@@ -5,173 +5,186 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pronterface rl1\n"
-"POT-Creation-Date: 2014-03-30 14:35+CEST\n"
+"POT-Creation-Date: 2015-03-04 01:46+EST\n"
 "PO-Revision-Date: 2011-09-06 16:31+0100\n"
 "Last-Translator: Ruben Lubbes <ruben.lubbes@gmx.net>\n"
 "Language-Team: NL <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: printrun/excluder.py:26
-msgid ""
-"Part excluder: draw rectangles where print instructions should be ignored"
-msgstr ""
-
-#: printrun/excluder.py:27 printrun/excluder.py:29
-msgid "Reset selection"
-msgstr ""
-
-#: printrun/gcodeplater.py:43 printrun/gcodeplater.py:44
+#: printrun/gcodeplater.py:77 printrun/gcodeplater.py:78
 msgid "GCODE files (*.gcode;*.GCODE;*.g)"
 msgstr ""
 
-#: printrun/gcodeplater.py:112 printrun/gcodeplater.py:152
-msgid "Warning: no rotation support for now, object won't be correctly rotated"
-msgstr ""
-
-#: printrun/gcodeplater.py:141 printrun/gcodeplater.py:178
+#: printrun/gcodeplater.py:196 printrun/gcodeplater.py:233
 msgid "Exported merged G-Codes to %s"
 msgstr ""
 
-#: printrun/gcview.py:352
+#: printrun/gcview.py:98
+#, fuzzy
+msgid "Invalid layer for injection"
+msgstr "Foute gegevens ingevoerd"
+
+#: printrun/gcview.py:106
+#, fuzzy
+msgid "Invalid layer for edition"
+msgstr "Foute gegevens ingevoerd"
+
+#: printrun/gcview.py:419
 msgid "Fit to plate"
 msgstr ""
 
-#: printrun/gcview.py:353
+#: printrun/gcview.py:420
 msgid "Fit to plate [F]"
 msgstr ""
 
-#: printrun/gui/__init__.py:19 printrun/pronterface.py:45
+#: printrun/gcview.py:448
+msgid "Layer %d -%s Z = %.03f mm"
+msgstr ""
+
+#: printrun/gcview.py:450 printrun/gcview.py:479
+msgid "Entire object"
+msgstr ""
+
+#: printrun/gl/panel.py:119
+msgid "OpenGL failed, disabling it:"
+msgstr ""
+
+#: printrun/gui/__init__.py:21 printrun/pronterface.py:47
 msgid "WX is not installed. This program requires WX to run."
 msgstr "WX is niet geïnstalleerd. Dit programma vereist WX."
 
-#: printrun/gui/__init__.py:159
+#: printrun/gui/__init__.py:180
 #, fuzzy
 msgid "Commands"
 msgstr "Commando"
 
-#: printrun/gui/__init__.py:160
+#: printrun/gui/__init__.py:181
 msgid "Status"
 msgstr ""
 
-#: printrun/gui/controls.py:126
+#: printrun/gui/controls.py:118
 #, fuzzy
 msgid "Heat:"
 msgstr "Element:"
 
-#: printrun/gui/controls.py:129
+#: printrun/gui/controls.py:121
 msgid "Switch Hotend Off"
 msgstr ""
 
-#: printrun/gui/controls.py:129 printrun/gui/controls.py:149
-#: printrun/gui/toolbar.py:85
+#: printrun/gui/controls.py:121 printrun/gui/controls.py:141
 msgid "Off"
 msgstr ""
 
-#: printrun/gui/controls.py:137
+#: printrun/gui/controls.py:129
 msgid "Select Temperature for Hotend"
 msgstr ""
 
-#: printrun/gui/controls.py:141
+#: printrun/gui/controls.py:133
 msgid "Switch Hotend On"
 msgstr ""
 
-#: printrun/gui/controls.py:141 printrun/gui/controls.py:161
-#: printrun/gui/controls.py:198
+#: printrun/gui/controls.py:133 printrun/gui/controls.py:153
+#: printrun/gui/controls.py:192
 msgid "Set"
 msgstr "Stel in"
 
-#: printrun/gui/controls.py:146 printrun/gui/controls.py:215
-msgid "Bed:"
+#: printrun/gui/controls.py:138
+#, fuzzy
+msgid "Bed: "
 msgstr "Bed:"
 
-#: printrun/gui/controls.py:149
+#: printrun/gui/controls.py:141
 msgid "Switch Heated Bed Off"
 msgstr ""
 
-#: printrun/gui/controls.py:157
+#: printrun/gui/controls.py:149
 msgid "Select Temperature for Heated Bed"
 msgstr ""
 
-#: printrun/gui/controls.py:161
+#: printrun/gui/controls.py:153
 msgid "Switch Heated Bed On"
 msgstr ""
 
-#: printrun/gui/controls.py:187
+#: printrun/gui/controls.py:179
 msgid "Print speed:"
 msgstr ""
 
-#: printrun/gui/controls.py:192 printrun/gui/controls.py:207
-msgid "%d%%"
+#: printrun/gui/controls.py:186
+msgid "%"
 msgstr ""
 
-#: printrun/gui/controls.py:198
+#: printrun/gui/controls.py:192
 msgid "Set print speed factor"
 msgstr ""
 
-#: printrun/gui/controls.py:213
+#: printrun/gui/controls.py:232
 msgid "Heater:"
 msgstr "Element:"
 
-#: printrun/gui/controls.py:265
+#: printrun/gui/controls.py:236
+msgid "Bed:"
+msgstr "Bed:"
+
+#: printrun/gui/controls.py:272
 msgid "Length:"
 msgstr ""
 
-#: printrun/gui/controls.py:267
+#: printrun/gui/controls.py:274
 msgid "mm"
 msgstr "mm"
 
-#: printrun/gui/controls.py:267
+#: printrun/gui/controls.py:274
 msgid "mm @"
 msgstr ""
 
-#: printrun/gui/controls.py:269
+#: printrun/gui/controls.py:276
 msgid "Amount to Extrude or Retract (mm)"
 msgstr ""
 
-#: printrun/gui/controls.py:272
+#: printrun/gui/controls.py:279
 msgid "Extrude / Retract speed (mm/min)"
 msgstr ""
 
-#: printrun/gui/controls.py:278
+#: printrun/gui/controls.py:285
 msgid "Speed:"
 msgstr ""
 
-#: printrun/gui/controls.py:279
+#: printrun/gui/controls.py:286
 msgid ""
 "mm/\n"
 "min"
 msgstr ""
 
-#: printrun/gui/controls.py:290
+#: printrun/gui/controls.py:297
 msgid "Tool:"
 msgstr ""
 
-#: printrun/gui/controls.py:293
+#: printrun/gui/controls.py:300
 msgid "Click to switch current extruder"
 msgstr ""
 
-#: printrun/gui/controls.py:310
+#: printrun/gui/controls.py:317
 msgid "Select current extruder"
 msgstr ""
 
-#: printrun/gui/controls.py:371
+#: printrun/gui/controls.py:384
 msgid "Set Maximum Speed for X & Y axes (mm/min)"
 msgstr ""
 
-#: printrun/gui/controls.py:372
+#: printrun/gui/controls.py:385
 msgid "XY:"
 msgstr "XY:"
 
-#: printrun/gui/controls.py:374
+#: printrun/gui/controls.py:387
 #, fuzzy
 msgid "mm/min Z:"
 msgstr "mm/min"
 
-#: printrun/gui/controls.py:376
+#: printrun/gui/controls.py:389
 msgid "Set Maximum Speed for Z axis (mm/min)"
 msgstr ""
 
@@ -186,581 +199,404 @@ msgid ""
 "help function)"
 msgstr ""
 
-#: printrun/gui/log.py:39
+#: printrun/gui/log.py:38
 msgid "Send"
 msgstr "Zend"
 
-#: printrun/gui/log.py:39
+#: printrun/gui/log.py:38
 #, fuzzy
 msgid "Send Command to Printer"
 msgstr "Printercommunicatie volgen"
 
-#: printrun/gui/toolbar.py:23
+#: printrun/gui/toolbar.py:25
+msgid "Monitor"
+msgstr ""
+
+#: printrun/gui/toolbar.py:27
+msgid "Turn on/off continuous temperature monitoring"
+msgstr ""
+
+#: printrun/gui/toolbar.py:34
 msgid "Lock"
 msgstr ""
 
-#: printrun/gui/toolbar.py:25
+#: printrun/gui/toolbar.py:36
 msgid "Lock graphical interface"
 msgstr ""
 
-#: printrun/gui/toolbar.py:32
+#: printrun/gui/toolbar.py:41
 msgid ""
 "Communication Settings\n"
 "Click to rescan ports"
 msgstr ""
 
-#: printrun/gui/toolbar.py:32
+#: printrun/gui/toolbar.py:41
 msgid "Port"
 msgstr "Poort"
 
-#: printrun/gui/toolbar.py:37
+#: printrun/gui/toolbar.py:46
 msgid "Select Port Printer is connected to"
 msgstr ""
 
-#: printrun/gui/toolbar.py:46
+#: printrun/gui/toolbar.py:55
 msgid "Select Baud rate for printer communication"
 msgstr ""
 
-#: printrun/gui/toolbar.py:55 printrun/pronterface.py:1052
+#: printrun/gui/toolbar.py:64 printrun/pronterface.py:1105
 msgid "Connect"
 msgstr "Verbind"
 
-#: printrun/gui/toolbar.py:55 printrun/pronterface.py:1053
+#: printrun/gui/toolbar.py:64 printrun/pronterface.py:1106
 msgid "Connect to the printer"
 msgstr "Verbind met printer"
 
-#: printrun/gui/toolbar.py:61
-msgid "Reset"
-msgstr "Reset"
-
-#: printrun/gui/toolbar.py:61
-#, fuzzy
-msgid "Reset the printer"
-msgstr "Verbind met printer"
-
-#: printrun/gui/toolbar.py:69
-#, fuzzy
-msgid "Load a 3D model file"
-msgstr "open bestand"
-
-#: printrun/gui/toolbar.py:69
-msgid "Load file"
-msgstr "open bestand"
-
-#: printrun/gui/toolbar.py:70
+#: printrun/gui/toolbar.py:73
 msgid "SD"
 msgstr ""
 
-#: printrun/gui/toolbar.py:70
+#: printrun/gui/toolbar.py:73
 #, fuzzy
 msgid "SD Card Printing"
 msgstr "Afdruk van SD"
 
-#: printrun/gui/toolbar.py:74
-msgid "Start Printing Loaded File"
+#: printrun/gui/toolbar.py:77
+msgid "Start/Cancel Printing Loaded File"
 msgstr ""
 
-#: printrun/gui/toolbar.py:74 printrun/pronterface.py:1003
-#: printrun/pronterface.py:1062 printrun/pronterface.py:1078
-#: printrun/pronterface.py:1363 printrun/pronterface.py:1445
+#: printrun/gui/toolbar.py:77 printrun/pronterface.py:1076
+#: printrun/pronterface.py:1108 printrun/pronterface.py:1158
+#: printrun/pronterface.py:1563 printrun/pronterface.py:1670
+#: printrun/pronterface.py:2064
 msgid "Print"
 msgstr "Printen"
 
-#: printrun/gui/toolbar.py:80
-msgid "Pause Current Print"
+#: printrun/gui/toolbar.py:83
+msgid "Pause/Resume Current Print"
 msgstr ""
 
-#: printrun/gui/toolbar.py:80 printrun/pronterface.py:1002
-#: printrun/pronterface.py:1061 printrun/pronterface.py:1081
-#: printrun/pronterface.py:1091 printrun/pronterface.py:1172
-#: printrun/pronterface.py:1364
+#: printrun/gui/toolbar.py:83 printrun/pronterface.py:1075
+#: printrun/pronterface.py:1116 printrun/pronterface.py:1161
+#: printrun/pronterface.py:1181 printrun/pronterface.py:1296
+#: printrun/pronterface.py:1564 printrun/pronterface.py:2065
 msgid "Pause"
 msgstr "Pauze"
 
-#: printrun/gui/toolbar.py:85
-msgid "Turn printer off"
+#: printrun/gui/toolbar.py:91
+msgid "Reset"
+msgstr "Reset"
+
+#: printrun/gui/toolbar.py:91
+#, fuzzy
+msgid "Reset the printer"
+msgstr "Verbind met printer"
+
+#: printrun/gui/toolbar.py:95
+msgid "Cancel the slicing process"
 msgstr ""
 
-#: printrun/gui/viz.py:65
+#: printrun/gui/toolbar.py:95
+msgid "KillSlicer"
+msgstr ""
+
+#: printrun/gui/viz.py:85
 msgid ""
 "Click to examine / edit\n"
 "  layers of loaded file"
 msgstr ""
 
-#: printrun/gui/widgets.py:36
+#: printrun/gui/widgets.py:35
 msgid "Find"
 msgstr ""
 
-#: printrun/gui/widgets.py:38
+#: printrun/gui/widgets.py:37
 msgid "Save"
 msgstr ""
 
-#: printrun/gui/widgets.py:43 printrun/objectplater.py:76
-#: printrun/pronterface.py:1257 printrun/pronterface.py:2017
+#: printrun/gui/widgets.py:42 printrun/objectplater.py:81
+#: printrun/pronterface.py:1183 printrun/pronterface.py:1189
+#: printrun/pronterface.py:2268
 msgid "Cancel"
 msgstr "Annuleer"
 
-#: printrun/gui/widgets.py:70
+#: printrun/gui/widgets.py:68
 #, fuzzy
 msgid "Not Found!"
 msgstr "Bestand niet gevonden!"
 
-#: printrun/gui/widgets.py:124
+#: printrun/gui/widgets.py:119
 #, fuzzy
 msgid "Printer settings"
 msgstr "Wijzig instellingen"
 
-#: printrun/gui/widgets.py:125
+#: printrun/gui/widgets.py:120
 #, fuzzy
 msgid "User interface"
 msgstr "Printer Interface"
 
-#: printrun/gui/widgets.py:126
+#: printrun/gui/widgets.py:121
+msgid "Viewer"
+msgstr ""
+
+#: printrun/gui/widgets.py:122
 #, fuzzy
 msgid "Colors"
 msgstr "Kleur"
 
-#: printrun/gui/widgets.py:127
+#: printrun/gui/widgets.py:123
 msgid "External commands"
 msgstr ""
 
-#: printrun/gui/widgets.py:132
+#: printrun/gui/widgets.py:128
 msgid "Edit settings"
 msgstr "Wijzig instellingen"
 
-#: printrun/gui/widgets.py:135
+#: printrun/gui/widgets.py:131
 #, fuzzy
 msgid "Settings"
 msgstr "&Instellingen"
 
-#: printrun/gui/widgets.py:187
+#: printrun/gui/widgets.py:201
 msgid "Custom button"
 msgstr "Gedefinieerde knop"
 
-#: printrun/gui/widgets.py:193
+#: printrun/gui/widgets.py:207
 msgid "Button title"
 msgstr "Knoptitel"
 
-#: printrun/gui/widgets.py:196
+#: printrun/gui/widgets.py:210
 msgid "Command"
 msgstr "Commando"
 
-#: printrun/gui/widgets.py:205
+#: printrun/gui/widgets.py:219
 msgid "Color"
 msgstr "Kleur"
 
-#: printrun/gviz.py:29
+#: printrun/gviz.py:31
 msgid "Layer number and Z position show here when you scroll"
 msgstr ""
 
-#: printrun/gviz.py:39
+#: printrun/gviz.py:41
 msgid "Zoom In [+]"
 msgstr ""
 
-#: printrun/gviz.py:40
+#: printrun/gviz.py:42
 msgid "Zoom Out [-]"
 msgstr ""
 
-#: printrun/gviz.py:42
+#: printrun/gviz.py:44
 msgid "Move Up a Layer [U]"
 msgstr ""
 
-#: printrun/gviz.py:43
+#: printrun/gviz.py:45
 msgid "Move Down a Layer [D]"
 msgstr ""
 
-#: printrun/gviz.py:44
+#: printrun/gviz.py:46
 #, fuzzy
 msgid "Reset view"
 msgstr "Reset"
 
-#: printrun/gviz.py:68
+#: printrun/gviz.py:48
+msgid "Inject G-Code"
+msgstr ""
+
+#: printrun/gviz.py:48
+msgid "Insert code at the beginning of this layer"
+msgstr ""
+
+#: printrun/gviz.py:49
+msgid "Edit layer"
+msgstr ""
+
+#: printrun/gviz.py:49
+msgid "Edit the G-Code of this layer"
+msgstr ""
+
+#: printrun/gviz.py:73
 msgid "Gcode view, shift to move view, mousewheel to set layer"
 msgstr ""
 
-#: printrun/gviz.py:105 printrun/gviz.py:241
-msgid "Layer %d - Going Up - Z = %.03f mm"
+#: printrun/gviz.py:109
+msgid "Layer %d - Z = %.03f mm"
 msgstr ""
 
 #: printrun/gviz.py:250
+msgid "Layer %d - Going Up - Z = %.03f mm"
+msgstr ""
+
+#: printrun/gviz.py:259
 msgid "Layer %d - Going Down - Z = %.03f mm"
 msgstr ""
 
-#: printrun/objectplater.py:35
-msgid "Plate building tool"
+#: printrun/injectgcode.py:27
+msgid "Inject G-Code at layer %d (Z = %.03f)"
 msgstr ""
 
-#: printrun/objectplater.py:45
+#: printrun/injectgcode.py:35
+msgid "Edit G-Code of layer %d (Z = %.03f)"
+msgstr ""
+
+#: printrun/injectgcode.py:40
+msgid "Successfully injected %d lines at beginning of layer %d"
+msgstr ""
+
+#: printrun/injectgcode.py:45
+msgid "Successfully edited layer %d (which now contains %d lines)"
+msgstr ""
+
+#: printrun/objectplater.py:50
 msgid "Clear"
 msgstr ""
 
-#: printrun/objectplater.py:49
+#: printrun/objectplater.py:54
 #, fuzzy
 msgid "Load"
 msgstr "Geladen "
 
-#: printrun/objectplater.py:53
+#: printrun/objectplater.py:58
 msgid "Snap to Z = 0"
 msgstr ""
 
-#: printrun/objectplater.py:57
+#: printrun/objectplater.py:62
 msgid "Put at center"
 msgstr ""
 
-#: printrun/objectplater.py:61
+#: printrun/objectplater.py:66
 msgid "Delete"
 msgstr ""
 
-#: printrun/objectplater.py:65
+#: printrun/objectplater.py:70
 msgid "Auto arrange"
 msgstr ""
 
-#: printrun/objectplater.py:69
+#: printrun/objectplater.py:74
 msgid "Export"
 msgstr ""
 
-#: printrun/objectplater.py:73
+#: printrun/objectplater.py:78
 msgid "Done"
 msgstr ""
 
-#: printrun/objectplater.py:151
+#: printrun/objectplater.py:156
 msgid "Autoplating"
 msgstr ""
 
-#: printrun/objectplater.py:199
+#: printrun/objectplater.py:203
 msgid "Bed full, sorry sir :("
 msgstr ""
 
-#: printrun/objectplater.py:209
+#: printrun/objectplater.py:215
 msgid ""
 "Are you sure you want to clear the grid? All unsaved changes will be lost."
 msgstr ""
 
-#: printrun/objectplater.py:210
+#: printrun/objectplater.py:216
 #, fuzzy
 msgid "Clear the grid?"
 msgstr " Sluit het venster"
 
-#: printrun/objectplater.py:256
+#: printrun/objectplater.py:266
 #, fuzzy
 msgid "Pick file to load"
 msgstr "Kies bestand op SD"
 
-#: printrun/objectplater.py:267
+#: printrun/objectplater.py:277
 #, fuzzy
 msgid "Pick file to save to"
 msgstr "Kies bestandsnaam op SD"
 
-#: printrun/plater.py:212
-msgid "STL files (*.stl;*.STL)|*.stl;*.STL|OpenSCAD files (*.scad)|*.scad"
+#: printrun/objectplater.py:294
+msgid "Plate building tool"
 msgstr ""
 
-#: printrun/plater.py:213
-msgid "STL files (*.stl;*.STL)|*.stl;*.STL"
-msgstr ""
-
-#: printrun/plater.py:244
-#, fuzzy
-msgid "Loading STL file failed"
-msgstr "Bestand openen mislukt"
-
-#: printrun/plater.py:244 printrun/plater.py:251
-msgid "Error"
-msgstr ""
-
-#: printrun/plater.py:251
-#, fuzzy
-msgid "Loading OpenSCAD file failed"
-msgstr "Bestand openen mislukt"
-
-#: printrun/plater.py:284
-msgid "Couldn't load non-existing file %s"
-msgstr ""
-
-#: printrun/plater.py:360
-msgid "Wrote plate to %s"
-msgstr ""
-
-#: printrun/plater.py:367
-msgid ""
-"Failed to use simarrange for plating, falling back to the standard method"
-msgstr ""
-
-#: printrun/plater.py:372
-msgid "Autoplating using simarrange"
-msgstr ""
-
-#: printrun/plater.py:387
-msgid "Plate full, please remove some objects"
-msgstr ""
-
-#: printrun/plater.py:404
-msgid "simarrange failed"
-msgstr ""
-
-#: printrun/printcore.py:177
+#: printrun/printcore.py:183
 msgid "Could not connect to %s:%s:"
 msgstr ""
 
-#: printrun/printcore.py:178
+#: printrun/printcore.py:184
 msgid "Socket error %s:"
 msgstr ""
 
-#: printrun/printcore.py:191 printrun/printcore.py:196
+#: printrun/printcore.py:201 printrun/printcore.py:206
 msgid "Could not connect to %s at baudrate %s:"
 msgstr ""
 
-#: printrun/printcore.py:192
+#: printrun/printcore.py:202
 msgid "Serial error: %s"
 msgstr ""
 
-#: printrun/printcore.py:197
+#: printrun/printcore.py:207
 msgid "IO error: %s"
 msgstr ""
 
-#: printrun/printcore.py:231
+#: printrun/printcore.py:244
 msgid "Can't read from printer (disconnected?) (SelectError {0}): {1}"
 msgstr ""
 
-#: printrun/printcore.py:234
+#: printrun/printcore.py:247
 msgid "SelectError ({0}): {1}"
 msgstr ""
 
-#: printrun/printcore.py:237
+#: printrun/printcore.py:250
 msgid "Can't read from printer (disconnected?) (SerialException): {0}"
 msgstr ""
 
-#: printrun/printcore.py:240
+#: printrun/printcore.py:253
 msgid "Can't read from printer (disconnected?) (Socket error {0}): {1}"
 msgstr ""
 
-#: printrun/printcore.py:245
+#: printrun/printcore.py:258
 msgid "Can't read from printer (disconnected?) (OS Error {0}): {1}"
 msgstr ""
 
-#: printrun/printcore.py:259
+#: printrun/printcore.py:272
 msgid "Aborting connection attempt after 4 failed writes."
 msgstr ""
 
-#: printrun/printcore.py:462 printrun/printcore.py:470
-#: printrun/pronsole.py:1192 printrun/pronsole.py:1250
-#: printrun/pronterface.py:209 printrun/pronterface.py:962
-#: printrun/pronterface.py:1111 printrun/pronterface.py:1178
+#: printrun/printcore.py:477 printrun/printcore.py:485
+#: printrun/pronsole.py:1001 printrun/pronsole.py:1059
+#: printrun/pronterface.py:217 printrun/pronterface.py:1033
+#: printrun/pronterface.py:1205 printrun/pronterface.py:1302
 msgid "Not connected to printer."
 msgstr "Printer is niet verbonden."
 
-#: printrun/printcore.py:479
+#: printrun/printcore.py:495
 msgid "Print start callback failed with:"
 msgstr ""
 
-#: printrun/printcore.py:490
+#: printrun/printcore.py:506
 msgid "Print end callback failed with:"
 msgstr ""
 
-#: printrun/printcore.py:493
+#: printrun/printcore.py:509
 msgid "Print thread died due to the following error:"
 msgstr ""
 
-#: printrun/printcore.py:584
+#: printrun/printcore.py:605
 msgid "Could not analyze command %s:"
 msgstr ""
 
-#: printrun/printcore.py:601
+#: printrun/printcore.py:622
 msgid "Can't write to printer (disconnected ?):"
 msgstr ""
 
-#: printrun/printcore.py:604
+#: printrun/printcore.py:625
 msgid "Can't write to printer (disconnected?) (Socket error {0}): {1}"
 msgstr ""
 
-#: printrun/printcore.py:607
+#: printrun/printcore.py:628
 msgid "Can't write to printer (disconnected?) (SerialException): {0}"
 msgstr ""
 
-#: printrun/printcore.py:610
+#: printrun/printcore.py:631
 msgid "Socket connection broken, disconnected. ({0}): {1}"
 msgstr ""
 
-#: printrun/pronsole.py:72
-#, fuzzy
-msgid "Default: "
-msgstr "Standaardinstelling"
-
-#: printrun/pronsole.py:73
-msgid "(Control-doubleclick to reset to default value)"
-msgstr ""
-
-#: printrun/pronsole.py:108
-#, fuzzy
-msgid ""
-"Are you sure you want to reset the setting to the default value: {0!r} ?"
-msgstr "Weet je zeker dat je de printer wilt resetten?"
-
-#: printrun/pronsole.py:108
-msgid "Confirm set default"
-msgstr ""
-
-#: printrun/pronsole.py:258
-msgid "Width"
-msgstr ""
-
-#: printrun/pronsole.py:261
-msgid "Depth"
-msgstr ""
-
-#: printrun/pronsole.py:264
-msgid "Height"
-msgstr ""
-
-#: printrun/pronsole.py:267
-msgid "X offset"
-msgstr ""
-
-#: printrun/pronsole.py:270
-msgid "Y offset"
-msgstr ""
-
-#: printrun/pronsole.py:273
-msgid "Z offset"
-msgstr ""
-
-#: printrun/pronsole.py:276
-msgid "X home pos."
-msgstr ""
-
-#: printrun/pronsole.py:279
-msgid "Y home pos."
-msgstr ""
-
-#: printrun/pronsole.py:282
-msgid "Z home pos."
-msgstr ""
-
-#: printrun/pronsole.py:301
-#, fuzzy
-msgid "Port used to communicate with printer"
-msgstr "Printer is niet verbonden."
-
-#: printrun/pronsole.py:301
-msgid "Serial port"
-msgstr ""
-
-#: printrun/pronsole.py:302
-msgid "Baud rate"
-msgstr ""
-
-#: printrun/pronsole.py:302
-msgid "Communications Speed"
-msgstr ""
-
-#: printrun/pronsole.py:303
-msgid "TCP streaming mode"
-msgstr ""
-
-#: printrun/pronsole.py:303
-msgid ""
-"When using a TCP connection to the printer, the streaming mode will not wait "
-"for acks from the printer to send new commands. This will break things such "
-"as ETA prediction, but can result in smoother prints."
-msgstr ""
-
-#: printrun/pronsole.py:304
-msgid "Bed temperature for ABS"
-msgstr ""
-
-#: printrun/pronsole.py:304
-msgid "Heated Build Platform temp for ABS (deg C)"
-msgstr ""
-
-#: printrun/pronsole.py:305
-msgid "Bed temperature for PLA"
-msgstr ""
-
-#: printrun/pronsole.py:305
-msgid "Heated Build Platform temp for PLA (deg C)"
-msgstr ""
-
-#: printrun/pronsole.py:306
-msgid "Extruder temp for ABS (deg C)"
-msgstr ""
-
-#: printrun/pronsole.py:306
-msgid "Extruder temperature for ABS"
-msgstr ""
-
-#: printrun/pronsole.py:307
-msgid "Extruder temp for PLA (deg C)"
-msgstr ""
-
-#: printrun/pronsole.py:307
-msgid "Extruder temperature for PLA"
-msgstr ""
-
-#: printrun/pronsole.py:308
-msgid "Feedrate for Control Panel Moves in X and Y (mm/min)"
-msgstr ""
-
-#: printrun/pronsole.py:308
-msgid "X && Y manual feedrate"
-msgstr ""
-
-#: printrun/pronsole.py:309
-msgid "Feedrate for Control Panel Moves in Z (mm/min)"
-msgstr ""
-
-#: printrun/pronsole.py:309
-msgid "Z manual feedrate"
-msgstr ""
-
-#: printrun/pronsole.py:310
-msgid "E manual feedrate"
-msgstr ""
-
-#: printrun/pronsole.py:310
-msgid "Feedrate for Control Panel Moves in Extrusions (mm/min)"
-msgstr ""
-
-#: printrun/pronsole.py:311
-#, fuzzy
-msgid "Slice command"
-msgstr "Commando"
-
-#: printrun/pronsole.py:312
-#, fuzzy
-msgid "Slice settings command"
-msgstr "SFACT Instellingen"
-
-#: printrun/pronsole.py:312
-msgid "Slicer options command"
-msgstr ""
-
-#: printrun/pronsole.py:313
-msgid "Executable to run when the print is finished"
-msgstr ""
-
-#: printrun/pronsole.py:313
-#, fuzzy
-msgid "Final command"
-msgstr "Commando"
-
-#: printrun/pronsole.py:314
-#, fuzzy
-msgid "Error command"
-msgstr "Commando"
-
-#: printrun/pronsole.py:314
-msgid "Executable to run when an error occurs"
-msgstr ""
-
-#: printrun/pronsole.py:381
-msgid "Failed to run callback after setting \"%s\":"
-msgstr ""
-
-#: printrun/pronsole.py:469
+#: printrun/pronsole.py:153
 msgid "Build dimensions"
 msgstr ""
 
-#: printrun/pronsole.py:469
+#: printrun/pronsole.py:153
 msgid ""
 "Dimensions of Build Platform\n"
 " & optional offset of origin\n"
@@ -773,281 +609,335 @@ msgid ""
 "XXXxYYYxZZZ+OffX+OffY+OffZ+HomeX+HomeY+HomeZ"
 msgstr ""
 
-#: printrun/pronsole.py:495
+#: printrun/pronsole.py:180
 msgid ""
 "Welcome to the printer console! Type \"help\" for a list of available "
 "commands."
 msgstr ""
 
-#: printrun/pronsole.py:657 printrun/pronsole.py:665 printrun/pronsole.py:673
-#: printrun/pronsole.py:1519 printrun/pronsole.py:1546
-#: printrun/pronsole.py:1618 printrun/pronterface.py:357
-#: printrun/pronterface.py:377 printrun/pronterface.py:394
+#: printrun/pronsole.py:359 printrun/pronsole.py:367 printrun/pronsole.py:1397
+#: printrun/pronsole.py:1424 printrun/pronsole.py:1495
+#: printrun/pronterface.py:420 printrun/pronterface.py:440
+#: printrun/pronterface.py:457
 msgid "Printer is not online."
 msgstr "Printer is niet verbonden."
 
-#: printrun/pronsole.py:692
+#: printrun/pronsole.py:382
+#, fuzzy
+msgid ""
+"Are you sure you want to exit while printing?\n"
+"(this will terminate the print)."
+msgstr "Weet je zeker dat je de printer wilt resetten?"
+
+#: printrun/pronsole.py:386
 msgid "Exiting program. Goodbye!"
 msgstr ""
 
-#: printrun/pronsole.py:697
+#: printrun/pronsole.py:392
 msgid "Disconnects from the printer and exits the program."
 msgstr ""
 
-#: printrun/pronsole.py:974
+#: printrun/pronsole.py:544
+msgid "Unknown variable '%s'"
+msgstr ""
+
+#: printrun/pronsole.py:547
+msgid "Bad value %s for variable '%s': %s"
+msgstr ""
+
+#: printrun/pronsole.py:549
+msgid "Bad value for variable '%s', expecting %s (%s)"
+msgstr ""
+
+#: printrun/pronsole.py:622
+msgid "Failure!!!"
+msgstr ""
+
+#: printrun/pronsole.py:708
+msgid "increase verbosity"
+msgstr ""
+
+#: printrun/pronsole.py:709
 msgid ""
 "load this file on startup instead of .pronsolerc ; you may chain config "
 "files, if so settings auto-save will use the last specified file"
 msgstr ""
 
-#: printrun/pronsole.py:975
+#: printrun/pronsole.py:710
 msgid ""
 "executes command after configuration/.pronsolerc is loaded ; macros/settings "
 "from these commands are not autosaved"
 msgstr ""
 
-#: printrun/pronsole.py:976
+#: printrun/pronsole.py:711
 msgid "file to load"
 msgstr ""
 
-#: printrun/pronsole.py:1104
+#: printrun/pronsole.py:751 printrun/pronsole.py:761
+msgid "Error: You are trying to connect to a non-existing port."
+msgstr ""
+
+#: printrun/pronsole.py:753
+msgid "Error: You don't have permission to open %s."
+msgstr ""
+
+#: printrun/pronsole.py:754
+msgid "You might need to add yourself to the dialout group."
+msgstr ""
+
+#: printrun/pronsole.py:860
+msgid "Disconnecting after 4 failed writes."
+msgstr ""
+
+#: printrun/pronsole.py:900 printrun/pronterface.py:1515
+#, fuzzy
+msgid "Loading file: %s"
+msgstr "open bestand"
+
+#: printrun/pronsole.py:905
 #, fuzzy
 msgid "Loaded %s, %d lines."
 msgstr "Geladen %s, %d regels"
 
-#: printrun/pronsole.py:1105 printrun/pronterface.py:1381
+#: printrun/pronsole.py:906 printrun/pronterface.py:1581
 msgid "Estimated duration: %d layers, %s"
 msgstr ""
 
-#: printrun/pronsole.py:1134
+#: printrun/pronsole.py:944
 msgid "No file name given."
 msgstr ""
 
-#: printrun/pronsole.py:1140
-msgid "Skeining file: %s"
-msgstr ""
+#: printrun/pronsole.py:950
+#, fuzzy
+msgid "Slicing file: %s"
+msgstr "Skeinforge draait"
 
-#: printrun/pronsole.py:1142 printrun/pronterface.py:1305
+#: printrun/pronsole.py:952 printrun/pronterface.py:1483
 msgid "File not found!"
 msgstr "Bestand niet gevonden!"
 
-#: printrun/pronsole.py:1147
+#: printrun/pronsole.py:957
 msgid "Entering slicer settings: %s"
 msgstr ""
 
-#: printrun/pronsole.py:1151
-#, fuzzy
-msgid "Slicing: "
-msgstr "Skeinforge draait"
-
-#: printrun/pronsole.py:1158
+#: printrun/pronsole.py:967
 #, fuzzy
 msgid "Loading sliced file."
 msgstr "open bestand"
 
-#: printrun/pronsole.py:1161
+#: printrun/pronsole.py:970
 #, fuzzy
 msgid "Slicing failed: %s"
 msgstr "Skeinforge draait"
 
-#: printrun/pronsole.py:1174
+#: printrun/pronsole.py:983
 msgid ""
 "Creates a gcode file from an stl model using the slicer (with tab-completion)"
 msgstr ""
 
-#: printrun/pronsole.py:1175
+#: printrun/pronsole.py:984
 msgid "slice filename.stl - create gcode file"
 msgstr ""
 
-#: printrun/pronsole.py:1176
+#: printrun/pronsole.py:985
 msgid ""
 "slice filename.stl view - create gcode file and view using skeiniso (if "
 "using skeinforge)"
 msgstr ""
 
-#: printrun/pronsole.py:1177
+#: printrun/pronsole.py:986
 #, fuzzy
 msgid "slice set - adjust slicer settings"
 msgstr "Instellen SFACT"
 
-#: printrun/pronsole.py:1189
+#: printrun/pronsole.py:998
 msgid "Please enter target name in 8.3 format."
 msgstr ""
 
-#: printrun/pronsole.py:1195
+#: printrun/pronsole.py:1004
 msgid "Uploading as %s"
 msgstr ""
 
-#: printrun/pronsole.py:1196
+#: printrun/pronsole.py:1005
 msgid "Uploading %s"
 msgstr ""
 
-#: printrun/pronsole.py:1198
+#: printrun/pronsole.py:1007
 msgid "Press Ctrl-C to interrupt upload."
 msgstr ""
 
-#: printrun/pronsole.py:1201
+#: printrun/pronsole.py:1010
 msgid "Progress: "
 msgstr ""
 
-#: printrun/pronsole.py:1212
+#: printrun/pronsole.py:1021
 msgid "Upload completed. %s should now be on the card."
 msgstr ""
 
-#: printrun/pronsole.py:1216
+#: printrun/pronsole.py:1025
 msgid "...interrupted!"
 msgstr ""
 
-#: printrun/pronsole.py:1218
+#: printrun/pronsole.py:1027
 msgid "Something wrong happened while uploading:"
 msgstr ""
 
-#: printrun/pronsole.py:1224
+#: printrun/pronsole.py:1033
 msgid "A partial file named %s may have been written to the sd card."
 msgstr ""
 
-#: printrun/pronsole.py:1241
+#: printrun/pronsole.py:1050
 msgid ""
 "Send a loaded gcode file to the printer. Load a file with the load command "
 "first."
 msgstr ""
 
-#: printrun/pronsole.py:1243
+#: printrun/pronsole.py:1052
 msgid "Send a loaded gcode file to the printer. You have %s loaded right now."
 msgstr ""
 
-#: printrun/pronsole.py:1247 printrun/pronterface.py:730
-#: printrun/pronterface.py:1108
+#: printrun/pronsole.py:1056 printrun/pronterface.py:1202
 msgid "No file loaded. Please use load first."
 msgstr "Geen bestand geladen. Eerst bestand inladen."
 
-#: printrun/pronsole.py:1252
+#: printrun/pronsole.py:1061
 #, fuzzy
 msgid "Printing %s"
 msgstr " Printen:%04.2f %% |"
 
-#: printrun/pronsole.py:1253
+#: printrun/pronsole.py:1062
 msgid "You can monitor the print with the monitor command."
 msgstr ""
 
-#: printrun/pronsole.py:1261
+#: printrun/pronsole.py:1071
 msgid "Not printing, cannot pause."
 msgstr ""
 
-#: printrun/pronsole.py:1267
+#: printrun/pronsole.py:1077
 #, fuzzy
 msgid "Pauses a running print"
 msgstr "Start het printen"
 
-#: printrun/pronsole.py:1274
+#: printrun/pronsole.py:1084
 msgid "Not paused, unable to resume. Start a print first."
 msgstr ""
 
-#: printrun/pronsole.py:1284
+#: printrun/pronsole.py:1094
 msgid "Resumes a paused print."
 msgstr ""
 
-#: printrun/pronsole.py:1293
+#: printrun/pronsole.py:1103
 msgid "Files on SD card:"
 msgstr ""
 
-#: printrun/pronsole.py:1307 printrun/pronsole.py:1349
-#: printrun/pronsole.py:1562
+#: printrun/pronsole.py:1118 printrun/pronsole.py:1160
+#: printrun/pronsole.py:1440
 #, fuzzy
 msgid "Printer is not online. Please connect to it first."
 msgstr "Printer is niet verbonden."
 
-#: printrun/pronsole.py:1312
+#: printrun/pronsole.py:1123
 msgid "Lists files on the SD card"
 msgstr ""
 
-#: printrun/pronsole.py:1316 printrun/pronterface.py:1645
+#: printrun/pronsole.py:1127 printrun/pronterface.py:1907
 msgid "Opening file failed."
 msgstr "Bestand openen mislukt"
 
-#: printrun/pronsole.py:1322 printrun/pronterface.py:1651
+#: printrun/pronsole.py:1133 printrun/pronterface.py:1913
 msgid "Starting print"
 msgstr "Start het printen"
 
-#: printrun/pronsole.py:1345
+#: printrun/pronsole.py:1156
 #, fuzzy
 msgid "Resets the printer."
 msgstr "Verbind met printer"
 
-#: printrun/pronsole.py:1355
+#: printrun/pronsole.py:1166
 #, fuzzy
 msgid "File is not present on card. Please upload it first."
 msgstr "Geen bestand geladen. Eerst bestand inladen."
 
-#: printrun/pronsole.py:1359
+#: printrun/pronsole.py:1170
 msgid "Printing file: %s from SD card."
 msgstr ""
 
-#: printrun/pronsole.py:1360
+#: printrun/pronsole.py:1171
 msgid "Requesting SD print..."
 msgstr ""
 
-#: printrun/pronsole.py:1364
+#: printrun/pronsole.py:1175
 msgid "Print a file from the SD card. Tab completes with available file names."
 msgstr ""
 
-#: printrun/pronsole.py:1365
+#: printrun/pronsole.py:1176
 msgid "sdprint filename.g"
 msgstr ""
 
-#: printrun/pronsole.py:1382
+#: printrun/pronsole.py:1193
 msgid "Print resumed at: %s"
 msgstr ""
 
-#: printrun/pronsole.py:1384
+#: printrun/pronsole.py:1195
 msgid "Print started at: %s"
 msgstr ""
 
-#: printrun/pronsole.py:1392
-msgid "Failed to inhibit sleep:"
-msgstr ""
+#: printrun/pronsole.py:1211 printrun/pronsole.py:1218
+#, fuzzy
+msgid "Failed to set power settings:"
+msgstr "Instellen SFACT"
 
-#: printrun/pronsole.py:1399
-msgid "Failed to uninhibit sleep:"
-msgstr ""
-
-#: printrun/pronsole.py:1403
+#: printrun/pronsole.py:1222
 msgid "Print ended at: %(end_time)s and took %(duration)s"
 msgstr ""
 
-#: printrun/pronsole.py:1457
+#: printrun/pronsole.py:1269 printrun/pronterface.py:1863
+#, fuzzy
+msgid "Received command %s"
+msgstr "Commando"
+
+#: printrun/pronsole.py:1335
 msgid "Printer is not currently printing. No ETA available."
 msgstr ""
 
-#: printrun/pronsole.py:1460
+#: printrun/pronsole.py:1338
 msgid "Est: %s of %s remaining"
 msgstr ""
 
-#: printrun/pronsole.py:1465
+#: printrun/pronsole.py:1343
 msgid "Displays estimated remaining print time."
 msgstr ""
 
-#: printrun/pronsole.py:1498
+#: printrun/pronsole.py:1370 printrun/pronsole.py:1372
+#, fuzzy
+msgid "Hotend: %s/%s"
+msgstr "Element"
+
+#: printrun/pronsole.py:1373
+msgid "Bed:    %s/%s"
+msgstr ""
+
+#: printrun/pronsole.py:1376
 #, fuzzy
 msgid "Read the extruder and bed temperature."
 msgstr "Er moet een temperatuur worden ingesteld."
 
-#: printrun/pronsole.py:1507 printrun/pronsole.py:1540
+#: printrun/pronsole.py:1385 printrun/pronsole.py:1418
 msgid "You must enter a temperature."
 msgstr "Er moet een temperatuur worden ingesteld."
 
-#: printrun/pronsole.py:1512
+#: printrun/pronsole.py:1390
 msgid ""
 "%s is a high temperature to set your extruder to. Are you sure you want to "
 "do that?"
 msgstr ""
 
-#: printrun/pronsole.py:1517
+#: printrun/pronsole.py:1395
 #, fuzzy
 msgid "Setting hotend temperature to %s degrees Celsius."
 msgstr "Stel elementtemperatuur in op %f graden Celsius."
 
-#: printrun/pronsole.py:1521 printrun/pronterface.py:359
+#: printrun/pronsole.py:1399 printrun/pronterface.py:422
 msgid ""
 "You cannot set negative temperatures. To turn the hotend off entirely, set "
 "its temperature to 0."
@@ -1055,21 +945,21 @@ msgstr ""
 "Negatieve temperatuur is niet instelbaar. Om het element uit te schakelen "
 "wordt temperatuur 0 ingesteld."
 
-#: printrun/pronsole.py:1524
+#: printrun/pronsole.py:1402
 #, fuzzy
 msgid "Sets the hotend temperature to the value entered."
 msgstr "Stel elementtemperatuur in op %f graden Celsius."
 
-#: printrun/pronsole.py:1525 printrun/pronsole.py:1552
+#: printrun/pronsole.py:1403 printrun/pronsole.py:1430
 msgid "Enter either a temperature in celsius or one of the following keywords"
 msgstr ""
 
-#: printrun/pronsole.py:1544
+#: printrun/pronsole.py:1422
 #, fuzzy
 msgid "Setting bed temperature to %s degrees Celsius."
 msgstr "Bed teperatuur ingesteld op %f graden Celsius."
 
-#: printrun/pronsole.py:1548 printrun/pronterface.py:379
+#: printrun/pronsole.py:1426 printrun/pronterface.py:442
 msgid ""
 "You cannot set negative temperatures. To turn the bed off entirely, set its "
 "temperature to 0."
@@ -1077,288 +967,302 @@ msgstr ""
 "Negatieve temperatuur is niet instelbaar. Om het printbed uit te schakelen "
 "wordt temperatuur 0 ingesteld."
 
-#: printrun/pronsole.py:1551
+#: printrun/pronsole.py:1429
 #, fuzzy
 msgid "Sets the bed temperature to the value entered."
 msgstr "Bed teperatuur ingesteld op %f graden Celsius."
 
-#: printrun/pronsole.py:1565
+#: printrun/pronsole.py:1443
 msgid "Printer is not printing. Please print something before monitoring."
 msgstr ""
 
-#: printrun/pronsole.py:1567
+#: printrun/pronsole.py:1445
 #, fuzzy
 msgid "Monitoring printer, use ^C to interrupt."
 msgstr "Printercommunicatie wordt gevolgd."
 
-#: printrun/pronsole.py:1572 printrun/pronterface.py:329
+#: printrun/pronsole.py:1450 printrun/pronterface.py:391
 msgid "Invalid period given."
 msgstr "Foute gegevens ingevoerd"
 
-#: printrun/pronsole.py:1573
+#: printrun/pronsole.py:1451
 msgid "Updating values every %f seconds."
 msgstr ""
 
-#: printrun/pronsole.py:1584 printrun/pronsole.py:1587
+#: printrun/pronsole.py:1461
 msgid "Print progress: "
 msgstr ""
 
-#: printrun/pronsole.py:1595 printrun/pronterface.py:333
+#: printrun/pronsole.py:1464
+msgid "SD print progress: "
+msgstr ""
+
+#: printrun/pronsole.py:1472 printrun/pronterface.py:395
 msgid "Done monitoring."
 msgstr "Klaar met volgen."
 
-#: printrun/pronsole.py:1599
+#: printrun/pronsole.py:1476
 msgid "Monitor a machine's temperatures and an SD print's status."
 msgstr ""
 
-#: printrun/pronsole.py:1600
+#: printrun/pronsole.py:1477
 msgid ""
 "monitor - Reports temperature and SD print status (if SD printing) every 5 "
 "seconds"
 msgstr ""
 
-#: printrun/pronsole.py:1601
+#: printrun/pronsole.py:1478
 msgid ""
 "monitor 2 - Reports temperature and SD print status (if SD printing) every 2 "
 "seconds"
 msgstr ""
 
-#: printrun/pronsole.py:1612
+#: printrun/pronsole.py:1489
 msgid "You must specify the tool index as an integer."
 msgstr ""
 
-#: printrun/pronsole.py:1616
+#: printrun/pronsole.py:1493
 msgid "Using tool %d."
 msgstr ""
 
-#: printrun/pronsole.py:1620
+#: printrun/pronsole.py:1497
 msgid "You cannot set negative tool numbers."
 msgstr ""
 
-#: printrun/pronsole.py:1623
+#: printrun/pronsole.py:1500
 msgid ""
 "Switches to the specified tool (e.g. doing tool 1 will emit a T1 G-Code)."
 msgstr ""
 
-#: printrun/pronsole.py:1627
+#: printrun/pronsole.py:1504
 msgid "No move specified."
 msgstr ""
 
-#: printrun/pronsole.py:1630 printrun/pronsole.py:1692
-#: printrun/pronsole.py:1735 printrun/pronsole.py:1762
+#: printrun/pronsole.py:1507 printrun/pronsole.py:1569
+#: printrun/pronsole.py:1612 printrun/pronsole.py:1639
 msgid ""
 "Printer is currently printing. Please pause the print before you issue "
 "manual commands."
 msgstr ""
 
-#: printrun/pronsole.py:1633 printrun/pronsole.py:1759
+#: printrun/pronsole.py:1510 printrun/pronsole.py:1636
 #, fuzzy
 msgid "Printer is not online. Unable to move."
 msgstr "Printer is niet verbonden."
 
-#: printrun/pronsole.py:1649
+#: printrun/pronsole.py:1526
 msgid "Unknown axis."
 msgstr ""
 
-#: printrun/pronsole.py:1654
+#: printrun/pronsole.py:1531
 msgid "Invalid distance"
 msgstr ""
 
-#: printrun/pronsole.py:1665
+#: printrun/pronsole.py:1542
 msgid "Move an axis. Specify the name of the axis and the amount. "
 msgstr ""
 
-#: printrun/pronsole.py:1666
+#: printrun/pronsole.py:1543
 msgid ""
 "move X 10 will move the X axis forward by 10mm at %s mm/min (default XY "
 "speed)"
 msgstr ""
 
-#: printrun/pronsole.py:1667
+#: printrun/pronsole.py:1544
 msgid "move Y 10 5000 will move the Y axis forward by 10mm at 5000mm/min"
 msgstr ""
 
-#: printrun/pronsole.py:1668
+#: printrun/pronsole.py:1545
 msgid ""
 "move Z -1 will move the Z axis down by 1mm at %s mm/min (default Z speed)"
 msgstr ""
 
-#: printrun/pronsole.py:1669
+#: printrun/pronsole.py:1546
 msgid "Common amounts are in the tabcomplete list."
 msgstr ""
 
-#: printrun/pronsole.py:1699 printrun/pronsole.py:1742
+#: printrun/pronsole.py:1576 printrun/pronsole.py:1619
 #, fuzzy
 msgid "Invalid length given."
 msgstr "Foute gegevens ingevoerd"
 
-#: printrun/pronsole.py:1704 printrun/pronsole.py:1747
+#: printrun/pronsole.py:1581 printrun/pronsole.py:1624
 #, fuzzy
 msgid "Invalid speed given."
 msgstr "Foute gegevens ingevoerd"
 
-#: printrun/pronsole.py:1712
+#: printrun/pronsole.py:1589
 msgid "Extruding %fmm of filament."
 msgstr ""
 
-#: printrun/pronsole.py:1714
+#: printrun/pronsole.py:1591
 msgid "Reversing %fmm of filament."
 msgstr ""
 
-#: printrun/pronsole.py:1716
+#: printrun/pronsole.py:1593
 msgid "Length is 0, not doing anything."
 msgstr ""
 
-#: printrun/pronsole.py:1722
+#: printrun/pronsole.py:1599
 msgid ""
 "Extrudes a length of filament, 5mm by default, or the number of mm given as "
 "a parameter"
 msgstr ""
 
-#: printrun/pronsole.py:1723
+#: printrun/pronsole.py:1600
 msgid "extrude - extrudes 5mm of filament at 300mm/min (5mm/s)"
 msgstr ""
 
-#: printrun/pronsole.py:1724
+#: printrun/pronsole.py:1601
 msgid "extrude 20 - extrudes 20mm of filament at 300mm/min (5mm/s)"
 msgstr ""
 
-#: printrun/pronsole.py:1725
+#: printrun/pronsole.py:1602
 msgid "extrude -5 - REVERSES 5mm of filament at 300mm/min (5mm/s)"
 msgstr ""
 
-#: printrun/pronsole.py:1726
+#: printrun/pronsole.py:1603
 msgid "extrude 10 210 - extrudes 10mm of filament at 210mm/min (3.5mm/s)"
 msgstr ""
 
-#: printrun/pronsole.py:1732
+#: printrun/pronsole.py:1609
 #, fuzzy
 msgid "Printer is not online. Unable to reverse."
 msgstr "Printer is niet verbonden."
 
-#: printrun/pronsole.py:1751
+#: printrun/pronsole.py:1628
 msgid ""
 "Reverses the extruder, 5mm by default, or the number of mm given as a "
 "parameter"
 msgstr ""
 
-#: printrun/pronsole.py:1752
+#: printrun/pronsole.py:1629
 msgid "reverse - reverses 5mm of filament at 300mm/min (5mm/s)"
 msgstr ""
 
-#: printrun/pronsole.py:1753
+#: printrun/pronsole.py:1630
 msgid "reverse 20 - reverses 20mm of filament at 300mm/min (5mm/s)"
 msgstr ""
 
-#: printrun/pronsole.py:1754
+#: printrun/pronsole.py:1631
 msgid "reverse 10 210 - extrudes 10mm of filament at 210mm/min (3.5mm/s)"
 msgstr ""
 
-#: printrun/pronsole.py:1755
+#: printrun/pronsole.py:1632
 msgid "reverse -5 - EXTRUDES 5mm of filament at 300mm/min (5mm/s)"
 msgstr ""
 
-#: printrun/pronsole.py:1777
+#: printrun/pronsole.py:1654
 #, fuzzy
 msgid "Homes the printer"
 msgstr "Verbind met printer"
 
-#: printrun/pronsole.py:1778
+#: printrun/pronsole.py:1655
 msgid "home - homes all axes and zeroes the extruder(Using G28 and G92)"
 msgstr ""
 
-#: printrun/pronsole.py:1779
+#: printrun/pronsole.py:1656
 msgid "home xy - homes x and y axes (Using G28)"
 msgstr ""
 
-#: printrun/pronsole.py:1780
+#: printrun/pronsole.py:1657
 msgid "home z - homes z axis only (Using G28)"
 msgstr ""
 
-#: printrun/pronsole.py:1781
+#: printrun/pronsole.py:1658
 msgid "home e - set extruder position to zero (Using G92)"
 msgstr ""
 
-#: printrun/pronsole.py:1782
+#: printrun/pronsole.py:1659
 msgid "home xyze - homes all axes and zeroes the extruder (Using G28 and G92)"
 msgstr ""
 
-#: printrun/pronsole.py:1790
+#: printrun/pronsole.py:1667
 #, fuzzy
 msgid "; Motors off"
 msgstr "Motoren uit"
 
-#: printrun/pronsole.py:1792
+#: printrun/pronsole.py:1669
 #, fuzzy
 msgid "; Extruder off"
 msgstr "Extruden"
 
-#: printrun/pronsole.py:1794
+#: printrun/pronsole.py:1671
 msgid "; Heatbed off"
 msgstr ""
 
-#: printrun/pronsole.py:1796
+#: printrun/pronsole.py:1673
 msgid "; Fan off"
 msgstr ""
 
-#: printrun/pronsole.py:1798
+#: printrun/pronsole.py:1675
 msgid "; Power supply off"
 msgstr ""
 
-#: printrun/pronsole.py:1801
+#: printrun/pronsole.py:1678
 #, fuzzy
 msgid "Printer is not online. Unable to turn it off."
 msgstr "Printer is niet verbonden."
 
-#: printrun/pronsole.py:1804
+#: printrun/pronsole.py:1681
 msgid "Turns off everything on the printer"
 msgstr ""
 
-#: printrun/pronsole.py:1815
+#: printrun/pronsole.py:1692
 msgid "G-Code calling host command \"%s\""
 msgstr ""
 
-#: printrun/pronsole.py:1824
+#: printrun/pronsole.py:1701
 msgid ""
-"Runs a custom script. Current gcode filename can be given using %s token."
+"Runs a custom script. Current gcode filename can be given using $s token."
 msgstr ""
 
-#: printrun/pronsole.py:1832
+#: printrun/pronsole.py:1709
 msgid ""
 "Runs a custom script which output gcode which will in turn be executed. "
-"Current gcode filename can be given using %s token."
+"Current gcode filename can be given using $s token."
 msgstr ""
 
-#: printrun/pronterface.py:149
+#: printrun/pronterface.py:159
 msgid "Motors off"
 msgstr "Motoren uit"
 
-#: printrun/pronterface.py:149
+#: printrun/pronterface.py:159
 msgid "Switch all motors off"
 msgstr ""
 
-#: printrun/pronterface.py:150
+#: printrun/pronterface.py:160
 msgid "Advance extruder by set length"
 msgstr ""
 
-#: printrun/pronterface.py:150
+#: printrun/pronterface.py:160
 msgid "Extrude"
 msgstr "Extruden"
 
-#: printrun/pronterface.py:151
+#: printrun/pronterface.py:161
 msgid "Reverse"
 msgstr "Terug"
 
-#: printrun/pronterface.py:151
+#: printrun/pronterface.py:161
 msgid "Reverse extruder by set length"
 msgstr ""
 
-#: printrun/pronterface.py:165
+#: printrun/pronterface.py:162
+#, fuzzy
+msgid "Check temperatures"
+msgstr "Controleer Temp."
+
+#: printrun/pronterface.py:162
+#, fuzzy
+msgid "CheckTemp"
+msgstr "Controleer Temp."
+
+#: printrun/pronterface.py:176
 #, fuzzy
 msgid "Pronterface"
 msgstr "Printer Interface"
 
-#: printrun/pronterface.py:192
+#: printrun/pronterface.py:200
 msgid ""
 "# I moved all your custom buttons into .pronsolerc.\n"
 "# Please don't add them here any more.\n"
@@ -1368,763 +1272,1150 @@ msgstr ""
 "# Hier geen nieuwe knoppen definiëren.\n"
 "# Een backup van de oude knoppen staat in custombtn.old\n"
 
-#: printrun/pronterface.py:197
+#: printrun/pronterface.py:205
 msgid ""
 "Note!!! You have specified custom buttons in both custombtn.txt and ."
 "pronsolerc"
 msgstr ""
 "Let op!!! Er zijn gedefinieerde knoppen in zowel custombtn.txt en .pronsolerc"
 
-#: printrun/pronterface.py:198
+#: printrun/pronterface.py:206
 msgid ""
 "Ignoring custombtn.txt. Remove all current buttons to revert to custombtn.txt"
 msgstr ""
 "Negeer custombtn.txt. Verwijder alle gedefinieerde knoppen om gebruik te "
 "maken van custombtn.txt"
 
-#: printrun/pronterface.py:331
+#: printrun/pronterface.py:393
 msgid "Monitoring printer."
 msgstr "Printercommunicatie wordt gevolgd."
 
-#: printrun/pronterface.py:354
+#: printrun/pronterface.py:417
 msgid "Setting hotend temperature to %f degrees Celsius."
 msgstr "Stel elementtemperatuur in op %f graden Celsius."
 
-#: printrun/pronterface.py:361 printrun/pronterface.py:381
+#: printrun/pronterface.py:424 printrun/pronterface.py:444
 msgid "You must enter a temperature. (%s)"
 msgstr "Er moet een temperatuur worden ingesteld. (%s)"
 
-#: printrun/pronterface.py:374
+#: printrun/pronterface.py:437
 msgid "Setting bed temperature to %f degrees Celsius."
 msgstr "Bed teperatuur ingesteld op %f graden Celsius."
 
-#: printrun/pronterface.py:392
+#: printrun/pronterface.py:455
 msgid "Setting print speed factor to %d%%."
 msgstr ""
 
-#: printrun/pronterface.py:396
+#: printrun/pronterface.py:459
 #, fuzzy
 msgid "You must enter a speed. (%s)"
 msgstr "Er moet een temperatuur worden ingesteld. (%s)"
 
-#: printrun/pronterface.py:470
+#: printrun/pronterface.py:538
 msgid "Plate function activated"
 msgstr ""
 
-#: printrun/pronterface.py:479
+#: printrun/pronterface.py:548
 msgid "G-Code plate function activated"
 msgstr ""
 
-#: printrun/pronterface.py:486
+#: printrun/pronterface.py:556
 msgid "Plated %s"
 msgstr ""
 
-#: printrun/pronterface.py:500
-msgid "SD Upload"
-msgstr "uploaden naar SD"
-
-#: printrun/pronterface.py:504
+#: printrun/pronterface.py:573
 msgid "SD Print"
 msgstr "Afdruk van SD"
 
-#: printrun/pronterface.py:565
+#: printrun/pronterface.py:575
+msgid "SD Upload"
+msgstr "uploaden naar SD"
+
+#: printrun/pronterface.py:579
+#, fuzzy
+msgid "SD Reset"
+msgstr "Reset"
+
+#: printrun/pronterface.py:643
 msgid ""
 "Manual move outside of the build volume prevented (see the \"Clamp manual "
 "moves\" option)."
 msgstr ""
 
-#: printrun/pronterface.py:621
+#: printrun/pronterface.py:699
 msgid ""
 "Attempted to write invalid text to console, which could be due to an invalid "
 "baudrate"
 msgstr ""
 
-#: printrun/pronterface.py:655
-msgid " Opens file"
+#: printrun/pronterface.py:727
+#, fuzzy
+msgid " Open file"
 msgstr " Opent bestand"
 
-#: printrun/pronterface.py:655
+#: printrun/pronterface.py:727
 msgid "&Open..."
 msgstr "&Open..."
 
-#: printrun/pronterface.py:663
+#: printrun/pronterface.py:728
+#, fuzzy
+msgid " Save file"
+msgstr " Opent bestand"
+
+#: printrun/pronterface.py:728
+#, fuzzy
+msgid "&Save..."
+msgstr "&Open..."
+
+#: printrun/pronterface.py:737
+#, fuzzy
+msgid "&Recent Files"
+msgstr "Reset"
+
+#: printrun/pronterface.py:738
 msgid " Clear output console"
 msgstr ""
 
-#: printrun/pronterface.py:663
+#: printrun/pronterface.py:738
 msgid "Clear console"
 msgstr ""
 
-#: printrun/pronterface.py:664
+#: printrun/pronterface.py:740
+msgid " Manages Configuration Profiles"
+msgstr ""
+
+#: printrun/pronterface.py:740
+msgid "X2 Profile Manager"
+msgstr ""
+
+#: printrun/pronterface.py:742
 msgid " Closes the Window"
 msgstr " Sluit het venster"
 
-#: printrun/pronterface.py:664
+#: printrun/pronterface.py:742
 msgid "E&xit"
 msgstr "&Stoppen"
 
-#: printrun/pronterface.py:665
+#: printrun/pronterface.py:743
 msgid "&File"
 msgstr ""
 
-#: printrun/pronterface.py:668
+#: printrun/pronterface.py:746
 msgid " Edit open file"
 msgstr " Wijzig geopend bestand"
 
-#: printrun/pronterface.py:668
+#: printrun/pronterface.py:746
 msgid "&Edit..."
 msgstr "&Wijzig..."
 
-#: printrun/pronterface.py:669
-msgid " Compose 3D models into a single plate"
-msgstr ""
-
-#: printrun/pronterface.py:669
-#, fuzzy
-msgid "Plater"
-msgstr "Element:"
-
-#: printrun/pronterface.py:670
-msgid " Compose G-Codes into a single plate"
-msgstr ""
-
-#: printrun/pronterface.py:670
-msgid "G-Code Plater"
-msgstr ""
-
-#: printrun/pronterface.py:671
-msgid " Exclude parts of the bed from being printed"
-msgstr ""
-
-#: printrun/pronterface.py:671
-msgid "Excluder"
-msgstr ""
-
-#: printrun/pronterface.py:672
-msgid " Project slices"
-msgstr ""
-
-#: printrun/pronterface.py:672
-msgid "Projector"
-msgstr ""
-
-#: printrun/pronterface.py:673
+#: printrun/pronterface.py:751
 msgid "&Tools"
 msgstr ""
 
-#: printrun/pronterface.py:676
+#: printrun/pronterface.py:754
 msgid ""
 " Recover previous print after a disconnect (homes X, Y, restores Z and E "
 "status)"
 msgstr ""
 
-#: printrun/pronterface.py:676
+#: printrun/pronterface.py:754
 msgid "Recover"
 msgstr ""
 
-#: printrun/pronterface.py:679
+#: printrun/pronterface.py:757
 msgid "&Advanced"
 msgstr ""
 
-#: printrun/pronterface.py:686
-#, fuzzy
-msgid "Print &settings"
-msgstr "Wijzig instellingen"
-
-#: printrun/pronterface.py:687
-msgid "&Filament"
-msgstr ""
-
-#: printrun/pronterface.py:688
-#, fuzzy
-msgid "&Printer"
-msgstr "&Printen"
-
-#: printrun/pronterface.py:694
-msgid "&Slic3r"
-msgstr ""
-
-#: printrun/pronterface.py:696
-msgid "Failed to load Slic3r configuration:"
-msgstr ""
-
-#: printrun/pronterface.py:702
+#: printrun/pronterface.py:780
 msgid "&Macros"
 msgstr "&Macros"
 
-#: printrun/pronterface.py:703
+#: printrun/pronterface.py:781
 msgid "<&New...>"
 msgstr "<&Nieuw...>"
 
-#: printrun/pronterface.py:704
+#: printrun/pronterface.py:782
 msgid " Options dialog"
 msgstr "Optievenster"
 
-#: printrun/pronterface.py:704
+#: printrun/pronterface.py:782
 msgid "&Options"
 msgstr "&Opties"
 
-#: printrun/pronterface.py:706
+#: printrun/pronterface.py:784
 #, fuzzy
 msgid " Adjust slicing settings"
 msgstr "Instellen SFACT"
 
-#: printrun/pronterface.py:706
+#: printrun/pronterface.py:784
 #, fuzzy
 msgid "Slicing settings"
 msgstr "SFACT Instellingen"
 
-#: printrun/pronterface.py:708
+#: printrun/pronterface.py:786
 msgid "Debug communications"
 msgstr ""
 
-#: printrun/pronterface.py:709
+#: printrun/pronterface.py:787
 msgid "Print all G-code sent to and received from the printer."
 msgstr ""
 
-#: printrun/pronterface.py:713
+#: printrun/pronterface.py:791
 msgid "&Settings"
 msgstr "&Instellingen"
 
-#: printrun/pronterface.py:719
+#: printrun/pronterface.py:796
 #, fuzzy
 msgid "&About Printrun"
 msgstr "Printercommunicatie volgen"
 
-#: printrun/pronterface.py:719
+#: printrun/pronterface.py:796
 msgid "Show about dialog"
 msgstr ""
 
-#: printrun/pronterface.py:720
+#: printrun/pronterface.py:797
 msgid "&Help"
 msgstr ""
 
-#: printrun/pronterface.py:746
+#: printrun/pronterface.py:816
 msgid ""
 "Printrun is a pure Python 3D printing (and other types of CNC) host software."
 msgstr ""
 
-#: printrun/pronterface.py:750
+#: printrun/pronterface.py:820
 #, fuzzy
 msgid "%.02fmm of filament have been extruded during prints"
 msgstr "mm fillament wordt gebruikt in deze print\n"
 
-#: printrun/pronterface.py:781
-#, fuzzy
-msgid "Monitor printer status"
-msgstr "Printercommunicatie volgen"
-
-#: printrun/pronterface.py:781
-msgid ""
-"Regularly monitor printer temperatures (required to have functional "
-"temperature graph or gauges)"
-msgstr ""
-
-#: printrun/pronterface.py:782
+#: printrun/pronterface.py:852
 msgid "Path to the simarrange binary to use in the STL plater"
 msgstr ""
 
-#: printrun/pronterface.py:782
+#: printrun/pronterface.py:852
 msgid "Simarrange command"
 msgstr ""
 
-#: printrun/pronterface.py:783
+#: printrun/pronterface.py:853
 msgid "Circular build platform"
 msgstr ""
 
-#: printrun/pronterface.py:783
+#: printrun/pronterface.py:853
 msgid "Draw a circular (or oval) build platform instead of a rectangular one"
 msgstr ""
 
-#: printrun/pronterface.py:784
+#: printrun/pronterface.py:854
 #, fuzzy
 msgid "Extruders count"
 msgstr "Extruden"
 
-#: printrun/pronterface.py:784
+#: printrun/pronterface.py:854
 msgid "Number of extruders"
 msgstr ""
 
-#: printrun/pronterface.py:785
+#: printrun/pronterface.py:855
 msgid "Clamp manual moves"
 msgstr ""
 
-#: printrun/pronterface.py:785
+#: printrun/pronterface.py:855
 msgid "Prevent manual moves from leaving the specified build dimensions"
 msgstr ""
 
-#: printrun/pronterface.py:786
-#, fuzzy
-msgid "Interface mode"
-msgstr "Voer macronaam in"
-
-#: printrun/pronterface.py:786
-msgid ""
-"Standard interface is a one-page, three columns layout with controls/"
-"visualization/log\n"
-"Compact mode is a one-page, two columns layout with controls + log/"
-"visualization\n"
-"Tabbed mode is a two-pages mode, where the first page shows controls and the "
-"second one shows visualization and log."
-msgstr ""
-
-#: printrun/pronterface.py:787
-msgid "Controls mode"
-msgstr ""
-
-#: printrun/pronterface.py:787
-msgid ""
-"Standard controls include all controls needed for printer setup and "
-"calibration, while Mini controls are limited to the ones needed for daily "
-"printing"
-msgstr ""
-
-#: printrun/pronterface.py:788
-msgid "Add a menu to select Slic3r profiles directly from Pronterface"
-msgstr ""
-
-#: printrun/pronterface.py:788
-msgid "Enable Slic3r integration"
-msgstr ""
-
-#: printrun/pronterface.py:789
-msgid "Update Slic3r default presets"
-msgstr ""
-
-#: printrun/pronterface.py:789
-msgid ""
-"When selecting a profile in Slic3r integration menu, also save it as the "
-"default Slic3r preset"
-msgstr ""
-
-#: printrun/pronterface.py:790
+#: printrun/pronterface.py:860
 msgid "Main visualization"
 msgstr ""
 
-#: printrun/pronterface.py:790
+#: printrun/pronterface.py:860
 msgid "Select visualization for main window."
 msgstr ""
 
-#: printrun/pronterface.py:791
+#: printrun/pronterface.py:861
 msgid "Use 3D in GCode viewer window"
 msgstr ""
 
-#: printrun/pronterface.py:791
+#: printrun/pronterface.py:861
 msgid "Use 3D mode instead of 2D layered mode in the visualization window"
 msgstr ""
 
-#: printrun/pronterface.py:792
+#: printrun/pronterface.py:862
+msgid "3D viewer options"
+msgstr ""
+
+#: printrun/pronterface.py:863
 msgid "Use a lighter 3D visualization"
 msgstr ""
 
-#: printrun/pronterface.py:792
+#: printrun/pronterface.py:863
 msgid ""
 "Use a lighter visualization with simple lines instead of extruded paths for "
 "3D viewer"
 msgstr ""
 
-#: printrun/pronterface.py:793
+#: printrun/pronterface.py:864
+msgid "Amount of anti-aliasing samples used in the 3D viewer"
+msgstr ""
+
+#: printrun/pronterface.py:864
+msgid "Number of anti-aliasing samples"
+msgstr ""
+
+#: printrun/pronterface.py:865
 msgid "Track current layer in main 3D view"
 msgstr ""
 
-#: printrun/pronterface.py:793
+#: printrun/pronterface.py:865
 msgid "Track the currently printing layer in the main 3D visualization"
 msgstr ""
 
-#: printrun/pronterface.py:794
+#: printrun/pronterface.py:866
+msgid "Extrusion width for 3D viewer"
+msgstr ""
+
+#: printrun/pronterface.py:866
+msgid "Width of printed path in 3D viewer"
+msgstr ""
+
+#: printrun/pronterface.py:867
+msgid "Height of printed path in 3D viewer"
+msgstr ""
+
+#: printrun/pronterface.py:867
+msgid "Layer height for 3D viewer"
+msgstr ""
+
+#: printrun/pronterface.py:868
 msgid "Display temperature graph"
 msgstr ""
 
-#: printrun/pronterface.py:794
+#: printrun/pronterface.py:868
 msgid "Display time-lapse temperature graph"
 msgstr ""
 
-#: printrun/pronterface.py:795
-msgid "Display graphical gauges for temperatures visualization"
+#: printrun/pronterface.py:869
+msgid "Display all temperature gauges"
 msgstr ""
 
-#: printrun/pronterface.py:795
-msgid "Display temperature gauges"
+#: printrun/pronterface.py:869
+msgid "Display graphical gauges for temperatures visualization for all hotends"
 msgstr ""
 
-#: printrun/pronterface.py:796
+#: printrun/pronterface.py:870
 msgid "Display a checkbox that, when check, locks most of Pronterface"
 msgstr ""
 
-#: printrun/pronterface.py:796
+#: printrun/pronterface.py:870
 msgid "Display interface lock checkbox"
 msgstr ""
 
-#: printrun/pronterface.py:797
+#: printrun/pronterface.py:871
 msgid "If lock checkbox is enabled, lock the interface when starting a print"
 msgstr ""
 
-#: printrun/pronterface.py:797
+#: printrun/pronterface.py:871
 msgid "Lock interface upon print start"
 msgstr ""
 
-#: printrun/pronterface.py:804
+#: printrun/pronterface.py:872
+msgid "Regularly update visualization during the load of a G-Code file"
+msgstr ""
+
+#: printrun/pronterface.py:872
+msgid "Update UI during G-Code load"
+msgstr ""
+
+#: printrun/pronterface.py:880
+msgid "2D viewer options"
+msgstr ""
+
+#: printrun/pronterface.py:881
 msgid "Preview extrusion width"
 msgstr ""
 
-#: printrun/pronterface.py:804
+#: printrun/pronterface.py:881
 msgid "Width of Extrusion in Preview"
 msgstr ""
 
-#: printrun/pronterface.py:805
+#: printrun/pronterface.py:882
 msgid "Fine Grid Spacing"
 msgstr ""
 
-#: printrun/pronterface.py:805
+#: printrun/pronterface.py:882
 msgid "Fine grid spacing"
 msgstr ""
 
-#: printrun/pronterface.py:806
+#: printrun/pronterface.py:883
 msgid "Coarse Grid Spacing"
 msgstr ""
 
-#: printrun/pronterface.py:806
+#: printrun/pronterface.py:883
 msgid "Coarse grid spacing"
 msgstr ""
 
-#: printrun/pronterface.py:807
+#: printrun/pronterface.py:884
 msgid "Background color"
 msgstr ""
 
-#: printrun/pronterface.py:807
+#: printrun/pronterface.py:884
 msgid "Pronterface background color"
 msgstr ""
 
-#: printrun/pronterface.py:808
+#: printrun/pronterface.py:885
 msgid "3D view background color"
 msgstr ""
 
-#: printrun/pronterface.py:808
+#: printrun/pronterface.py:885
 msgid "Color of the 3D view background"
 msgstr ""
 
-#: printrun/pronterface.py:809
+#: printrun/pronterface.py:886
 msgid "3D view travel moves color"
 msgstr ""
 
-#: printrun/pronterface.py:809
+#: printrun/pronterface.py:886
 msgid "Color of travel moves in 3D view"
 msgstr ""
 
-#: printrun/pronterface.py:810
+#: printrun/pronterface.py:887
 msgid "3D view print moves color"
 msgstr ""
 
-#: printrun/pronterface.py:810
+#: printrun/pronterface.py:887
 msgid "Color of print moves with tool 0 in 3D view"
 msgstr ""
 
-#: printrun/pronterface.py:811
+#: printrun/pronterface.py:888
 msgid "3D view tool 1 moves color"
 msgstr ""
 
-#: printrun/pronterface.py:811
+#: printrun/pronterface.py:888
 msgid "Color of print moves with tool 1 in 3D view"
 msgstr ""
 
-#: printrun/pronterface.py:812
+#: printrun/pronterface.py:889
+msgid "3D view tool 2 moves color"
+msgstr ""
+
+#: printrun/pronterface.py:889
+msgid "Color of print moves with tool 2 in 3D view"
+msgstr ""
+
+#: printrun/pronterface.py:890
+msgid "3D view tool 3 moves color"
+msgstr ""
+
+#: printrun/pronterface.py:890
+msgid "Color of print moves with tool 3 in 3D view"
+msgstr ""
+
+#: printrun/pronterface.py:891
+msgid "3D view tool 4 moves color"
+msgstr ""
+
+#: printrun/pronterface.py:891
+msgid "Color of print moves with tool 4 in 3D view"
+msgstr ""
+
+#: printrun/pronterface.py:892
 msgid "3D view printed moves color"
 msgstr ""
 
-#: printrun/pronterface.py:812
+#: printrun/pronterface.py:892
 msgid "Color of printed moves in 3D view"
 msgstr ""
 
-#: printrun/pronterface.py:813
+#: printrun/pronterface.py:893
 msgid "3D view current layer moves color"
 msgstr ""
 
-#: printrun/pronterface.py:813
+#: printrun/pronterface.py:893
 msgid "Color of moves in current layer in 3D view"
 msgstr ""
 
-#: printrun/pronterface.py:814
+#: printrun/pronterface.py:894
 msgid "3D view printed current layer moves color"
 msgstr ""
 
-#: printrun/pronterface.py:814
+#: printrun/pronterface.py:894
 msgid "Color of already printed moves from current layer in 3D view"
 msgstr ""
 
-#: printrun/pronterface.py:815
-msgid "Changing most settings here will require restart to get effect"
+#: printrun/pronterface.py:895
+msgid "Changing some of these settings might require a restart to get effect"
 msgstr ""
 
-#: printrun/pronterface.py:815
+#: printrun/pronterface.py:895
 msgid "Note:"
 msgstr ""
 
-#: printrun/pronterface.py:822
+#: printrun/pronterface.py:902
 msgid "automatically try to connect to printer on startup"
 msgstr ""
 
-#: printrun/pronterface.py:835 printrun/pronterface.py:1316
+#: printrun/pronterface.py:915 printrun/pronterface.py:1494
 msgid "Failed to load recent files list:"
 msgstr ""
 
-#: printrun/pronterface.py:916
+#: printrun/pronterface.py:1004
 #, fuzzy
 msgid "SD upload: %04.2f%% |"
 msgstr " SD printen:%04.2f %%"
 
-#: printrun/pronterface.py:917 printrun/pronterface.py:922
+#: printrun/pronterface.py:1005 printrun/pronterface.py:1010
 msgid " Line# %d of %d lines |"
 msgstr ""
 
-#: printrun/pronterface.py:919
+#: printrun/pronterface.py:1007
 #, fuzzy
 msgid "SD printing: %04.2f%% |"
 msgstr " SD printen:%04.2f %%"
 
-#: printrun/pronterface.py:921
+#: printrun/pronterface.py:1009
 #, fuzzy
 msgid "Printing: %04.2f%% |"
 msgstr " Printen:%04.2f %% |"
 
-#: printrun/pronterface.py:924
+#: printrun/pronterface.py:1012
 msgid " Est: %s of %s remaining | "
 msgstr ""
 
-#: printrun/pronterface.py:926
+#: printrun/pronterface.py:1014
 #, fuzzy
 msgid " Z: %.3f mm"
 msgstr " Z: %0.2f mm"
 
-#: printrun/pronterface.py:931
-msgid "Disconnecting after 4 failed writes."
-msgstr ""
-
-#: printrun/pronterface.py:972
+#: printrun/pronterface.py:1045
 #, fuzzy
 msgid "Locking interface."
 msgstr "Printer Interface"
 
-#: printrun/pronterface.py:976
+#: printrun/pronterface.py:1049
 #, fuzzy
 msgid "Unlocking interface."
 msgstr "Printercommunicatie wordt gevolgd."
 
-#: printrun/pronterface.py:985
+#: printrun/pronterface.py:1058
 #, fuzzy
 msgid "Connecting..."
 msgstr "Verbind"
 
-#: printrun/pronterface.py:997
+#: printrun/pronterface.py:1070
 msgid "Could not parse baud rate: "
 msgstr ""
 
-#: printrun/pronterface.py:1013 printrun/pronterface.py:1023
-msgid "Error: You are trying to connect to a non-existing port."
-msgstr ""
-
-#: printrun/pronterface.py:1015
-msgid "Error: You don't have permission to open %s."
-msgstr ""
-
-#: printrun/pronterface.py:1016
-msgid "You might need to add yourself to the dialout group."
-msgstr ""
-
-#: printrun/pronterface.py:1043
+#: printrun/pronterface.py:1096
 #, fuzzy
 msgid "Disconnected."
 msgstr "Ontkoppel"
 
-#: printrun/pronterface.py:1071
+#: printrun/pronterface.py:1135
 #, fuzzy
 msgid "Reset."
 msgstr "Reset"
 
-#: printrun/pronterface.py:1072
+#: printrun/pronterface.py:1136 printrun/pronterface.py:1152
 msgid "Are you sure you want to reset the printer?"
 msgstr "Weet je zeker dat je de printer wilt resetten?"
 
-#: printrun/pronterface.py:1072
+#: printrun/pronterface.py:1136 printrun/pronterface.py:1152
 msgid "Reset?"
 msgstr "resetten?"
 
-#: printrun/pronterface.py:1093
-msgid "Restart"
-msgstr "Herstart"
+#: printrun/pronterface.py:1195 printrun/pronterface.py:1214
+#: printrun/pronterface.py:1226 printrun/pronterface.py:1243
+#: printrun/pronterface.py:1415 printrun/pronterface.py:1461
+#, fuzzy
+msgid "Cancel?"
+msgstr "Annuleer"
 
-#: printrun/pronterface.py:1126
+#: printrun/pronterface.py:1195 printrun/pronterface.py:1214
+#: printrun/pronterface.py:1243
+#, fuzzy
+msgid "Are you sure you want to cancel the print?"
+msgstr "Weet je zeker dat je de printer wilt resetten?"
+
+#: printrun/pronterface.py:1226
+#, fuzzy
+msgid "Are you sure you want to reset SD?"
+msgstr "Weet je zeker dat je de printer wilt resetten?"
+
+#: printrun/pronterface.py:1248
 msgid "Pick SD filename"
 msgstr "Kies bestandsnaam op SD"
 
-#: printrun/pronterface.py:1144
+#: printrun/pronterface.py:1268
 msgid "File upload complete"
 msgstr "Bestandsupload voltooid"
 
-#: printrun/pronterface.py:1151
+#: printrun/pronterface.py:1276
 msgid "Print paused at: %s"
 msgstr ""
 
-#: printrun/pronterface.py:1163
+#: printrun/pronterface.py:1285
+#, fuzzy
+msgid "Paused."
+msgstr "Pauze"
+
+#: printrun/pronterface.py:1287
 msgid "Resume"
 msgstr "Hervat"
 
-#: printrun/pronterface.py:1166
+#: printrun/pronterface.py:1295
 #, fuzzy
-msgid "Resuming."
+msgid "Resumed."
 msgstr "Hervat"
 
-#: printrun/pronterface.py:1192
+#: printrun/pronterface.py:1316
 msgid "Pick SD file"
 msgstr "Kies bestand op SD"
 
-#: printrun/pronterface.py:1192
+#: printrun/pronterface.py:1316
 msgid "Select the file to print"
 msgstr "Kies het te printen bestand"
 
-#: printrun/pronterface.py:1228 printrun/pronterface.py:1259
-#, fuzzy
-msgid "Slicing "
-msgstr "Skeinforge draait"
+#: printrun/pronterface.py:1354
+msgid "Running "
+msgstr ""
 
-#: printrun/pronterface.py:1237
+#: printrun/pronterface.py:1368
 msgid "Failed to execute slicing software: "
 msgstr ""
 
-#: printrun/pronterface.py:1244
+#: printrun/pronterface.py:1376
 #, fuzzy
 msgid "Slicing..."
 msgstr "Skeinforge draait..."
 
-#: printrun/pronterface.py:1296
+#: printrun/pronterface.py:1386
+#, fuzzy
+msgid "Slicing cancelled!"
+msgstr "Skeinforge draait"
+
+#: printrun/pronterface.py:1388
+msgid "Unable to cancel slicing!"
+msgstr ""
+
+#: printrun/pronterface.py:1415
+msgid "Would you like to cancel the slicing?"
+msgstr ""
+
+#: printrun/pronterface.py:1427
+#, fuzzy
+msgid "Slicing "
+msgstr "Skeinforge draait"
+
+#: printrun/pronterface.py:1431
+msgid "Generating G-Code"
+msgstr ""
+
+#: printrun/pronterface.py:1461
+msgid "Would you like to cancel the ongoing print to load the new file?"
+msgstr ""
+
+#: printrun/pronterface.py:1474
 msgid "Open file to print"
 msgstr "Open het te printen bestand"
 
-#: printrun/pronterface.py:1297
+#: printrun/pronterface.py:1475
 #, fuzzy
 msgid ""
 "OBJ, STL, and GCODE files (*.gcode;*.gco;*.g;*.stl;*.STL;*.obj;*.OBJ)|*."
 "gcode;*.gco;*.g;*.stl;*.STL;*.obj;*.OBJ|All Files (*.*)|*.*"
 msgstr "STL en GCODE bestanden (;*.gcode;*.g;*.stl;*.STL;)"
 
-#: printrun/pronterface.py:1325
+#: printrun/pronterface.py:1503
 msgid "Could not update recent files list:"
 msgstr ""
 
-#: printrun/pronterface.py:1359
+#: printrun/pronterface.py:1536
+msgid "Loading %s: %d layers loaded (%d lines)"
+msgstr ""
+
+#: printrun/pronterface.py:1545
+#, fuzzy
+msgid "Loading %s..."
+msgstr "open bestand"
+
+#: printrun/pronterface.py:1558
+#, fuzzy
+msgid "Pronterface - %s"
+msgstr "Printer Interface"
+
+#: printrun/pronterface.py:1559
 msgid "Loaded %s, %d lines"
 msgstr "Geladen %s, %d regels"
 
-#: printrun/pronterface.py:1362
-#, fuzzy
-msgid "Load File"
-msgstr "open bestand"
-
-#: printrun/pronterface.py:1376
+#: printrun/pronterface.py:1576
 #, fuzzy
 msgid "%.2fmm of filament used in this print"
 msgstr "mm fillament wordt gebruikt in deze print\n"
 
-#: printrun/pronterface.py:1377
+#: printrun/pronterface.py:1577
 msgid "The print goes:"
 msgstr ""
 
-#: printrun/pronterface.py:1378
+#: printrun/pronterface.py:1578
 msgid "- from %.2f mm to %.2f mm in X and is %.2f mm wide"
 msgstr ""
 
-#: printrun/pronterface.py:1379
+#: printrun/pronterface.py:1579
 msgid "- from %.2f mm to %.2f mm in Y and is %.2f mm deep"
 msgstr ""
 
-#: printrun/pronterface.py:1380
+#: printrun/pronterface.py:1580
 msgid "- from %.2f mm to %.2f mm in Z and is %.2f mm high"
 msgstr ""
 
-#: printrun/pronterface.py:1450
+#: printrun/pronterface.py:1607
+msgid "Warning, unexpected layer %d, not %d!"
+msgstr ""
+
+#: printrun/pronterface.py:1638
+msgid "Save as"
+msgstr ""
+
+#: printrun/pronterface.py:1639
+#, fuzzy
+msgid "GCODE files (*.gcode;*.gco;*.g)|*.gcode;*.gco;*.g|All Files (*.*)|*.*"
+msgstr "STL en GCODE bestanden (;*.gcode;*.g;*.stl;*.STL;)"
+
+#: printrun/pronterface.py:1643
+msgid "G-Code succesfully saved to %s"
+msgstr ""
+
+#: printrun/pronterface.py:1675
 msgid "Printer is now online."
 msgstr "Printer is nu verbonden."
 
-#: printrun/pronterface.py:1455
+#: printrun/pronterface.py:1691
 msgid "Disconnect"
 msgstr "Ontkoppel"
 
-#: printrun/pronterface.py:1688
+#: printrun/pronterface.py:1951
 #, fuzzy
 msgid "click to add new custom button"
 msgstr "Definieer eigen knop."
 
-#: printrun/pronterface.py:1694
+#: printrun/pronterface.py:1957
 msgid "Execute command: "
 msgstr ""
 
-#: printrun/pronterface.py:1714
+#: printrun/pronterface.py:1977
 msgid ""
 "Defines custom button. Usage: button <num> \"title\" [/c \"colour\"] command"
 msgstr ""
 "Definieert eigen knop. Gebruik: knop <num> \"titel\" [/c \"kleur\"] commando"
 
-#: printrun/pronterface.py:1736
+#: printrun/pronterface.py:1999
 msgid "Custom button number should be between 0 and 63"
 msgstr "Knopnummer moet tussen 0 en 63 zijn"
 
-#: printrun/pronterface.py:1827
+#: printrun/pronterface.py:2069
+#, fuzzy
+msgid "Print cancelled."
+msgstr "Afgebroken"
+
+#: printrun/pronterface.py:2104
 msgid "Edit custom button '%s'"
 msgstr "Wijzig gedefineerde knop '%s'"
 
-#: printrun/pronterface.py:1829
+#: printrun/pronterface.py:2106
 msgid "Move left <<"
 msgstr "Verplaats links <<"
 
-#: printrun/pronterface.py:1832
+#: printrun/pronterface.py:2109
 msgid "Move right >>"
 msgstr "Verplaats rechts >>"
 
-#: printrun/pronterface.py:1836
+#: printrun/pronterface.py:2113
 msgid "Remove custom button '%s'"
 msgstr "Verwijder gedefinieerde knop '%s'"
 
-#: printrun/pronterface.py:1839
+#: printrun/pronterface.py:2116
 msgid "Add custom button"
 msgstr "Definieer eigen knop."
 
-#: printrun/pronterface.py:1972
-msgid "event object missing"
-msgstr "vermist object"
+#: printrun/pronterface.py:2224
+msgid "Failed to handle button"
+msgstr ""
 
-#: printrun/pronterface.py:1985
+#: printrun/pronterface.py:2237
 msgid "Do you want to erase the macro?"
 msgstr "Wilt u de macro verwijderen?"
 
-#: printrun/pronterface.py:1989
+#: printrun/pronterface.py:2241
 msgid "Cancelled."
 msgstr "Afgebroken"
 
-#: printrun/pronterface.py:2007
+#: printrun/pronterface.py:2259
 msgid "Enter macro name"
 msgstr "Voer macronaam in"
 
-#: printrun/pronterface.py:2010
+#: printrun/pronterface.py:2262
 msgid "Macro name:"
 msgstr "Macronaam:"
 
-#: printrun/pronterface.py:2013
+#: printrun/pronterface.py:2265
 msgid "Ok"
 msgstr "Ok"
 
-#: printrun/pronterface.py:2035
+#: printrun/pronterface.py:2286
 msgid "Macro name may contain only ASCII alphanumeric symbols and underscores"
 msgstr ""
 
-#: printrun/pronterface.py:2038
+#: printrun/pronterface.py:2289
 msgid "Name '%s' is being used by built-in command"
 msgstr "Naam '%s' wordt gebruikt door ingebouwde instructie"
 
-#: pronsole.py:31
+#: printrun/rpc.py:39
+msgid "RPC server bound on non-default port %d"
+msgstr ""
+
+#: printrun/settings.py:34
+#, fuzzy
+msgid "Default: "
+msgstr "Standaardinstelling"
+
+#: printrun/settings.py:35
+msgid "(Control-doubleclick to reset to default value)"
+msgstr ""
+
+#: printrun/settings.py:70
+#, fuzzy
+msgid ""
+"Are you sure you want to reset the setting to the default value: {0!r} ?"
+msgstr "Weet je zeker dat je de printer wilt resetten?"
+
+#: printrun/settings.py:70
+msgid "Confirm set default"
+msgstr ""
+
+#: printrun/settings.py:223
+msgid "Width"
+msgstr ""
+
+#: printrun/settings.py:226
+msgid "Depth"
+msgstr ""
+
+#: printrun/settings.py:229
+msgid "Height"
+msgstr ""
+
+#: printrun/settings.py:232
+msgid "X offset"
+msgstr ""
+
+#: printrun/settings.py:235
+msgid "Y offset"
+msgstr ""
+
+#: printrun/settings.py:238
+msgid "Z offset"
+msgstr ""
+
+#: printrun/settings.py:241
+msgid "X home pos."
+msgstr ""
+
+#: printrun/settings.py:244
+msgid "Y home pos."
+msgstr ""
+
+#: printrun/settings.py:247
+msgid "Z home pos."
+msgstr ""
+
+#: printrun/settings.py:263
+#, fuzzy
+msgid "Port used to communicate with printer"
+msgstr "Printer is niet verbonden."
+
+#: printrun/settings.py:263
+msgid "Serial port"
+msgstr ""
+
+#: printrun/settings.py:264
+msgid "Baud rate"
+msgstr ""
+
+#: printrun/settings.py:264
+msgid "Communications Speed"
+msgstr ""
+
+#: printrun/settings.py:265
+msgid "TCP streaming mode"
+msgstr ""
+
+#: printrun/settings.py:265
+msgid ""
+"When using a TCP connection to the printer, the streaming mode will not wait "
+"for acks from the printer to send new commands. This will break things such "
+"as ETA prediction, but can result in smoother prints."
+msgstr ""
+
+#: printrun/settings.py:266
+msgid "Enable RPC server to allow remotely querying print status"
+msgstr ""
+
+#: printrun/settings.py:266
+msgid "RPC server"
+msgstr ""
+
+#: printrun/settings.py:267
+msgid "Bed temperature for ABS"
+msgstr ""
+
+#: printrun/settings.py:267
+msgid "Heated Build Platform temp for ABS (deg C)"
+msgstr ""
+
+#: printrun/settings.py:268
+msgid "Bed temperature for PLA"
+msgstr ""
+
+#: printrun/settings.py:268
+msgid "Heated Build Platform temp for PLA (deg C)"
+msgstr ""
+
+#: printrun/settings.py:269
+msgid "Extruder temp for ABS (deg C)"
+msgstr ""
+
+#: printrun/settings.py:269
+msgid "Extruder temperature for ABS"
+msgstr ""
+
+#: printrun/settings.py:270
+msgid "Extruder temp for PLA (deg C)"
+msgstr ""
+
+#: printrun/settings.py:270
+msgid "Extruder temperature for PLA"
+msgstr ""
+
+#: printrun/settings.py:271
+msgid "Feedrate for Control Panel Moves in X and Y (mm/min)"
+msgstr ""
+
+#: printrun/settings.py:271
+msgid "X && Y manual feedrate"
+msgstr ""
+
+#: printrun/settings.py:272
+msgid "Feedrate for Control Panel Moves in Z (mm/min)"
+msgstr ""
+
+#: printrun/settings.py:272
+msgid "Z manual feedrate"
+msgstr ""
+
+#: printrun/settings.py:273
+msgid "E manual feedrate"
+msgstr ""
+
+#: printrun/settings.py:273
+msgid "Feedrate for Control Panel Moves in Extrusions (mm/min)"
+msgstr ""
+
+#: printrun/settings.py:274
+#, fuzzy
+msgid "Slice command"
+msgstr "Commando"
+
+#: printrun/settings.py:275
+#, fuzzy
+msgid "Slice settings command"
+msgstr "SFACT Instellingen"
+
+#: printrun/settings.py:275
+msgid "Slicer options command"
+msgstr ""
+
+#: printrun/settings.py:276
+msgid "Executable to run when the print is started"
+msgstr ""
+
+#: printrun/settings.py:276
+#, fuzzy
+msgid "Start command"
+msgstr "Commando"
+
+#: printrun/settings.py:277
+msgid "Executable to run when the print is finished"
+msgstr ""
+
+#: printrun/settings.py:277
+#, fuzzy
+msgid "Final command"
+msgstr "Commando"
+
+#: printrun/settings.py:278
+#, fuzzy
+msgid "Error command"
+msgstr "Commando"
+
+#: printrun/settings.py:278
+msgid "Executable to run when an error occurs"
+msgstr ""
+
+#: printrun/settings.py:279
+msgid "Log path"
+msgstr ""
+
+#: printrun/settings.py:279
+msgid "Path to the log file. An empty path will log to the console."
+msgstr ""
+
+#: printrun/settings.py:355
+msgid "Failed to run callback after setting \"%s\":"
+msgstr ""
+
+#: printrun/stlplater.py:221
+msgid "STL files (*.stl;*.STL)|*.stl;*.STL|OpenSCAD files (*.scad)|*.scad"
+msgstr ""
+
+#: printrun/stlplater.py:222
+msgid "STL files (*.stl;*.STL)|*.stl;*.STL"
+msgstr ""
+
+#: printrun/stlplater.py:238
+msgid "Cut along:"
+msgstr ""
+
+#: printrun/stlplater.py:240
+msgid "Confirm cut"
+msgstr ""
+
+#: printrun/stlplater.py:248
+msgid ">X"
+msgstr ""
+
+#: printrun/stlplater.py:251
+msgid ">Y"
+msgstr ""
+
+#: printrun/stlplater.py:254
+msgid ">Z"
+msgstr ""
+
+#: printrun/stlplater.py:257
+msgid "<X"
+msgstr ""
+
+#: printrun/stlplater.py:260
+msgid "<Y"
+msgstr ""
+
+#: printrun/stlplater.py:263
+msgid "<Z"
+msgstr ""
+
+#: printrun/stlplater.py:296
+msgid "Cutting %s alongside %s axis"
+msgstr ""
+
+#: printrun/stlplater.py:379
+#, fuzzy
+msgid "Loading STL file failed"
+msgstr "Bestand openen mislukt"
+
+#: printrun/stlplater.py:380 printrun/stlplater.py:390
+msgid "Error:"
+msgstr ""
+
+#: printrun/stlplater.py:383
+#, fuzzy
+msgid "Loading STL file failed:"
+msgstr "Bestand openen mislukt"
+
+#: printrun/stlplater.py:389
+#, fuzzy
+msgid "Loading OpenSCAD file failed"
+msgstr "Bestand openen mislukt"
+
+#: printrun/stlplater.py:393
+#, fuzzy
+msgid "Loading OpenSCAD file failed:"
+msgstr "Bestand openen mislukt"
+
+#: printrun/stlplater.py:425
+msgid "Couldn't load non-existing file %s"
+msgstr ""
+
+#: printrun/stlplater.py:475
+msgid "Wrote plate to %s"
+msgstr ""
+
+#: printrun/stlplater.py:482
+msgid ""
+"Failed to use simarrange for plating, falling back to the standard method. "
+"The error was: "
+msgstr ""
+
+#: printrun/stlplater.py:490
+msgid "Autoplating using simarrange"
+msgstr ""
+
+#: printrun/stlplater.py:505
+msgid "Plate full, please remove some objects"
+msgstr ""
+
+#: printrun/stlplater.py:522
+msgid "simarrange failed"
+msgstr ""
+
+#: printrun/utils.py:219
+msgid "Color must be specified as #RGB"
+msgstr ""
+
+#: printrun/utils.py:225
+msgid "Color must be specified as #RGBA"
+msgstr ""
+
+#: pronsole.py:32
 msgid "Caught an exception, exiting:"
 msgstr ""
 
-#~ msgid "Check temp"
-#~ msgstr "Controleer Temp."
+#, fuzzy
+#~ msgid "Load a 3D model file"
+#~ msgstr "open bestand"
+
+#, fuzzy
+#~ msgid "Slicing: "
+#~ msgstr "Skeinforge draait"
+
+#, fuzzy
+#~ msgid "Plater"
+#~ msgstr "Element:"
+
+#, fuzzy
+#~ msgid "Print &settings"
+#~ msgstr "Wijzig instellingen"
+
+#, fuzzy
+#~ msgid "&Printer"
+#~ msgstr "&Printen"
+
+#, fuzzy
+#~ msgid "Monitor printer status"
+#~ msgstr "Printercommunicatie volgen"
+
+#, fuzzy
+#~ msgid "Interface mode"
+#~ msgstr "Voer macronaam in"
+
+#~ msgid "Restart"
+#~ msgstr "Herstart"
+
+#, fuzzy
+#~ msgid "Resuming."
+#~ msgstr "Hervat"
+
+#, fuzzy
+#~ msgid "Load File"
+#~ msgstr "open bestand"
+
+#~ msgid "event object missing"
+#~ msgstr "vermist object"
 
 #~ msgid "Mini mode"
 #~ msgstr "Mini-venster"
@@ -2141,15 +2432,8 @@ msgstr ""
 #~ msgid "Bed"
 #~ msgstr "Bed"
 
-#~ msgid "Hotend"
-#~ msgstr "Element"
-
 #~ msgid ", %d lines"
 #~ msgstr ", %d regels"
-
-#, fuzzy
-#~ msgid "Paused."
-#~ msgstr "Pauze"
 
 #~ msgid "X+100"
 #~ msgstr "X+100"
