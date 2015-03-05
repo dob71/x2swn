@@ -123,7 +123,10 @@ if ($opt{save}) {
 # launch GUI
 my $gui;
 if (!@ARGV && !$opt{save} && eval "require Slic3r::GUI; 1") {
-    my $loading_dlg = Slic3r::GUI->loading;
+    my $loading_dlg;
+    if ($^O eq 'MSWin32') { # GUI loading can be pretty slow under Windows
+        $loading_dlg = Slic3r::GUI->loading;
+    }
     {
         no warnings 'once';
         $Slic3r::GUI::datadir   = Slic3r::decode_path($opt{datadir});
@@ -135,7 +138,9 @@ if (!@ARGV && !$opt{save} && eval "require Slic3r::GUI; 1") {
     setlocale(LC_NUMERIC, 'C');
     $gui->{mainframe}->load_config_file($_) for @{$opt{load}};
     $gui->{mainframe}->load_config($cli_config);
-    $loading_dlg->Destroy();
+    if ($^O eq 'MSWin32') {
+        $loading_dlg->Destroy();
+    }
     $gui->MainLoop;
     exit;
 }
