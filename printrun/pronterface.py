@@ -1354,17 +1354,26 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
             self.log(_("Running ") + " ".join(pararray))
             self.slicep = subprocess.Popen(pararray, stderr = subprocess.STDOUT, stdout = subprocess.PIPE)
             o_str = ""
+            o_crlf = False
             while True:
                 o = self.slicep.stdout.read(1)
-                if o == '' and self.slicep.poll() is not None: break
-                o_str = o_str + o
-                if o == '\n' or  o == '\r':
-                    sys.stdout.write(o_str)
-                    o_str = ""
+                if o == '\r' or o == '\n':
+                    o_crlf = True
+                elif o_crlf:
+                    sys.stdout.write(o_str + "\n")
+                    o_str = o
+                    o_crlf = False
+                elif not o == '\033':
+                    o_str = o_str + o
+                if o == '' and self.slicep.poll() is not None: 
+                    break
             self.slicep.wait()
             self.stopsf = 1
         except:
-            os.remove(self.output_filename)
+            try:
+                os.remove(self.output_filename)
+            except:
+                pass
             self.logError(_("Failed to execute slicing software: ")
                           + "\n" + traceback.format_exc())
             self.stopsf = 1
