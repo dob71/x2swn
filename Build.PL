@@ -12,6 +12,7 @@ my %prereqs = qw(
     ExtUtils::ParseXS               3.22
     File::Basename                  0
     File::Spec                      0
+    File::HomeDir                   0
     Getopt::Long                    0
     Math::PlanePath                 53
     Module::Build::WithXSpp         0.14
@@ -51,7 +52,7 @@ if ($gui) {
     %prereqs = %recommends = ();
 } elsif ($fix_wx) {
     %prereqs = qw(
-    local_packages\Wx-0.9923.tar.gz 0
+    local_packages/Wx-0.9923.tar.gz 0
     );
 }
 

@@ -65,6 +65,9 @@ $ sudo perl Build.PL
 $ sudo perl Build.PL --gui
 $ ./slic3r.pl
 ```
+Note: compiling locally never "just works" for me, some help (at least a little) 
+      might be found in the README.md of the x2sw_packager project here: 
+      https://github.com/dob71/x2sw_packager
 
 ### Can I help?
 
@@ -349,6 +352,8 @@ The author of the Silk icon set is Mark James.
         --bridge-spacing-multiplier 
                             Multiplier changing spacing between extrusion lines while printing bridges
         --bridge-flow-ratio Multiplier for extrusion when bridging (> 0, default: 1)
+        --bridge-spacing-multiplier 
+                            Multiplier changing spacing between extrusion lines while printing bridges
     
        Multiple extruder options:
         --extruder-offset   Offset of each extruder, if firmware doesn't handle the displacement
@@ -369,6 +374,10 @@ The author of the Silk icon set is Mark James.
                             Temperature difference to be applied when an extruder is not active and
                             --ooze-prevention is enabled (default: -5)
 
+
+Note: X2SW mod of Slic3r automatically loads GUI configuration even when run
+      with no "load" parameters. I.e. you can configure it from the GUI, then
+      slice using the configured settings just by passing it the STL filename.
 
 If you want to change a preset file, just do
 
