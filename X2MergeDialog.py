@@ -2,8 +2,8 @@
 
 from skeinforge.fabmetheus_utilities import archive
 from subprocess import STDOUT
-import printcore
-import pronsole
+import printrun.printcore
+import printrun.pronsole
 import sys
 import re
 import os
@@ -11,10 +11,10 @@ import shutil
 import subprocess
 import wx
 
-class X2MergeDialog(wx.Dialog, pronsole.pronsole):
+class X2MergeDialog(wx.Dialog, printrun.pronsole.pronsole):
     '''Gcode mixer for dual extruder prints.'''
     def __init__(self, *args, **kwds):
-        pronsole.pronsole.__init__(self)
+        printrun.pronsole.pronsole.__init__(self)
 
         kwds["style"] = wx.DEFAULT_DIALOG_STYLE | wx.MAXIMIZE_BOX | wx.MINIMIZE_BOX | wx.RESIZE_BORDER
         wx.Dialog.__init__(self, *args, **kwds)
