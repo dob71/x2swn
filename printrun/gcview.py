@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Printrun.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+import platform
 import logging
 import wx
 
@@ -323,8 +325,11 @@ class GcodeViewLoader(object):
     path_halfheight = 0.15
 
     def addfile_perlayer(self, gcode = None, showall = False):
-        self.model = create_model(self.root.settings.light3d
-                                  if self.root else False)
+        useLight3d = self.root.settings.light3d if self.root else False
+        if hasattr(sys, 'frozen') and  platform.system() is 'Linux':
+            logging.warning("Forcing light 3D mode for Linux binary")
+            useLight3d = True
+        self.model = create_model(useLight3d)
         if isinstance(self.model, actors.GcodeModel):
             self.model.set_path_size(self.path_halfwidth, self.path_halfheight)
         self.objects[-1].model = self.model
