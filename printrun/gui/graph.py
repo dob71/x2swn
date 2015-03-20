@@ -315,8 +315,9 @@ class Graph(BufferedCanvas):
         self.drawbedtemp(dc, gc)
         self.drawextruder0targettemp(dc, gc)
         self.drawextruder0temp(dc, gc)
-        self.drawextruder1targettemp(dc, gc)
-        self.drawextruder1temp(dc, gc)
+        if self.root.settings.extruders > 1:
+            self.drawextruder1targettemp(dc, gc)
+            self.drawextruder1temp(dc, gc)
 
     class _YBounds(object):
         """Small helper class to claculate y bounds dynamically"""
