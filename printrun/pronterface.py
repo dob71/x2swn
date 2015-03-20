@@ -460,7 +460,7 @@ class PronterWindow(MainWindow, pronsole.pronsole):
 
     def setbedgui(self, f):
         self.bsetpoint = f
-        if self.display_gauges: self.bedtgauge.SetTarget(int(f))
+        self.bedtgauge.SetTarget(int(f))
         if self.display_graph: wx.CallAfter(self.graph.SetBedTargetTemperature, int(f))
         if f > 0:
             wx.CallAfter(self.btemp.SetValue, str(f))
@@ -1741,8 +1741,7 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
             gline_s = gcoder.S(gline)
             if gline_s is not None:
                 temp = gline_s
-                if self.display_gauges: 
-                    wx.CallAfter(self.bedtgauge.SetTarget, temp)
+                wx.CallAfter(self.bedtgauge.SetTarget, temp)
                 if self.display_graph: 
                     wx.CallAfter(self.graph.SetBedTargetTemperature, temp)
         elif gline.command.startswith("T"):
@@ -1831,12 +1830,12 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
             bed_temp = float(temps["B"][0]) if "B" in temps and temps["B"][0] else None
             if bed_temp is not None:
                 if self.display_graph: wx.CallAfter(self.graph.SetBedTemperature, bed_temp)
-                if self.display_gauges: wx.CallAfter(self.bedtgauge.SetValue, bed_temp)
+                wx.CallAfter(self.bedtgauge.SetValue, bed_temp)
                 setpoint = temps["B"][1]
                 if setpoint:
                     setpoint = float(setpoint)
                     if self.display_graph: wx.CallAfter(self.graph.SetBedTargetTemperature, setpoint)
-                    if self.display_gauges: wx.CallAfter(self.bedtgauge.SetTarget, setpoint)
+                    wx.CallAfter(self.bedtgauge.SetTarget, setpoint)
         except:
             self.logError(traceback.format_exc())
 
