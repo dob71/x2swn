@@ -64,8 +64,8 @@ if __name__ == '__main__':
             pass
         if not x2Profiler.pronterface_restart:
             break
-        elif hasattr(sys, 'frozen') and platform.system() is 'Linux':
-            # reload() is not working under Linux binary, wrapper script
+        elif hasattr(sys, 'frozen') and platform.system() == 'Linux':
+            # restart is not working under Linux binary, wrapper script
             # will do it there when sees exit code 22.
             exit(22)
         reload(printrun.pronterface)
