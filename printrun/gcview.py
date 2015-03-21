@@ -326,7 +326,7 @@ class GcodeViewLoader(object):
 
     def addfile_perlayer(self, gcode = None, showall = False):
         useLight3d = self.root.settings.light3d if self.root else False
-        if hasattr(sys, 'frozen') and  platform.system() is 'Linux':
+        if hasattr(sys, 'frozen') and  platform.system() == 'Linux':
             logging.warning("Forcing light 3D mode for Linux binary")
             useLight3d = True
         self.model = create_model(useLight3d)
