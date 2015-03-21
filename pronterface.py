@@ -29,6 +29,7 @@ not yet available for python3. You should try running with python2 instead.""")
 
 import sys
 import os
+import platform
 import x2Profiler
 import printrun.pronterface
 
