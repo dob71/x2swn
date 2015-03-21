@@ -67,5 +67,5 @@ if __name__ == '__main__':
         elif hasattr(sys, 'frozen') and platform.system() == 'Linux':
             # restart is not working under Linux binary, wrapper script
             # will do it there when sees exit code 22.
-            exit(22)
+            sys.exit(22)
         reload(printrun.pronterface)
