@@ -2065,7 +2065,8 @@ Printrun. If not, see <http://www.gnu.org/licenses/>."""
         if self.sdprinting:
             self.p.send_now("M25")
             self.p.send_now("M26 S0")
-            self.sdprinting = 0
+            self.sdprinting = False
+            self.recvlisteners.remove(self.waitforsdresponse)
         self.extra_print_time=0
         self.p.paused=0
         self.paused=0
