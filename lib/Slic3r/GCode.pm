@@ -485,6 +485,7 @@ sub set_extruder {
     # For X2/X2V3 the custom code has to be used for the tool change if available
     if ($self->config->gcode_flavor eq 'x2' && length($tc_gcode) > 0) {
         $gcode .= $tc_gcode;
+        $self->writer->toolchange($extruder_id);
     } else {
         $gcode .= $self->writer->toolchange($extruder_id);
     }
