@@ -177,8 +177,9 @@ class SkirtSkein:
 		self.addTemperatureLineIfDifferent(self.skirtTemperature)
 		self.addFlowRate(self.skirtFlowRate)
 		for outsetLoop in self.outsetLoops:
-			closedLoop = outsetLoop + [outsetLoop[0]]
-			self.distanceFeedRate.addGcodeFromFeedRateThreadZ(self.feedRateMinute, closedLoop, self.travelFeedRateMinute, z)
+			if len(outsetLoop) > 0:
+				closedLoop = outsetLoop + [outsetLoop[0]]
+				self.distanceFeedRate.addGcodeFromFeedRateThreadZ(self.feedRateMinute, closedLoop, self.travelFeedRateMinute, z)
 		self.addFlowRate(self.oldFlowRate)
 		self.addTemperatureLineIfDifferent(oldTemperature)
 		self.distanceFeedRate.addLine('(</skirt>)')

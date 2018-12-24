@@ -858,7 +858,10 @@ class FillSkein:
 		infillPaths = []
 		layerFillInset = self.fillInset
 		layerInfillSolidity = self.infillSolidity
-		layerRemainder = layerIndex % int(round(self.repository.diaphragmPeriod.value))
+		if 0 < int(round(self.repository.diaphragmPeriod.value)):
+			layerRemainder = layerIndex % int(round(self.repository.diaphragmPeriod.value))
+		else:
+			layerRemainder = layerIndex
 		layerRotation = self.getLayerRotation(layerIndex)
 		pixelTable = {}
 		reverseRotation = complex(layerRotation.real, - layerRotation.imag)
