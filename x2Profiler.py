@@ -173,9 +173,10 @@ class DownloadingPage(wiz.PyWizardPage):
             self.cmd_fetch(x2ProfilerApp.repo, x2ProfilerApp.repo_url)
             self.gauge.SetValue(100)
             self.status.SetLabel('Done fetching from ' + x2ProfilerApp.repo_url)
-        except:
+        except Exception as e:
             self.status.SetLabel('Failure to create temporary repository for:\n' + x2ProfilerApp.repo_url)
             self.gauge.SetValue(0)
+            wx.MessageBox("Error:\n\n" + str(e), '', style = wx.OK|wx.ICON_EXCLAMATION)
 
     #----------------------------------------------------------------------
     def flush(self, msg=None):
@@ -195,7 +196,7 @@ class DownloadingPage(wiz.PyWizardPage):
         msgs = re.split('[\r\n]', self.msgbuf + msg)
         self.msgbuf = msgs.pop()
         for msg in msgs:
-            print 'msg:' + msg + '\n'
+            ### for debugging ### print 'msg:' + msg + '\n'
             td = msg.split(':', 1)
             data = td.pop()
             if not td:
