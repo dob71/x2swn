@@ -223,6 +223,13 @@ if (@ARGV) {  # slicing from command line
         }
         if (defined $opt{print_center}) {
             $opt{print_center} = Slic3r::Pointf->new(split /[,x]/, $opt{print_center}, 2);
+        } else {
+            # Use bed shape to determine default print center
+            my $bed_shape = $config->get_value('bed_shape');
+            if (defined $bed_shape) {
+                my $bb = Slic3r::Geometry::BoundingBoxf->new_from_points($bed_shape);
+                $opt{print_center} = $bb->center;
+            }
         }
         
         my $sprint = Slic3r::Print::Simple->new(
