@@ -180,7 +180,9 @@ class PronterOptionsDialog(wx.Dialog):
 
 def PronterOptions(pronterface):
     dialog = PronterOptionsDialog(pronterface)
-    do_restart = False
+    # Pretty much nothing works on that dialog without restart, so till
+    # there is a reason to be selective when it is offered do it always.
+    do_restart = True #False
     if dialog.ShowModal() == wx.ID_OK:
         for setting in pronterface.settings._all_settings():
             old_value = setting.value

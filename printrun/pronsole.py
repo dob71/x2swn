@@ -136,8 +136,8 @@ class pronsole(cmd.Cmd):
         self.paused = False
         self.sdprinting = 0
         self.uploading = 0  # Unused, just for pronterface generalization
-        self.temps = {"pla": "185", "abs": "230", "off": "0"}
-        self.bedtemps = {"pla": "60", "abs": "110", "off": "0"}
+        self.temps = { "off" : "0" }
+        self.bedtemps = { "off" : "0" }
         self.percentdone = 0
         self.posreport = ""
         self.tempreadings = ""
@@ -152,12 +152,10 @@ class pronsole(cmd.Cmd):
         self.settings = Settings(self)
         self.settings._add(BuildDimensionsSetting("build_dimensions", "200x200x100+0+0+0+0+0+0", _("Build dimensions"), _("Dimensions of Build Platform\n & optional offset of origin\n & optional switch position\n\nExamples:\n   XXXxYYY\n   XXX,YYY,ZZZ\n   XXXxYYYxZZZ+OffX+OffY+OffZ\nXXXxYYYxZZZ+OffX+OffY+OffZ+HomeX+HomeY+HomeZ"), "Printer"), self.update_build_dimensions)
         self.settings._port_list = self.scanserial
-        self.settings._temperature_abs_cb = self.set_temp_preset
-        self.settings._temperature_pla_cb = self.set_temp_preset
-        self.settings._bedtemp_abs_cb = self.set_temp_preset
-        self.settings._bedtemp_pla_cb = self.set_temp_preset
         self.update_build_dimensions(None, self.settings.build_dimensions)
         self.update_tcp_streaming_mode(None, self.settings.tcp_streaming_mode)
+        setattr(self.settings, "__temperature_list_cb", self.set_temp_preset)
+        setattr(self.settings, "__bedtemp_list_cb", self.set_temp_preset)
         self.monitoring = 0
         self.starttime = 0
         self.extra_print_time = 0
@@ -1348,13 +1346,19 @@ class pronsole(cmd.Cmd):
 
     def set_temp_preset(self, key, value):
         if not key.startswith("bed"):
-            self.temps["pla"] = str(self.settings.temperature_pla)
-            self.temps["abs"] = str(self.settings.temperature_abs)
-            self.log("Hotend temperature presets updated, pla:%s, abs:%s" % (self.temps["pla"], self.temps["abs"]))
+            self.temps.clear();
+            self.temps['off'] = '0' # we always have 'off'
+            if len(str(self.settings.temperature_list).strip()) > 0:
+                for x in str(self.settings.temperature_list).split(','):
+                    self.temps[x.split(':')[0].strip()] = x.split(':')[1].strip()
+            self.log("Hotend temperature presets updated")
         else:
-            self.bedtemps["pla"] = str(self.settings.bedtemp_pla)
-            self.bedtemps["abs"] = str(self.settings.bedtemp_abs)
-            self.log("Bed temperature presets updated, pla:%s, abs:%s" % (self.bedtemps["pla"], self.bedtemps["abs"]))
+            self.bedtemps.clear();
+            self.bedtemps['off'] = '0' # we always have 'off'
+            if len(str(self.settings.bedtemp_list).strip()):
+                for x in str(self.settings.bedtemp_list).split(','):
+                    self.bedtemps[x.split(':')[0].strip()] = x.split(':')[1].strip()
+            self.log("Bed temperature presets updated")
 
     def tempcb(self, l):
         if "T:" in l:

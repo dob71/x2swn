@@ -125,7 +125,7 @@ def add_extra_controls(self, root, parentpanel, extra_buttons = None, mini_mode 
     if root.settings.last_temperature not in map(float, root.temps.values()):
         htemp_choices = [str(root.settings.last_temperature)] + htemp_choices
     root.htemp = wx.ComboBox(parentpanel, -1, choices = htemp_choices,
-                             style = wx.CB_DROPDOWN, size = (80, -1))
+                             style = wx.CB_DROPDOWN, size = (200, -1))
     root.htemp.SetToolTip(wx.ToolTip(_("Select Temperature for Hotend")))
     root.htemp.Bind(wx.EVT_COMBOBOX, root.htemp_change)
 
@@ -136,7 +136,7 @@ def add_extra_controls(self, root, parentpanel, extra_buttons = None, mini_mode 
 
     # Bed temp
     add("btemp_label", wx.StaticText(parentpanel, -1, _("Bed: ")), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT)
-    btemp_choices = [root.bedtemps[i] + " (" + i + ")" for i in sorted(root.bedtemps.keys(), key = lambda x:root.temps[x])]
+    btemp_choices = [root.bedtemps[i] + " (" + i + ")" for i in sorted(root.bedtemps.keys(), key = lambda x:root.bedtemps[x])]
 
     root.setboff = make_button(parentpanel, _("Off"), lambda e: root.do_bedtemp("off"), _("Switch Heated Bed Off"), size = (38, -1), style = wx.BU_EXACTFIT)
     root.printerControls.append(root.setboff)
@@ -145,7 +145,7 @@ def add_extra_controls(self, root, parentpanel, extra_buttons = None, mini_mode 
     if root.settings.last_bed_temperature not in map(float, root.bedtemps.values()):
         btemp_choices = [str(root.settings.last_bed_temperature)] + btemp_choices
     root.btemp = wx.ComboBox(parentpanel, -1, choices = btemp_choices,
-                             style = wx.CB_DROPDOWN, size = (80, -1))
+                             style = wx.CB_DROPDOWN, size = (200, -1))
     root.btemp.SetToolTip(wx.ToolTip(_("Select Temperature for Heated Bed")))
     root.btemp.Bind(wx.EVT_COMBOBOX, root.btemp_change)
     add("btemp_val", root.btemp)
