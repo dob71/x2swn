@@ -675,10 +675,13 @@ class ReportResultPage(wiz.PyWizardPage):
             try:
                 self.DoDeploy(self.selection)
                 self.status.SetLabel("The operation has completed successfully.")
-            except:
+            except Exception as e:
                 self.status.SetLabel("\
-The operation has failed! Please examine the X2SW profiles folder and\n\
-use GIT to manually checkout the desired profile or fix the repository.")
+The operation has failed! If using Windows in-place profile storage try to run\n\
+the X2SW app in Windows XP(SP 2) compatibility mode or run it as Administrator.\n\
+You can also cd to X2SW profiles folder and use GIT to check out the desired\n\
+profile manually or attempt to diagnose and fix the issue.")
+                wx.MessageBox("Error:\n\n" + str(e), '', style = wx.OK|wx.ICON_EXCLAMATION)
         x2ProfilerApp.changes = True
         self.Show()
         self.GetParent().Update()
